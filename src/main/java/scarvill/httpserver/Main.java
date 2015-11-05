@@ -9,8 +9,15 @@ import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(5000);
-        System.out.println("HTTPServer started...\nport: 5000\n");
+        int portNumber;
+        if (args.length != 1) {
+            portNumber = 5000;
+        } else {
+            portNumber = Integer.parseInt(args[0]);
+        }
+
+        ServerSocket serverSocket = new ServerSocket(portNumber);
+        System.out.println("HTTPServer started...\nport: " + portNumber + "\n");
         while (true) {
             Socket clientSocket = serverSocket.accept();
             OutputStream out = clientSocket.getOutputStream();

@@ -18,6 +18,7 @@ public class Main {
 
         ServerSocket serverSocket = new ServerSocket(portNumber);
         System.out.println("HTTPServer started...\nport: " + portNumber + "\n");
+        
         while (true) {
             Socket clientSocket = serverSocket.accept();
             OutputStream out = clientSocket.getOutputStream();

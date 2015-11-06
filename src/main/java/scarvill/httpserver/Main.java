@@ -9,16 +9,18 @@ import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int portNumber;
-        if (args.length != 1) {
-            portNumber = 5000;
-        } else {
-            portNumber = Integer.parseInt(args[0]);
-        }
-
+        int portNumber = parsePortNumber(args);
         ServerSocket serverSocket = new ServerSocket(portNumber);
         System.out.println("HTTPServer started...\nport: " + portNumber + "\n");
-        
+
+        serve(serverSocket);
+    }
+
+    private static int parsePortNumber(String[] args) {
+        return (args.length != 1) ? 5000 : Integer.parseInt(args[0]);
+    }
+
+    private static void serve(ServerSocket serverSocket) throws IOException {
         while (true) {
             Socket clientSocket = serverSocket.accept();
             OutputStream out = clientSocket.getOutputStream();
@@ -26,24 +28,16 @@ public class Main {
                 new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
 
-            HTTPRequest request = receiveRequest(in.readLine());
-            String response = generateResponse(request);
+            Request request = receiveRequest(in.readLine());
+            String response = Dispatch.handle(request);
             sendResponse(response, out);
             out.close();
         }
     }
 
-    private static HTTPRequest receiveRequest(String rawRequest) {
+    private static Request receiveRequest(String rawRequest) {
         System.out.println("Received request: " + rawRequest);
-        return new HTTPRequest(rawRequest);
-    }
-
-    private static String generateResponse(HTTPRequest request) {
-        if (request.getURI().equals("/foobar")) {
-            return HTTPStatus.NOT_FOUND;
-        } else {
-            return HTTPStatus.OK;
-        }
+        return new Request(rawRequest);
     }
 
     private static void sendResponse(String response, OutputStream out) throws IOException {

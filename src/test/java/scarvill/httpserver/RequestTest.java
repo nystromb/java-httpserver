@@ -4,17 +4,17 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HTTPRequestTest {
+public class RequestTest {
     @Test
     public void testParsesAction() {
-        HTTPRequest request = new HTTPRequest("GET / HTTP/1.1\r\n");
+        Request request = new Request("GET / HTTP/1.1\r\n");
 
         assertEquals("GET", request.getAction());
     }
 
     @Test
     public void testParsesRoute() {
-        HTTPRequest request = new HTTPRequest("GET /foo/bar HTTP/1.1\r\n");
+        Request request = new Request("GET /foo/bar HTTP/1.1\r\n");
 
         assertEquals("/foo/bar", request.getURI());
     }

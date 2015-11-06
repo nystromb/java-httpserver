@@ -1,9 +1,9 @@
 package scarvill.httpserver;
 
-public class HTTPRequest {
+public class Request {
     private String rawRequest;
 
-    public HTTPRequest(String rawRequest) {
+    public Request(String rawRequest) {
         this.rawRequest = rawRequest;
     }
 

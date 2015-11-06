@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HTTPServer.iml" filepath="$PROJECT_DIR$/HTTPServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/httpserver.iml" filepath="$PROJECT_DIR$/httpserver.iml" />
     </modules>
   </component>

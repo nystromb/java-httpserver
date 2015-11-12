@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class RouterTest {
     @Test
     public void testReturnsResponseWithStatusOKForConfiguredRoute() throws Exception {
-        Request request = new Request("GET / HTTP/1.1\r\n");
+        Request request = new Request(RequestBuilder.build(Method.GET, "/"));
         Router router = new Router();
         router.addRoute("/", new String[]{Method.GET});
         Response response = router.routeRequest(request);
@@ -17,7 +17,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
-        Request request = new Request("GET /not/configured HTTP/1.1\r\n");
+        Request request = new Request(RequestBuilder.build(Method.GET, "/not/configured"));
         Router router = new Router();
         Response response = router.routeRequest(request);
 
@@ -26,7 +26,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsMethodNotAllowedWhenPermissionDoesNotExist() throws Exception {
-        Request request = new Request("POST / HTTP/1.1\r\n");
+        Request request = new Request(RequestBuilder.build(Method.POST, "/"));
         Router router = new Router();
         String[] methodPermissions = {Method.GET, Method.HEAD, Method.OPTIONS};
         router.addRoute("/", methodPermissions);

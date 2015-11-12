@@ -7,14 +7,16 @@ import static org.junit.Assert.*;
 public class RequestTest {
     @Test
     public void testParsesAction() {
-        Request request = new Request("GET / HTTP/1.1\r\n");
+        String rawRequest = RequestBuilder.build(Method.GET, "/");
+        Request request = new Request(rawRequest);
 
-        assertEquals("GET", request.getMethod());
+        assertEquals(Method.GET, request.getMethod());
     }
 
     @Test
     public void testParsesRoute() {
-        Request request = new Request("GET /foo/bar HTTP/1.1\r\n");
+        String rawRequest = RequestBuilder.build(Method.GET, "/foo/bar");
+        Request request = new Request(rawRequest);
 
         assertEquals("/foo/bar", request.getURI());
     }

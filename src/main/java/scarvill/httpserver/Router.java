@@ -5,16 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Router {
-    private class Route {
-        public String path;
-        public String[] permissions;
-
-        public Route(String path, String[] permissions) {
-            this.path = path;
-            this.permissions = permissions;
-        }
-    }
-
     private List<Route> configuredRoutes = new ArrayList<>();
 
     public void addRoute(String route, String[] methodPermissions) {
@@ -32,5 +22,15 @@ public class Router {
             }
         }
         return new Response(Status.NOT_FOUND);
+    }
+
+    private class Route {
+        public String path;
+        public String[] permissions;
+
+        public Route(String path, String[] permissions) {
+            this.path = path;
+            this.permissions = permissions;
+        }
     }
 }

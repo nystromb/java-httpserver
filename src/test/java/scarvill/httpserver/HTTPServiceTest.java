@@ -11,7 +11,8 @@ public class HTTPServiceTest {
     @Test
     public void testRespondsToARequest() throws Exception {
         HTTPService service = new HTTPService(new MockRouter());
-        InputStream inputStream = new ByteArrayInputStream("GET / HTTP/1.1\r\n".getBytes());
+        String rawRequest = RequestBuilder.build(Method.GET, "/");
+        InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
 
         service.accept(inputStream, outputStream);

@@ -9,7 +9,7 @@ public class RequestTest {
     public void testParsesAction() {
         Request request = new Request("GET / HTTP/1.1\r\n");
 
-        assertEquals("GET", request.getAction());
+        assertEquals("GET", request.getMethod());
     }
 
     @Test

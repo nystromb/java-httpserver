@@ -7,7 +7,7 @@ public class Request {
         this.rawRequest = rawRequest;
     }
 
-    public String getAction() {
+    public String getMethod() {
         return rawRequest.split(" ")[0];
     }
 

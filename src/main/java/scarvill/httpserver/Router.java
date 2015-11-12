@@ -16,7 +16,7 @@ public class Router {
     }
 
     private List<Route> configuredRoutes = new ArrayList<>();
-    
+
     public void addRoute(String route, String[] methodPermissions) {
         configuredRoutes.add(new Route(route, methodPermissions));
     }
@@ -24,7 +24,7 @@ public class Router {
     public Response routeRequest(Request request) {
         for (Route route : configuredRoutes) {
             if (route.path.equals(request.getURI())) {
-                if (Arrays.asList(route.permissions).contains(request.getAction())) {
+                if (Arrays.asList(route.permissions).contains(request.getMethod())) {
                     return new Response(Status.OK);
                 } else {
                     return new Response(Status.METHOD_NOT_ALLOWED);

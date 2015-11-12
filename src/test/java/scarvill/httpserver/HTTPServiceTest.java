@@ -21,7 +21,7 @@ public class HTTPServiceTest {
 
     private class MockRouter extends Router {
         public MockRouter() {
-            super(new String[]{});
+            super();
         }
 
         @Override

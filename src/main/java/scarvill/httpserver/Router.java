@@ -1,26 +1,36 @@
 package scarvill.httpserver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Router {
-    private List<String> configuredRoutes = new ArrayList<>();
+    private class Route {
+        public String path;
+        public String[] permissions;
 
-    public Router(String[] routes) {
-        for (String route : routes ) {
-            addRoute(route);
+        public Route(String path, String[] permissions) {
+            this.path = path;
+            this.permissions = permissions;
         }
     }
 
-    public void addRoute(String route) {
-        configuredRoutes.add(route);
+    private List<Route> configuredRoutes = new ArrayList<>();
+    
+    public void addRoute(String route, String[] methodPermissions) {
+        configuredRoutes.add(new Route(route, methodPermissions));
     }
 
     public Response routeRequest(Request request) {
-        if (configuredRoutes.contains(request.getURI())) {
-            return new Response(Status.OK);
-        } else {
-            return new Response(Status.NOT_FOUND);
+        for (Route route : configuredRoutes) {
+            if (route.path.equals(request.getURI())) {
+                if (Arrays.asList(route.permissions).contains(request.getAction())) {
+                    return new Response(Status.OK);
+                } else {
+                    return new Response(Status.METHOD_NOT_ALLOWED);
+                }
+            }
         }
+        return new Response(Status.NOT_FOUND);
     }
 }

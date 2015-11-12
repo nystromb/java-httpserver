@@ -1,6 +1,7 @@
 package scarvill.httpserver;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Response {
@@ -14,9 +15,7 @@ public class Response {
 
     public Response(String status, String[] headers) {
         statusLine = status;
-        for (String header : headers) {
-            this.headers.add(header);
-        }
+        Collections.addAll(this.headers, headers);
         addDefaultHeaders();
     }
 

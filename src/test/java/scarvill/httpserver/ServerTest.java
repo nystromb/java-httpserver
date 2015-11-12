@@ -33,7 +33,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testEchoesMessage() throws Exception {
+    public void testServesConnectionAccordingToInjectedService() throws Exception {
         Server server = new Server(0, echoService());
         threadPool.submit(server::start);
         String echoMessage = "foo";

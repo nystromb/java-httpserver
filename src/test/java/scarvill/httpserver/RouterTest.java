@@ -2,9 +2,12 @@ package scarvill.httpserver;
 
 import org.junit.Test;
 
+import java.util.function.Function;
+
 import static org.junit.Assert.*;
 
 public class RouterTest {
+
     @Test
     public void testReturnsResponseWithStatusOKForConfiguredRoute() throws Exception {
         Request request = new Request(RequestBuilder.build(Method.GET, "/"));

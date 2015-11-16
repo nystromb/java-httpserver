@@ -3,6 +3,7 @@ package scarvill.httpserver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public class Router {
     private List<Route> configuredRoutes = new ArrayList<>();
@@ -17,11 +18,19 @@ public class Router {
                 if (Arrays.asList(route.permissions).contains(request.getMethod())) {
                     return new Response(Status.OK);
                 } else {
-                    return new Response(Status.METHOD_NOT_ALLOWED);
+                    return methodNotAllowed(request);
                 }
             }
         }
-        return new Response(Status.NOT_FOUND);
+        return routeNotFound(request);
+    }
+
+    private Response routeNotFound(Request request) {
+        return new NotFoundHandler().apply(request);
+    }
+
+    private Response methodNotAllowed(Request request) {
+        return new MethodNotAllowedHandler().apply(request);
     }
 
     private class Route {

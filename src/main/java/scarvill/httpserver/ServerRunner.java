@@ -1,5 +1,7 @@
 package scarvill.httpserver;
 
+import scarvill.httpserver.constants.Method;
+
 import java.io.IOException;
 
 public class ServerRunner {

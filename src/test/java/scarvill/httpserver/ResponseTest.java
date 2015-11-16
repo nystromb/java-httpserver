@@ -1,6 +1,7 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
+import scarvill.httpserver.constants.Status;
 
 import static org.junit.Assert.*;
 

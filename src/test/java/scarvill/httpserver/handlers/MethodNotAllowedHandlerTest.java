@@ -1,6 +1,10 @@
-package scarvill.httpserver;
+package scarvill.httpserver.handlers;
 
 import org.junit.Test;
+import scarvill.httpserver.Request;
+import scarvill.httpserver.RequestBuilder;
+import scarvill.httpserver.constants.Method;
+import scarvill.httpserver.constants.Status;
 
 import static org.junit.Assert.*;
 

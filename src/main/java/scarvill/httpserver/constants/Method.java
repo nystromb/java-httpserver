@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.constants;
 
 public class Method {
     public static final String GET = "GET";

@@ -1,15 +1,18 @@
 package scarvill.httpserver;
 
+import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.handlers.MethodNotAllowedHandler;
+import scarvill.httpserver.handlers.NotFoundHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 public class Router {
     private List<Route> configuredRoutes = new ArrayList<>();
 
-    public void addRoute(String route, String[] methodPermissions) {
-        configuredRoutes.add(new Route(route, methodPermissions));
+    public void addRoute(String uri, String[] methodPermissions) {
+        configuredRoutes.add(new Route(uri, methodPermissions));
     }
 
     public Response routeRequest(Request request) {

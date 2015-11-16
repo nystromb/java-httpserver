@@ -1,8 +1,8 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-
-import java.util.function.Function;
+import scarvill.httpserver.constants.Method;
+import scarvill.httpserver.constants.Status;
 
 import static org.junit.Assert.*;
 

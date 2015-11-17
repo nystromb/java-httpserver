@@ -37,7 +37,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>scarvill.httpserver.ServerRunner</mainClass>
+              <mainClass>scarvill.httpserver.cobspec.ServerRunner</mainClass>
             </manifest>
           </archive>
         </configuration>

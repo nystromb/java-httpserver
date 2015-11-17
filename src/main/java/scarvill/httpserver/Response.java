@@ -15,12 +15,16 @@ public class Response {
 
     public Response(String status, String[] headers) {
         statusLine = status;
-        Collections.addAll(this.headers, headers);
         addDefaultHeaders();
+        Collections.addAll(this.headers, headers);
     }
 
     public String getStatusLine() {
         return statusLine;
+    }
+
+    public List<String> getHeaders() {
+        return headers;
     }
 
     public String generate() {

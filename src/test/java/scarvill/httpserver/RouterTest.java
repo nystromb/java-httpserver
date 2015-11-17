@@ -3,20 +3,15 @@ package scarvill.httpserver;
 import org.junit.Test;
 import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.handlers.RouteHandler;
+import scarvill.httpserver.mocks.MockHandler;
+
+import java.util.HashMap;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
 public class RouterTest {
-
-    @Test
-    public void testReturnsResponseWithStatusOKForConfiguredRoute() throws Exception {
-        Request request = new Request(RequestBuilder.build(Method.GET, "/"));
-        Router router = new Router();
-        router.addRoute("/", new String[]{Method.GET});
-        Response response = router.routeRequest(request);
-
-        assertEquals(Status.OK, response.getStatusLine());
-    }
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
@@ -28,13 +23,26 @@ public class RouterTest {
     }
 
     @Test
-    public void testReturnsMethodNotAllowedWhenPermissionDoesNotExist() throws Exception {
-        Request request = new Request(RequestBuilder.build(Method.POST, "/"));
+    public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
+        Request request = new Request(RequestBuilder.build("METHOD", "/"));
         Router router = new Router();
-        String[] methodPermissions = {Method.GET, Method.HEAD, Method.OPTIONS};
-        router.addRoute("/", methodPermissions);
+        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        router.addRoute("/", new RouteHandler(methodHandlers));
         Response response = router.routeRequest(request);
 
         assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
+    }
+
+    @Test
+    public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
+        Request request = new Request(RequestBuilder.build("METHOD", "/"));
+        Router router = new Router();
+        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        String expectedResponseStatus = "a response status\r\n";
+        methodHandlers.put("METHOD", new MockHandler(expectedResponseStatus));
+        router.addRoute("/", new RouteHandler(methodHandlers));
+        Response response = router.routeRequest(request);
+
+        assertEquals(expectedResponseStatus, response.getStatusLine());
     }
 }

@@ -8,11 +8,11 @@ import scarvill.httpserver.constants.Status;
 
 import static org.junit.Assert.*;
 
-public class NotFoundHandlerTest {
+public class RouteNotFoundHandlerTest {
 
     @Test
     public void testReturnsResponseWith404NotFoundStatus() throws Exception {
-        NotFoundHandler handler = new NotFoundHandler();
+        RouteNotFoundHandler handler = new RouteNotFoundHandler();
         Request anyRequest = new Request(RequestBuilder.build(Method.GET,"/"));
 
         assertEquals(Status.NOT_FOUND, handler.apply(anyRequest).getStatusLine());

@@ -6,7 +6,7 @@ import scarvill.httpserver.constants.Status;
 
 import java.util.function.Function;
 
-public class NotFoundHandler implements Function<Request, Response> {
+public class RouteNotFoundHandler implements Function<Request, Response> {
 
     public Response apply(Request request) {
         return new Response(Status.NOT_FOUND);

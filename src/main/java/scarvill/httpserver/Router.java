@@ -1,6 +1,6 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.handlers.NotFoundHandler;
+import scarvill.httpserver.handlers.RouteNotFoundHandler;
 import scarvill.httpserver.handlers.RouteHandler;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class Router {
                 return route.handler.apply(request);
             }
         }
-        return new NotFoundHandler().apply(request);
+        return new RouteNotFoundHandler().apply(request);
     }
 
     private class Route {

@@ -2,6 +2,7 @@ package scarvill.httpserver;
 
 import java.io.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class HTTPService implements BiConsumer<InputStream, OutputStream> {
     private Router router;
@@ -17,7 +18,7 @@ public class HTTPService implements BiConsumer<InputStream, OutputStream> {
         try {
             Request request = new Request(in.readLine());
             Response response = router.routeRequest(request);
-            out.print(response.getStatusLine());
+            out.print(response.generate());
             out.close();
         } catch (IOException e) { throw new RuntimeException(e); }
     }

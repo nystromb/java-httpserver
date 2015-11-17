@@ -12,24 +12,27 @@ public class HTTPServiceTest {
 
     @Test
     public void testRespondsToARequest() throws Exception {
-        HTTPService service = new HTTPService(new MockRouter());
         String rawRequest = RequestBuilder.build(Method.GET, "/");
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
+        Response expectedResponse = new Response(Status.OK, new String[]{"Header: a header\r\n"});
+        HTTPService service = new HTTPService(new MockRouter(expectedResponse));
 
         service.accept(inputStream, outputStream);
 
-        assertEquals(Status.OK, outputStream.toString());
+        assertEquals(expectedResponse.generate(), outputStream.toString());
     }
 
     private class MockRouter extends Router {
-        public MockRouter() {
-            super();
+        private Response response;
+
+        public MockRouter(Response expectedResponse) {
+            this.response = expectedResponse;
         }
 
         @Override
         public Response routeRequest(Request request) {
-            return new Response(Status.OK);
+            return response;
         }
     }
 }

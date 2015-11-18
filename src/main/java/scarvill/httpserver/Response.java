@@ -47,4 +47,8 @@ public class Response {
     private void addDefaultHeaders() {
         headers.add("Connection: close\r\n");
     }
+
+    public List<String> getHeaders() {
+        return headers;
+    }
 }

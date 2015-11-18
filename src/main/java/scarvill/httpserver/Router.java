@@ -2,7 +2,6 @@ package scarvill.httpserver;
 
 import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.IndifferentHandler;
-import scarvill.httpserver.handlers.RouteHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ public class Router {
 
     private List<Route> configuredRoutes = new ArrayList<>();
 
-    public void addRoute(String uri, RouteHandler handler) {
+    public void addRoute(String uri, Function<Request, Response> handler) {
         configuredRoutes.add(new Route(uri, handler));
     }
 
@@ -29,9 +28,9 @@ public class Router {
 
     private class Route {
         public String uri;
-        public RouteHandler handler;
+        public Function<Request, Response> handler;
 
-        public Route(String uri, RouteHandler handler) {
+        public Route(String uri, Function<Request, Response> handler) {
             this.uri = uri;
             this.handler = handler;
         }

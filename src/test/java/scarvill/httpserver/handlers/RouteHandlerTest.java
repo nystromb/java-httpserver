@@ -25,7 +25,7 @@ public class RouteHandlerTest {
     }
 
     @Test
-    public void testDelegatesToAppropriateMethodHandlerGivenAtInitialization() throws Exception {
+    public void testDelegatesToAppropriateMethodHandler() throws Exception {
         Request request = new Request(RequestUtility.rawRequest("METHOD", "/a/route"));
         HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
         String expectedResponseStatus = "a response status\r\n";

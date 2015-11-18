@@ -2,7 +2,7 @@ package scarvill.httpserver.handlers;
 
 import org.junit.Test;
 import scarvill.httpserver.Request;
-import scarvill.httpserver.RequestBuilder;
+import scarvill.httpserver.RequestUtility;
 import scarvill.httpserver.Response;
 import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.mocks.MockHandler;
@@ -16,7 +16,7 @@ public class RouteHandlerTest {
 
     @Test
     public void testReturns405NotAllowedIfRequestCannotDelegatedToAnotherHandler() throws Exception {
-        Request request = new Request(RequestBuilder.build("METHOD", "/a/route"));
+        Request request = new Request(RequestUtility.rawRequest("METHOD", "/a/route"));
         HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
         Function<Request, Response> routeHandler = new RouteHandler(methodHandlers);
         Response response = routeHandler.apply(request);
@@ -26,7 +26,7 @@ public class RouteHandlerTest {
 
     @Test
     public void testDelegatesToAppropriateMethodHandlerGivenAtInitialization() throws Exception {
-        Request request = new Request(RequestBuilder.build("METHOD", "/a/route"));
+        Request request = new Request(RequestUtility.rawRequest("METHOD", "/a/route"));
         HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
         String expectedResponseStatus = "a response status\r\n";
         methodHandlers.put("METHOD", new MockHandler(expectedResponseStatus));

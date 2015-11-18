@@ -15,7 +15,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
-        Request request = new Request(RequestBuilder.build(Method.GET, "/not/configured"));
+        Request request = new Request(RequestUtility.rawRequest(Method.GET, "/not/configured"));
         Router router = new Router();
         Response response = router.routeRequest(request);
 
@@ -24,7 +24,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
-        Request request = new Request(RequestBuilder.build("METHOD", "/"));
+        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
         Router router = new Router();
         HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
         router.addRoute("/", new RouteHandler(methodHandlers));
@@ -35,7 +35,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
-        Request request = new Request(RequestBuilder.build("METHOD", "/"));
+        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
         Router router = new Router();
         HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
         String expectedResponseStatus = "a response status\r\n";

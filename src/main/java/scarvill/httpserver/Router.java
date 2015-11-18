@@ -1,12 +1,17 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.handlers.RouteNotFoundHandler;
+import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.handlers.IndifferentHandler;
 import scarvill.httpserver.handlers.RouteHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class Router {
+    private final Function<Request, Response> NOT_FOUND_HANDLER =
+        new IndifferentHandler(new Response(Status.NOT_FOUND));
+
     private List<Route> configuredRoutes = new ArrayList<>();
 
     public void addRoute(String uri, RouteHandler handler) {
@@ -19,7 +24,7 @@ public class Router {
                 return route.handler.apply(request);
             }
         }
-        return new RouteNotFoundHandler().apply(request);
+        return NOT_FOUND_HANDLER.apply(request);
     }
 
     private class Route {

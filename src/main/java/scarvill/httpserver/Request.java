@@ -14,5 +14,12 @@ public class Request {
     public String getURI() {
         return rawRequest.split(" ")[1];
     }
+
+    public String getBody() {
+        String bodyDelimiter = "\r\n\r\n";
+        int bodyStartIndex = rawRequest.indexOf(bodyDelimiter) + bodyDelimiter.length();
+
+        return rawRequest.substring(bodyStartIndex);
+    }
 }
 

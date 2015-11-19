@@ -16,7 +16,7 @@ public class GetResourceHandler implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String contentLength = "Content-length: " + resource.getData().length() + "\r\n";
+        String contentLength = "Content-Length: " + resource.getData().length() + "\r\n";
         return new Response(Status.OK, new String[]{contentLength}, resource.getData());
     }
 }

@@ -27,7 +27,7 @@ public class GetResourceHandlerTest {
         Function<Request, Response> handler = new GetResourceHandler(resource);
         Request request = new Request(RequestUtility.rawRequest("METHOD", "/some/route"));
         Response response = handler.apply(request);
-        String expectedHeader = "Content-length: " + resource.getData().length() + "\r\n";
+        String expectedHeader = "Content-Length: " + resource.getData().length() + "\r\n";
 
         assertTrue(response.getHeaders().contains(expectedHeader));
     }

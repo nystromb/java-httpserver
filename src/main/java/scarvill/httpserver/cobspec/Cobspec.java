@@ -12,6 +12,7 @@ import scarvill.httpserver.handlers.IndifferentHandler;
 import scarvill.httpserver.handlers.RouteHandler;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Cobspec {
@@ -28,9 +29,12 @@ public class Cobspec {
         return router;
     }
 
-    private static Function<Request, Response> optionsHandler(String[] allowedMethods) {
-        String[] headers = new String[] {"Allow: " + String.join(",", allowedMethods) + "\r\n"};
-        return new IndifferentHandler(new Response(Status.OK, headers));
+    private static Function<Request, Response> unmodifiableResourceRouteHandler(Resource resource) {
+        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        methodHandlers.put(Method.GET, new GetResourceHandler(resource));
+        addOptionsHandler(methodHandlers);
+
+        return new RouteHandler(methodHandlers);
     }
 
     private static Function<Request, Response> resourcefulRouteHandler(Resource resource) {
@@ -39,14 +43,18 @@ public class Cobspec {
         for (String method : new String[]{Method.POST, Method.PUT, Method.DELETE}) {
             methodHandlers.put(method, new ChangeResourceHandler(resource));
         }
+        addOptionsHandler(methodHandlers);
 
         return new RouteHandler(methodHandlers);
     }
 
-    private static Function<Request, Response> unmodifiableResourceRouteHandler(Resource resource) {
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        methodHandlers.put(Method.GET, new GetResourceHandler(resource));
+    private static Function<Request, Response> optionsHandler(String[] allowedMethods) {
+        String[] headers = new String[] {"Allow: " + String.join(",", allowedMethods) + "\r\n"};
+        return new IndifferentHandler(new Response(Status.OK, headers));
+    }
 
-        return new RouteHandler(methodHandlers);
+    private static void addOptionsHandler(HashMap<String, Function<Request, Response>> methodHandlers) {
+        Set<String> methods = methodHandlers.keySet();
+        methodHandlers.put(Method.OPTIONS, optionsHandler(methods.toArray(new String[methods.size()])));
     }
 }

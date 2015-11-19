@@ -1,1 +1,0 @@
-web: java -jar target/httpserver-1.0-SNAPSHOT.jar $PORT

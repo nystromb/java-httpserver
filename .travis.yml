@@ -3,4 +3,6 @@ jdk:
   - oraclejdk8
 notifications:
   email: false
-script: mvn test -B
+script:
+  - mvn test -B
+  - cd cob_spec && mvn package && java -jar fitnesse.jar -c "HttpTestSuite.ResponseTestSuite.SimpleGet?test&format=text"

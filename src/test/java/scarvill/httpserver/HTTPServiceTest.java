@@ -16,7 +16,8 @@ public class HTTPServiceTest {
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         Response expectedResponse = new Response(Status.OK, new String[]{"Header: a header\r\n"});
-        HTTPService service = new HTTPService(new MockRouter(expectedResponse));
+        Logger logger = new Logger(new NullPrintStream());
+        HTTPService service = new HTTPService(new MockRouter(expectedResponse), logger);
 
         service.accept(inputStream, outputStream);
 
@@ -33,6 +34,12 @@ public class HTTPServiceTest {
         @Override
         public Response routeRequest(Request request) {
             return response;
+        }
+    }
+
+    private class NullPrintStream extends PrintStream {
+        public NullPrintStream() {
+            super(new ByteArrayOutputStream());
         }
     }
 }

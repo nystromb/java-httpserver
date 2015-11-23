@@ -1,7 +1,6 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
 
 import java.io.*;
@@ -12,7 +11,7 @@ public class HTTPServiceTest {
 
     @Test
     public void testRespondsToARequest() throws Exception {
-        String rawRequest = RequestUtility.rawRequest(Method.GET, "/");
+        String rawRequest = RequestUtility.rawRequest("GET", "/");
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         Response expectedResponse = new Response(Status.OK, new String[]{"Header: a header\r\n"});

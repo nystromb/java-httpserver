@@ -15,7 +15,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest(Method.GET, "/not/configured"));
+        Request request = new Request(RequestUtility.rawRequest("GET", "/not/configured"));
         Router router = new Router();
         Response response = router.routeRequest(request);
 
@@ -24,10 +24,10 @@ public class RouterTest {
 
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
+        Request request = new Request(RequestUtility.rawRequest("GET", "/"));
         Router router = new Router();
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        router.addRoute("/", new RouteHandler(methodHandlers));
+        HashMap<Method, Function<Request, Response>> methodHandlersOld = new HashMap<>();
+        router.addRoute("/", new RouteHandler(methodHandlersOld));
         Response response = router.routeRequest(request);
 
         assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
@@ -35,11 +35,11 @@ public class RouterTest {
 
     @Test
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
+        Request request = new Request(RequestUtility.rawRequest("POST", "/"));
         Router router = new Router();
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
         String expectedResponseStatus = "a response status\r\n";
-        methodHandlers.put("METHOD", new MockHandler(expectedResponseStatus));
+        methodHandlers.put(Method.POST, new MockHandler(expectedResponseStatus));
         router.addRoute("/", new RouteHandler(methodHandlers));
         Response response = router.routeRequest(request);
 

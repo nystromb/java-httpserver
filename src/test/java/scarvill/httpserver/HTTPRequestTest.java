@@ -3,40 +3,40 @@ package scarvill.httpserver;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static scarvill.httpserver.constants.MethodTwo.*;
+import static scarvill.httpserver.constants.Method.*;
 
 public class HTTPRequestTest {
     @Test
     public void testParsesRawHTTPRequest() {
-        RequestTwo request = new HTTPRequest("GET /uri HTTP/1.1").parse();
+        Request request = new HTTPRequest("GET /uri HTTP/1.1").parseAsRequest();
 
         assertEquals(GET, request.getMethod());
     }
 
     @Test
     public void testParsesInvalidRawHTTPRequestMethod() {
-        RequestTwo request = new HTTPRequest("FOO /uri HTTP/1.1").parse();
+        Request request = new HTTPRequest("FOO /uri HTTP/1.1").parseAsRequest();
 
         assertEquals(NULL_METHOD, request.getMethod());
     }
 
     @Test
     public void testParsesRawHTTPRequestURI() {
-        RequestTwo request = new HTTPRequest("GET /uri HTTP/1.1").parse();
+        Request request = new HTTPRequest("GET /uri HTTP/1.1").parseAsRequest();
 
         assertEquals("/uri", request.getURI());
     }
 
     @Test
     public void testParsesRawHTTPRequestWithNoBody() {
-        RequestTwo request = new HTTPRequest("GET /uri HTTP/1.1").parse();
+        Request request = new HTTPRequest("GET /uri HTTP/1.1").parseAsRequest();
 
         assertEquals("", request.getBody());
     }
 
     @Test
     public void testParsesRawHTTPRequestWithBody() {
-        RequestTwo request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\nbody").parse();
+        Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\nbody").parseAsRequest();
 
         assertEquals("body", request.getBody());
     }

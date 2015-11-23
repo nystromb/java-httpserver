@@ -7,11 +7,19 @@ import static org.junit.Assert.*;
 
 public class RequestTest {
     @Test
-    public void testParsesAction() {
-        String rawRequest = RequestUtility.rawRequest("METHOD", "/foo/bar");
+    public void testParsesGetMethod() {
+        String rawRequest = RequestUtility.rawRequest("GET", "/foo/bar");
         Request request = new Request(rawRequest);
 
-        assertEquals("METHOD", request.getMethod());
+        assertEquals(Method.GET, request.getMethod());
+    }
+
+    @Test
+    public void testParsesPostMethod() {
+        String rawRequest = RequestUtility.rawRequest("POST", "/foo/bar");
+        Request request = new Request(rawRequest);
+
+        assertEquals(Method.POST, request.getMethod());
     }
 
     @Test

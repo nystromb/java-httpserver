@@ -1,8 +1,8 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.constants.MethodTwo;
+import scarvill.httpserver.constants.Method;
 
-import static scarvill.httpserver.constants.MethodTwo.*;
+import static scarvill.httpserver.constants.Method.*;
 
 public class HTTPRequest {
     private String rawRequest;
@@ -11,15 +11,7 @@ public class HTTPRequest {
         this.rawRequest = rawRequest;
     }
 
-    public RequestTwo parse() {
-        return new RequestTwo.Builder()
-            .setMethod(parseMethod())
-            .setURI(parseURI())
-            .setBody(parseBody())
-            .build();
-    }
-
-    private MethodTwo parseMethod() {
+    private Method parseMethod() {
         String method = rawRequest.split(" ")[0];
         switch (method) {
             case "GET":     return GET;
@@ -45,5 +37,13 @@ public class HTTPRequest {
         } else {
             return rawRequest.substring(bodyStartIndex + bodyDelimiter.length());
         }
+    }
+
+    public Request parseAsRequest() {
+        return new Request.Builder()
+            .setMethod(parseMethod())
+            .setURI(parseURI())
+            .setBody(parseBody())
+            .build();
     }
 }

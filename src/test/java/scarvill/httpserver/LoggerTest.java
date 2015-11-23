@@ -1,7 +1,6 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
 
 import java.io.ByteArrayOutputStream;
@@ -14,7 +13,7 @@ public class LoggerTest {
     public void testLogsRequestToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String requestToBeLogged = RequestUtility.rawRequest(Method.GET, "/");
+        String requestToBeLogged = RequestUtility.rawRequest("GET", "/");
         logger.logRequest(requestToBeLogged);
 
         assertTrue(out.toString().contains("Received request:"));

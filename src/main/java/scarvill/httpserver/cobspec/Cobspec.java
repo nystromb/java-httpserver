@@ -25,12 +25,12 @@ public class Cobspec {
         router.addRoute("/", unmodifiableResourceRouteHandler(new Resource("")));
         router.addRoute("/form", resourcefulRouteHandler(new Resource("")));
         router.addRoute("/redirect", REDIRECT_HANDLER);
-        router.addRoute("/method_options", optionsHandler(Method.allMethods()));
+        router.addRoute("/method_options", optionsHandler(new String[]{"GET", "HEAD", "OPTIONS", "PUT", "POST", "DELETE"}));
         return router;
     }
 
     private static Function<Request, Response> unmodifiableResourceRouteHandler(Resource resource) {
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
         methodHandlers.put(Method.GET, new GetResourceHandler(resource));
         addOptionsHandler(methodHandlers);
 
@@ -38,9 +38,9 @@ public class Cobspec {
     }
 
     private static Function<Request, Response> resourcefulRouteHandler(Resource resource) {
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
+        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
         methodHandlers.put(Method.GET, new GetResourceHandler(resource));
-        for (String method : new String[]{Method.POST, Method.PUT, Method.DELETE}) {
+        for (Method method : new Method[]{Method.POST, Method.PUT, Method.DELETE}) {
             methodHandlers.put(method, new ChangeResourceHandler(resource));
         }
         addOptionsHandler(methodHandlers);
@@ -53,8 +53,8 @@ public class Cobspec {
         return new IndifferentHandler(new Response(Status.OK, headers));
     }
 
-    private static void addOptionsHandler(HashMap<String, Function<Request, Response>> methodHandlers) {
-        Set<String> methods = methodHandlers.keySet();
+    private static void addOptionsHandler(HashMap<Method, Function<Request, Response>> methodHandlers) {
+        Set<Method> methods = methodHandlers.keySet();
         methodHandlers.put(Method.OPTIONS, optionsHandler(methods.toArray(new String[methods.size()])));
     }
 }

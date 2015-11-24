@@ -1,7 +1,6 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.constants.StatusTwo;
 
 import java.io.ByteArrayOutputStream;
@@ -14,21 +13,22 @@ public class LoggerTest {
     public void testLogsRequestToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String requestToBeLogged = "GET / HTTP/1.1";
-        logger.logRequest(requestToBeLogged);
+        String rawRequest = "GET / HTTP/1.1";
+        logger.logRequest(rawRequest);
 
         assertTrue(out.toString().contains("Received request:"));
-        assertTrue(out.toString().contains(requestToBeLogged));
+        assertTrue(out.toString().contains(rawRequest));
     }
 
     @Test
     public void testLogsResponseToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String responseToBeLogged = new HTTPResponse().generate(new Response(StatusTwo.OK));
-        logger.logResponse(responseToBeLogged);
+        String rawResponse = new HTTPResponse().generate(
+            new Response.Builder().setStatus(StatusTwo.OK).build());
+        logger.logResponse(rawResponse);
 
         assertTrue(out.toString().contains("Sent response:"));
-        assertTrue(out.toString().contains(responseToBeLogged));
+        assertTrue(out.toString().contains(rawResponse));
     }
 }

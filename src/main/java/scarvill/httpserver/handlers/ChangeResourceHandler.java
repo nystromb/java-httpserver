@@ -3,7 +3,6 @@ package scarvill.httpserver.handlers;
 import scarvill.httpserver.Request;
 import scarvill.httpserver.Resource;
 import scarvill.httpserver.Response;
-import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.constants.StatusTwo;
 
 import java.util.function.Function;
@@ -19,6 +18,6 @@ public class ChangeResourceHandler implements Function<Request, Response> {
     public Response apply(Request request) {
         resource.setData(request.getBody());
 
-        return new Response(StatusTwo.OK);
+        return new Response.Builder().setStatus(StatusTwo.OK).build();
     }
 }

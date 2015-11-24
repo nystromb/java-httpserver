@@ -9,16 +9,7 @@ import java.util.List;
 public class Response {
     private final StatusTwo status;
     private List<String> headers = new ArrayList<>();
-    private String body = "";
-
-    public Response(StatusTwo status) {
-        this.status = status;
-    }
-
-    public Response(StatusTwo status, String[] headers) {
-        this.status = status;
-        Collections.addAll(this.headers, headers);
-    }
+    private String body;
 
     public Response(StatusTwo status, String[] headers, String body) {
         this.status = status;
@@ -34,13 +25,12 @@ public class Response {
         return headers;
     }
 
-    public String getBody() { return body;
-    }
+    public String getBody() { return body; }
 
     public static class Builder {
         private StatusTwo status;
         private String[] headers = new String[]{};
-        private String body;
+        private String body = "";
 
         public Builder setStatus(StatusTwo status) {
             this.status = status;

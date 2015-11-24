@@ -15,6 +15,6 @@ public class MockHandler implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        return new Response(expectedResponseStatus);
+        return new Response.Builder().setStatus(expectedResponseStatus).build();
     }
 }

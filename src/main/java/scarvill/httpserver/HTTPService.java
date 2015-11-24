@@ -40,7 +40,7 @@ public class HTTPService implements BiConsumer<InputStream, OutputStream> {
 
     private void sendResponse(PrintWriter out, Request request) {
         Response response = router.routeRequest(request);
-        logger.logResponse(response.generate());
-        out.print(response.generate());
+        logger.logResponse(new HTTPResponse().generate(response));
+        out.print(new HTTPResponse().generate(response));
     }
 }

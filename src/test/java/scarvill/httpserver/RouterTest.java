@@ -21,7 +21,7 @@ public class RouterTest {
 
         Response response = router.routeRequest(request);
 
-        assertEquals(Status.NOT_FOUND, response.getStatusLine());
+        assertEquals(StatusTwo.NOT_FOUND, response.getStatus());
     }
 
     @Test
@@ -33,7 +33,7 @@ public class RouterTest {
 
         Response response = router.routeRequest(request);
 
-        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
+        assertEquals(StatusTwo.METHOD_NOT_ALLOWED, response.getStatus());
     }
 
     @Test

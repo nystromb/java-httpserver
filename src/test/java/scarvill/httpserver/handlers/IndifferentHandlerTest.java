@@ -19,7 +19,7 @@ public class IndifferentHandlerTest {
             new IndifferentHandler(new Response(StatusTwo.NOT_FOUND));
         Request anyRequest = new Request.Builder().build();
 
-        assertEquals(Status.OK, statusOKHandler.apply(anyRequest).getStatusLine());
-        assertEquals(Status.NOT_FOUND, statusNotFoundHandler.apply(anyRequest).getStatusLine());
+        assertEquals(StatusTwo.OK, statusOKHandler.apply(anyRequest).getStatus());
+        assertEquals(StatusTwo.NOT_FOUND, statusNotFoundHandler.apply(anyRequest).getStatus());
     }
 }

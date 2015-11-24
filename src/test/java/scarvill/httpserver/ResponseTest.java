@@ -8,9 +8,9 @@ import static org.junit.Assert.*;
 
 public class ResponseTest {
     @Test
-    public void testSetStatusLine() throws Exception {
+    public void testHasStatus() throws Exception {
         Response response = new Response(StatusTwo.OK);
 
-        assertEquals("HTTP/1.1 200 OK\r\n", response.getStatusLine());
+        assertEquals(StatusTwo.OK, response.getStatus());
     }
 }

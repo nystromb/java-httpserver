@@ -21,7 +21,7 @@ public class HTTPServiceTest {
 
         service.accept(inputStream, outputStream);
 
-        assertEquals(expectedResponse.generate(), outputStream.toString());
+        assertEquals(new HTTPResponse().generate(expectedResponse), outputStream.toString());
     }
 
     private class MockRouter extends Router {

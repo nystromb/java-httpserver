@@ -23,7 +23,7 @@ public class RouteHandlerTest {
 
         Response response = routeHandler.apply(request);
 
-        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
+        assertEquals(StatusTwo.METHOD_NOT_ALLOWED, response.getStatus());
     }
 
     @Test

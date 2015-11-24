@@ -1,5 +1,21 @@
 package scarvill.httpserver.constants;
 
 public enum Method {
-    GET, HEAD, OPTIONS, PUT, POST, DELETE, NULL_METHOD
+    GET("GET"),
+    HEAD("HEAD"),
+    OPTIONS("OPTIONS"),
+    PUT("PUT"),
+    POST("POST"),
+    DELETE("DELETE"),
+    NULL_METHOD("");
+
+    private final String methodString;
+
+    Method(String methodString) {
+        this.methodString = methodString;
+    }
+
+    public String toString() {
+        return this.methodString;
+    }
 }

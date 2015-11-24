@@ -11,9 +11,9 @@ import scarvill.httpserver.handlers.GetResourceHandler;
 import scarvill.httpserver.handlers.IndifferentHandler;
 import scarvill.httpserver.handlers.RouteHandler;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
@@ -28,7 +28,6 @@ public class Cobspec {
         router.addRoute("/", unmodifiableResourceRouteHandler(new Resource("")));
         router.addRoute("/form", resourcefulRouteHandler(new Resource("")));
         router.addRoute("/redirect", REDIRECT_HANDLER);
-        router.addRoute("/method_options", optionsHandler(new String[]{"GET", "HEAD", "OPTIONS", "PUT", "POST", "DELETE"}));
         return router;
     }
 
@@ -51,14 +50,19 @@ public class Cobspec {
         return new RouteHandler(methodHandlers);
     }
 
-    private static Function<Request, Response> optionsHandler(String[] allowedMethods) {
-        String[] headers = new String[] {"Allow: " + String.join(",", allowedMethods) + "\r\n"};
+    private static Function<Request, Response> optionsHandler(List<Method> allowedMethods) {
+        List<String> methodNames = allowedMethods.stream()
+            .map(Method::toString)
+            .collect(Collectors.toList());
+        String[] headers = new String[] {"Allow: " + String.join(",", methodNames) + "\r\n"};
         return new IndifferentHandler(
             new Response.Builder().setStatus(Status.OK).setHeaders(headers).build());
     }
 
     private static void addOptionsHandler(HashMap<Method, Function<Request, Response>> methodHandlers) {
-        Set<Method> methods = methodHandlers.keySet();
-        methodHandlers.put(Method.OPTIONS, optionsHandler(methods.toArray(new String[methods.size()])));
+        List<Method> methods = new ArrayList<>();
+        methods.addAll(methodHandlers.keySet());
+
+        methodHandlers.put(Method.OPTIONS, optionsHandler(methods));
     }
 }

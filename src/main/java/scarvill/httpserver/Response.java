@@ -1,23 +1,23 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.constants.StatusTwo;
+import scarvill.httpserver.constants.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Response {
-    private final StatusTwo status;
+    private final Status status;
     private List<String> headers = new ArrayList<>();
     private String body;
 
-    public Response(StatusTwo status, String[] headers, String body) {
+    public Response(Status status, String[] headers, String body) {
         this.status = status;
         Collections.addAll(this.headers, headers);
         this.body = body;
     }
 
-    public StatusTwo getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -28,11 +28,11 @@ public class Response {
     public String getBody() { return body; }
 
     public static class Builder {
-        private StatusTwo status;
+        private Status status;
         private String[] headers = new String[]{};
         private String body = "";
 
-        public Builder setStatus(StatusTwo status) {
+        public Builder setStatus(Status status) {
             this.status = status;
             return this;
         }

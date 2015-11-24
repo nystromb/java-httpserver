@@ -1,12 +1,11 @@
 package scarvill.httpserver;
 
 import scarvill.httpserver.constants.Status;
-import scarvill.httpserver.constants.StatusTwo;
 
 public class HTTPResponse {
 
     public String generate(Response response) {
-        String generatedResponse = statusToStatusLine(response.getStatus());
+        String generatedResponse = statusToString(response.getStatus());
         for (String header : response.getHeaders()) {
             generatedResponse = generatedResponse.concat(header);
         }
@@ -16,13 +15,27 @@ public class HTTPResponse {
         return generatedResponse;
     }
 
-    private String statusToStatusLine(StatusTwo status) {
+    private String statusToString(Status status) {
+        String statusLine;
+
         switch (status) {
-            case OK: return Status.OK;
-            case NOT_FOUND: return Status.NOT_FOUND;
-            case METHOD_NOT_ALLOWED: return Status.METHOD_NOT_ALLOWED;
-            case FOUND: return Status.FOUND;
-            default: return null;
+            case OK:
+                statusLine = "200 OK";
+                break;
+            case NOT_FOUND:
+                statusLine = "404 Not Found";
+                break;
+            case METHOD_NOT_ALLOWED:
+                statusLine = "405 Method Not Allowed";
+                break;
+            case FOUND:
+                statusLine = "302 Found";
+                break;
+            default:
+                statusLine = "";
+                break;
         }
+
+        return "HTTP/1.1 " + statusLine + "\r\n";
     }
 }

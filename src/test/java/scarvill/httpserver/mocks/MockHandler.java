@@ -2,14 +2,14 @@ package scarvill.httpserver.mocks;
 
 import scarvill.httpserver.Request;
 import scarvill.httpserver.Response;
-import scarvill.httpserver.constants.StatusTwo;
+import scarvill.httpserver.constants.Status;
 
 import java.util.function.Function;
 
 public class MockHandler implements Function<Request, Response> {
-    private StatusTwo expectedResponseStatus;
+    private Status expectedResponseStatus;
 
-    public MockHandler(StatusTwo expectedResponseStatus) {
+    public MockHandler(Status expectedResponseStatus) {
         this.expectedResponseStatus = expectedResponseStatus;
     }
 

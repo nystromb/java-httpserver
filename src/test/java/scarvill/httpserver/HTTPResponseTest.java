@@ -1,7 +1,7 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.StatusTwo;
+import scarvill.httpserver.constants.Status;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ public class HTTPResponseTest {
     public void testGeneratesAWellFormedHTTPResponseFromResponseObject() {
         String[] headers = {"Foo: a random header\r\n", "Bar: another header\r\n"};
         Response response = new Response.Builder()
-            .setStatus(StatusTwo.OK)
+            .setStatus(Status.OK)
             .setHeaders(headers)
             .setBody("this is the response body")
             .build();

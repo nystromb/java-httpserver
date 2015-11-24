@@ -3,7 +3,6 @@ package scarvill.httpserver;
 import org.junit.Test;
 import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
-import scarvill.httpserver.constants.StatusTwo;
 import scarvill.httpserver.handlers.RouteHandler;
 import scarvill.httpserver.mocks.MockHandler;
 
@@ -21,7 +20,7 @@ public class RouterTest {
 
         Response response = router.routeRequest(request);
 
-        assertEquals(StatusTwo.NOT_FOUND, response.getStatus());
+        assertEquals(Status.NOT_FOUND, response.getStatus());
     }
 
     @Test
@@ -33,7 +32,7 @@ public class RouterTest {
 
         Response response = router.routeRequest(request);
 
-        assertEquals(StatusTwo.METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
     }
 
     @Test
@@ -41,7 +40,7 @@ public class RouterTest {
         Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
         HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
-        StatusTwo expectedResponseStatus = StatusTwo.OK;
+        Status expectedResponseStatus = Status.OK;
         methodHandlers.put(Method.GET, new MockHandler(expectedResponseStatus));
         router.addRoute("/", new RouteHandler(methodHandlers));
 

@@ -1,7 +1,7 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.StatusTwo;
+import scarvill.httpserver.constants.Status;
 
 import java.io.*;
 
@@ -15,7 +15,7 @@ public class HTTPServiceTest {
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         Response expectedResponse = new Response.Builder()
-            .setStatus(StatusTwo.OK)
+            .setStatus(Status.OK)
             .setHeaders(new String[]{"Header: a header\r\n"})
             .build();
         Logger logger = new Logger(new NullPrintStream());

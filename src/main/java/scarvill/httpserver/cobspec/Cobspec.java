@@ -5,7 +5,7 @@ import scarvill.httpserver.Resource;
 import scarvill.httpserver.Response;
 import scarvill.httpserver.Router;
 import scarvill.httpserver.constants.Method;
-import scarvill.httpserver.constants.StatusTwo;
+import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.ChangeResourceHandler;
 import scarvill.httpserver.handlers.GetResourceHandler;
 import scarvill.httpserver.handlers.IndifferentHandler;
@@ -19,7 +19,7 @@ public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
         new IndifferentHandler(
             new Response.Builder()
-                .setStatus(StatusTwo.FOUND)
+                .setStatus(Status.FOUND)
                 .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
                 .build());
 
@@ -54,7 +54,7 @@ public class Cobspec {
     private static Function<Request, Response> optionsHandler(String[] allowedMethods) {
         String[] headers = new String[] {"Allow: " + String.join(",", allowedMethods) + "\r\n"};
         return new IndifferentHandler(
-            new Response.Builder().setStatus(StatusTwo.OK).setHeaders(headers).build());
+            new Response.Builder().setStatus(Status.OK).setHeaders(headers).build());
     }
 
     private static void addOptionsHandler(HashMap<Method, Function<Request, Response>> methodHandlers) {

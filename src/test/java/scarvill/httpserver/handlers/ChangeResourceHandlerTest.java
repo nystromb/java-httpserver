@@ -5,7 +5,6 @@ import scarvill.httpserver.Request;
 import scarvill.httpserver.Resource;
 import scarvill.httpserver.Response;
 import scarvill.httpserver.constants.Status;
-import scarvill.httpserver.constants.StatusTwo;
 
 import java.util.function.Function;
 
@@ -31,6 +30,6 @@ public class ChangeResourceHandlerTest {
 
         Response response = handler.apply(request);
 
-        assertEquals(StatusTwo.OK, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 }

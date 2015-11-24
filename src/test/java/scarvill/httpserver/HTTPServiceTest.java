@@ -11,7 +11,7 @@ public class HTTPServiceTest {
 
     @Test
     public void testRespondsToARequest() throws Exception {
-        String rawRequest = RequestUtility.rawRequest("GET", "/");
+        String rawRequest = "GET / HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         Response expectedResponse = new Response(Status.OK, new String[]{"Header: a header\r\n"});

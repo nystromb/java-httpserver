@@ -13,7 +13,7 @@ public class LoggerTest {
     public void testLogsRequestToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String requestToBeLogged = RequestUtility.rawRequest("GET", "/");
+        String requestToBeLogged = "GET / HTTP/1.1";
         logger.logRequest(requestToBeLogged);
 
         assertTrue(out.toString().contains("Received request:"));

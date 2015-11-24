@@ -15,8 +15,9 @@ public class RouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("GET", "/not/configured"));
+        Request request = new Request.Builder().setURI("/unconfigured").build();
         Router router = new Router();
+
         Response response = router.routeRequest(request);
 
         assertEquals(Status.NOT_FOUND, response.getStatusLine());
@@ -24,10 +25,11 @@ public class RouterTest {
 
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("GET", "/"));
+        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
-        HashMap<Method, Function<Request, Response>> methodHandlersOld = new HashMap<>();
-        router.addRoute("/", new RouteHandler(methodHandlersOld));
+        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
+        router.addRoute("/", new RouteHandler(methodHandlers));
+
         Response response = router.routeRequest(request);
 
         assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
@@ -35,12 +37,13 @@ public class RouterTest {
 
     @Test
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("POST", "/"));
+        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
         HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
         String expectedResponseStatus = "a response status\r\n";
-        methodHandlers.put(Method.POST, new MockHandler(expectedResponseStatus));
+        methodHandlers.put(Method.GET, new MockHandler(expectedResponseStatus));
         router.addRoute("/", new RouteHandler(methodHandlers));
+
         Response response = router.routeRequest(request);
 
         assertEquals(expectedResponseStatus, response.getStatusLine());

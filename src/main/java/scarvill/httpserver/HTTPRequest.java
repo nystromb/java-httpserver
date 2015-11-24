@@ -11,6 +11,14 @@ public class HTTPRequest {
         this.rawRequest = rawRequest;
     }
 
+    public Request parse() {
+        return new Request.Builder()
+            .setMethod(parseMethod())
+            .setURI(parseURI())
+            .setBody(parseBody())
+            .build();
+    }
+
     private Method parseMethod() {
         String method = rawRequest.split(" ")[0];
         switch (method) {
@@ -37,13 +45,5 @@ public class HTTPRequest {
         } else {
             return rawRequest.substring(bodyStartIndex + bodyDelimiter.length());
         }
-    }
-
-    public Request parseAsRequest() {
-        return new Request.Builder()
-            .setMethod(parseMethod())
-            .setURI(parseURI())
-            .setBody(parseBody())
-            .build();
     }
 }

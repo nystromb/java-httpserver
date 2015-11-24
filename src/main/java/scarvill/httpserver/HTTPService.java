@@ -28,7 +28,7 @@ public class HTTPService implements BiConsumer<InputStream, OutputStream> {
     private Request parseRequest(BufferedReader in) throws IOException {
         String rawRequest = readRequest(in);
         logger.logRequest(rawRequest);
-        return new Request(rawRequest);
+        return new HTTPRequest(rawRequest).parse();
     }
 
     private String readRequest(BufferedReader in) throws IOException {

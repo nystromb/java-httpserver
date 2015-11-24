@@ -2,6 +2,7 @@ package scarvill.httpserver;
 
 import org.junit.Test;
 import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.constants.StatusTwo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -24,7 +25,7 @@ public class LoggerTest {
     public void testLogsResponseToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String responseToBeLogged = new Response(Status.OK).generate();
+        String responseToBeLogged = new Response(StatusTwo.OK).generate();
         logger.logResponse(responseToBeLogged);
 
         assertTrue(out.toString().contains("Sent response:"));

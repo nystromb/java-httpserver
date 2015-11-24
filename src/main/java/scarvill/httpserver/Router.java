@@ -1,6 +1,7 @@
 package scarvill.httpserver;
 
 import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.constants.StatusTwo;
 import scarvill.httpserver.handlers.IndifferentHandler;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.function.Function;
 
 public class Router {
     private final Function<Request, Response> NOT_FOUND_HANDLER =
-        new IndifferentHandler(new Response(Status.NOT_FOUND));
+        new IndifferentHandler(new Response(StatusTwo.NOT_FOUND));
 
     private List<Route> configuredRoutes = new ArrayList<>();
 

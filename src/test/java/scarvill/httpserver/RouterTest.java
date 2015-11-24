@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class RouterTest {
 
     @Test
-    public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
+    public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
         Request request = new Request.Builder().setURI("/unconfigured").build();
         Router router = new Router();
 
@@ -24,11 +24,10 @@ public class RouterTest {
     }
 
     @Test
-    public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
+    public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
         Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
-        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
-        router.addRoute("/", new RouteHandler(methodHandlers));
+        router.addRoute("/", Method.POST, new MockHandler(Status.OK));
 
         Response response = router.routeRequest(request);
 
@@ -36,13 +35,11 @@ public class RouterTest {
     }
 
     @Test
-    public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
+    public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
         Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
-        Router router = new Router();
-        HashMap<Method, Function<Request, Response>> methodHandlers = new HashMap<>();
         Status expectedResponseStatus = Status.OK;
-        methodHandlers.put(Method.GET, new MockHandler(expectedResponseStatus));
-        router.addRoute("/", new RouteHandler(methodHandlers));
+        Router router = new Router();
+        router.addRoute("/", Method.GET, new MockHandler(expectedResponseStatus));
 
         Response response = router.routeRequest(request);
 

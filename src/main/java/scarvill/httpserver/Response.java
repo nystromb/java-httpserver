@@ -11,24 +11,25 @@ public class Response {
 
     public Response(String status) {
         statusLine = status;
-        addDefaultHeaders();
     }
 
     public Response(String status, String[] headers) {
         statusLine = status;
-        addDefaultHeaders();
         Collections.addAll(this.headers, headers);
     }
 
     public Response(String status, String[] headers, String body) {
         statusLine = status;
-        addDefaultHeaders();
         Collections.addAll(this.headers, headers);
         this.body = body;
     }
 
     public String getStatusLine() {
         return statusLine;
+    }
+
+    public List<String> getHeaders() {
+        return headers;
     }
 
     public String getBody() { return body;
@@ -42,13 +43,5 @@ public class Response {
         response = response.concat("\r\n");
         response = response.concat(body);
         return response;
-    }
-
-    private void addDefaultHeaders() {
-        headers.add("Connection: close\r\n");
-    }
-
-    public List<String> getHeaders() {
-        return headers;
     }
 }

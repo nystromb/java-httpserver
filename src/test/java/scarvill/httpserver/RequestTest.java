@@ -3,7 +3,7 @@ package scarvill.httpserver;
 import org.junit.Test;
 import scarvill.httpserver.constants.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RequestTest {
     @Test

@@ -2,8 +2,9 @@ package scarvill.httpserver;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static scarvill.httpserver.constants.Method.*;
+import static org.junit.Assert.assertEquals;
+import static scarvill.httpserver.constants.Method.GET;
+import static scarvill.httpserver.constants.Method.NULL_METHOD;
 
 public class HTTPRequestTest {
     @Test

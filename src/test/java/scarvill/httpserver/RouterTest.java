@@ -7,6 +7,7 @@ import scarvill.httpserver.handlers.RouteHandler;
 import scarvill.httpserver.mocks.MockHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
@@ -14,35 +15,68 @@ import static org.junit.Assert.*;
 public class RouterTest {
 
     @Test
-    public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest(Method.GET, "/not/configured"));
+    public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
+        Request request = new Request.Builder().setURI("/unconfigured").build();
         Router router = new Router();
+
         Response response = router.routeRequest(request);
 
-        assertEquals(Status.NOT_FOUND, response.getStatusLine());
+        assertEquals(Status.NOT_FOUND, response.getStatus());
     }
 
     @Test
-    public void testReturnsMethodNotAllowedWhenNoMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
+    public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
+        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        router.addRoute("/", new RouteHandler(methodHandlers));
+        router.addRoute("/", Method.POST, new MockHandler(Status.OK));
+
         Response response = router.routeRequest(request);
 
-        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatusLine());
+        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
     }
 
     @Test
-    public void testReturnsResultOfApplyingCorrespondingMethodHandler() throws Exception {
-        Request request = new Request(RequestUtility.rawRequest("METHOD", "/"));
+    public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
+        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
+        Status expectedResponseStatus = Status.OK;
         Router router = new Router();
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        String expectedResponseStatus = "a response status\r\n";
-        methodHandlers.put("METHOD", new MockHandler(expectedResponseStatus));
-        router.addRoute("/", new RouteHandler(methodHandlers));
+        router.addRoute("/", Method.GET, new MockHandler(expectedResponseStatus));
+
         Response response = router.routeRequest(request);
 
-        assertEquals(expectedResponseStatus, response.getStatusLine());
+        assertEquals(expectedResponseStatus, response.getStatus());
+    }
+
+    @Test
+    public void testDynamicallyHandlesOptionsRequests() {
+        Request request = new Request.Builder().setMethod(Method.OPTIONS).setURI("/").build();
+        Router router = new Router();
+        router.addRoute("/", Method.GET, new MockHandler(Status.OK));
+
+        Response response = router.routeRequest(request);
+
+        assertEquals(Status.OK, response.getStatus());
+        String allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
+
+        assertTrue(allowHeader.contains("GET"));
+        assertTrue(allowHeader.contains("OPTIONS"));
+
+        router.addRoute("/", Method.POST, new MockHandler(Status.OK));
+
+        response = router.routeRequest(request);
+        allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
+
+        assertTrue(allowHeader.contains("GET"));
+        assertTrue(allowHeader.contains("POST"));
+        assertTrue(allowHeader.contains("OPTIONS"));
+    }
+
+    private String getHeaderContaining(String substring, List<String> headers) {
+        for (String header : headers) {
+            if (header.contains(substring)) {
+                return header;
+            }
+        }
+        return "";
     }
 }

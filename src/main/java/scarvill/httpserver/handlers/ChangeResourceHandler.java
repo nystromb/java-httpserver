@@ -18,6 +18,6 @@ public class ChangeResourceHandler implements Function<Request, Response> {
     public Response apply(Request request) {
         resource.setData(request.getBody());
 
-        return new Response(Status.OK);
+        return new Response.Builder().setStatus(Status.OK).build();
     }
 }

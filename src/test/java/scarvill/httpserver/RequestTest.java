@@ -7,25 +7,22 @@ import static org.junit.Assert.*;
 
 public class RequestTest {
     @Test
-    public void testParsesAction() {
-        String rawRequest = RequestUtility.rawRequest("METHOD", "/foo/bar");
-        Request request = new Request(rawRequest);
+    public void testHasMethod() {
+        Request request = new Request.Builder().setMethod(Method.GET).build();
 
-        assertEquals("METHOD", request.getMethod());
+        assertEquals(Method.GET, request.getMethod());
     }
 
     @Test
-    public void testParsesRoute() {
-        String rawRequest = RequestUtility.rawRequest("METHOD", "/foo/bar");
-        Request request = new Request(rawRequest);
+    public void testHasURI() {
+        Request request = new Request.Builder().setURI("/foo/bar").build();
 
         assertEquals("/foo/bar", request.getURI());
     }
 
     @Test
-    public void testParsesBody() throws Exception {
-        String rawRequest = RequestUtility.rawRequest("METHOD", "/foo/bar", "body");
-        Request request = new Request(rawRequest);
+    public void testHasBody() throws Exception {
+        Request request = new Request.Builder().setBody("body").build();
 
         assertEquals("body", request.getBody());
     }

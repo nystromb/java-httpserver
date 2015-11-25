@@ -1,25 +1,53 @@
 package scarvill.httpserver;
 
+import scarvill.httpserver.constants.Method;
+
 public class Request {
-    private String rawRequest;
+    private final Method method;
+    private final String body;
+    private final String uri;
 
-    public Request(String rawRequest) {
-        this.rawRequest = rawRequest;
-    }
-
-    public String getMethod() {
-        return rawRequest.split(" ")[0];
+    public Request(Method method, String uri, String body) {
+        this.method = method;
+        this.uri = uri;
+        this.body = body;
     }
 
     public String getURI() {
-        return rawRequest.split(" ")[1];
+        return uri;
     }
 
     public String getBody() {
-        String bodyDelimiter = "\r\n\r\n";
-        int bodyStartIndex = rawRequest.indexOf(bodyDelimiter) + bodyDelimiter.length();
+        return body;
+    }
 
-        return rawRequest.substring(bodyStartIndex);
+    public Method getMethod() {
+        return method;
+    }
+
+    public static class Builder {
+        private Method method;
+        private String uri;
+        private String body;
+
+        public Request build() {
+            return new Request(method, uri, body);
+        }
+
+        public Builder setMethod(Method method) {
+            this.method = method;
+            return this;
+        }
+
+        public Builder setURI(String uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public Builder setBody(String body) {
+            this.body = body;
+            return this;
+        }
     }
 }
 

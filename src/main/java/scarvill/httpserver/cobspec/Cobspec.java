@@ -9,52 +9,40 @@ import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.ChangeResourceHandler;
 import scarvill.httpserver.handlers.GetResourceHandler;
 import scarvill.httpserver.handlers.IndifferentHandler;
-import scarvill.httpserver.handlers.RouteHandler;
 
-import java.util.HashMap;
-import java.util.Set;
 import java.util.function.Function;
 
 public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
         new IndifferentHandler(
-            new Response(Status.FOUND, new String[]{"Location: http://localhost:5000/\r\n"}));
+            new Response.Builder()
+                .setStatus(Status.FOUND)
+                .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
+                .build());
+    private static final Function<Request, Response> STATUS_OK_HANDLER =
+        new IndifferentHandler(
+            new Response.Builder()
+                .setStatus(Status.OK)
+                .build());
 
     public static Router configuredRouter() {
         Router router = new Router();
-        router.addRoute("/", unmodifiableResourceRouteHandler(new Resource("")));
-        router.addRoute("/form", resourcefulRouteHandler(new Resource("")));
-        router.addRoute("/redirect", REDIRECT_HANDLER);
-        router.addRoute("/method_options", optionsHandler(Method.allMethods()));
+
+        router.addRoute("/", Method.GET, new GetResourceHandler(new Resource("")));
+
+        Resource formResource = new Resource("");
+        router.addRoute("/form", Method.GET, new GetResourceHandler(formResource));
+        router.addRoute("/form", Method.POST, new ChangeResourceHandler(formResource));
+        router.addRoute("/form", Method.PUT, new ChangeResourceHandler(formResource));
+        router.addRoute("/form", Method.DELETE, new ChangeResourceHandler(formResource));
+
+        router.addRoute("/redirect", Method.GET, REDIRECT_HANDLER);
+
+        router.addRoute("/method_options", Method.GET, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.PUT, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.POST, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.HEAD, STATUS_OK_HANDLER);
+
         return router;
-    }
-
-    private static Function<Request, Response> unmodifiableResourceRouteHandler(Resource resource) {
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        methodHandlers.put(Method.GET, new GetResourceHandler(resource));
-        addOptionsHandler(methodHandlers);
-
-        return new RouteHandler(methodHandlers);
-    }
-
-    private static Function<Request, Response> resourcefulRouteHandler(Resource resource) {
-        HashMap<String, Function<Request, Response>> methodHandlers = new HashMap<>();
-        methodHandlers.put(Method.GET, new GetResourceHandler(resource));
-        for (String method : new String[]{Method.POST, Method.PUT, Method.DELETE}) {
-            methodHandlers.put(method, new ChangeResourceHandler(resource));
-        }
-        addOptionsHandler(methodHandlers);
-
-        return new RouteHandler(methodHandlers);
-    }
-
-    private static Function<Request, Response> optionsHandler(String[] allowedMethods) {
-        String[] headers = new String[] {"Allow: " + String.join(",", allowedMethods) + "\r\n"};
-        return new IndifferentHandler(new Response(Status.OK, headers));
-    }
-
-    private static void addOptionsHandler(HashMap<String, Function<Request, Response>> methodHandlers) {
-        Set<String> methods = methodHandlers.keySet();
-        methodHandlers.put(Method.OPTIONS, optionsHandler(methods.toArray(new String[methods.size()])));
     }
 }

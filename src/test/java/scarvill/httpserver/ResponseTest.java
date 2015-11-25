@@ -7,30 +7,26 @@ import static org.junit.Assert.*;
 
 public class ResponseTest {
     @Test
-    public void testSetStatusLine() throws Exception {
-        Response response = new Response(Status.OK);
+    public void testHasStatus() {
+        Response response = new Response.Builder().setStatus(Status.OK).build();
 
-        assertEquals("HTTP/1.1 200 OK\r\n", response.getStatusLine());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
-    public void testGeneratesAWellFormedHTTPResponse() throws Exception {
-        String[] headers = {"Foo: a random header\r\n", "Bar: another header\r\n"};
-        Response response = new Response(Status.OK, headers, "this is the response body");
-        String expectedRawResponse = "HTTP/1.1 200 OK\r\n" +
-            "Connection: close\r\n" +
-            "Foo: a random header\r\n" +
-            "Bar: another header\r\n" +
-            "\r\n" +
-            "this is the response body";
+    public void testHasHeaders() {
+        String[] headers = new String[]{"Foo: a header", "Bar: another header"};
+        Response response = new Response.Builder().setHeaders(headers).build();
 
-        assertEquals(expectedRawResponse, response.generate());
+        for (String header : headers) {
+            assertTrue(response.getHeaders().contains(header));
+        }
     }
 
     @Test
-    public void testGeneratedResponseAlwaysIncludesConnectionCloseHeader() throws Exception {
-        Response response = new Response(Status.OK);
+    public void testHasBody() {
+        Response response = new Response.Builder().setBody("body").build();
 
-        assertTrue(response.generate().contains("Connection: close\r\n"));
+        assertEquals("body", response.getBody());
     }
 }

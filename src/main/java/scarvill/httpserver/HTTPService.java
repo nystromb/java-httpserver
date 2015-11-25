@@ -5,9 +5,11 @@ import java.util.function.BiConsumer;
 
 public class HTTPService implements BiConsumer<InputStream, OutputStream> {
     private Router router;
+    private Logger logger;
 
-    public HTTPService(Router router) {
+    public HTTPService(Router router, Logger logger) {
         this.router = router;
+        this.logger = logger;
     }
 
     public void accept(InputStream inputStream, OutputStream outputStream) {
@@ -25,8 +27,8 @@ public class HTTPService implements BiConsumer<InputStream, OutputStream> {
 
     private Request parseRequest(BufferedReader in) throws IOException {
         String rawRequest = readRequest(in);
-        System.out.print("Received request:\r\n" + rawRequest + "\r\n");
-        return new Request(rawRequest);
+        logger.logRequest(rawRequest);
+        return new HTTPRequest(rawRequest).parse();
     }
 
     private String readRequest(BufferedReader in) throws IOException {
@@ -38,7 +40,7 @@ public class HTTPService implements BiConsumer<InputStream, OutputStream> {
 
     private void sendResponse(PrintWriter out, Request request) {
         Response response = router.routeRequest(request);
-        System.out.print("Sent response:\r\n" + response.generate() + "\r\n");
-        out.print(response.generate());
+        logger.logResponse(new HTTPResponse().generate(response));
+        out.print(new HTTPResponse().generate(response));
     }
 }

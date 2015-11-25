@@ -19,6 +19,11 @@ public class Cobspec {
                 .setStatus(Status.FOUND)
                 .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
                 .build());
+    private static final Function<Request, Response> STATUS_OK_HANDLER =
+        new IndifferentHandler(
+            new Response.Builder()
+                .setStatus(Status.OK)
+                .build());
 
     public static Router configuredRouter() {
         Router router = new Router();
@@ -32,6 +37,11 @@ public class Cobspec {
         router.addRoute("/form", Method.DELETE, new ChangeResourceHandler(formResource));
 
         router.addRoute("/redirect", Method.GET, REDIRECT_HANDLER);
+
+        router.addRoute("/method_options", Method.GET, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.PUT, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.POST, STATUS_OK_HANDLER);
+        router.addRoute("/method_options", Method.HEAD, STATUS_OK_HANDLER);
 
         return router;
     }

@@ -1,18 +1,15 @@
 package scarvill.httpserver;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.function.BiConsumer;
 
 public class Server {
     private ServerSocket serverSocket;
-    private BiConsumer<InputStream, OutputStream> service;
+    private Serveable service;
 
-    public Server(int port, BiConsumer<InputStream, OutputStream> service) throws IOException {
+    public Server(int port, Serveable service) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.service = service;
     }
@@ -30,16 +27,21 @@ public class Server {
     }
 
     public void start() {
-        while(!serverSocket.isClosed()) {
+        while(isRunning()) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                service.accept(clientSocket.getInputStream(), clientSocket.getOutputStream());
-            } catch (IOException e) { throw new RuntimeException(e); }
+                new Thread(service.serve(clientSocket)).start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public void stop() {
-        try { serverSocket.close(); }
-        catch (IOException e) { throw new RuntimeException(e); }
+    public void stopServingNewConnections() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -4,10 +4,7 @@ import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.IndifferentHandler;
 
-import java.beans.MethodDescriptor;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;

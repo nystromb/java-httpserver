@@ -2,8 +2,9 @@ package scarvill.httpserver;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static scarvill.httpserver.constants.Method.*;
+import static org.junit.Assert.assertEquals;
+import static scarvill.httpserver.constants.Method.GET;
+import static scarvill.httpserver.constants.Method.NULL_METHOD;
 
 public class HTTPRequestTest {
     @Test
@@ -25,6 +26,15 @@ public class HTTPRequestTest {
         Request request = new HTTPRequest("GET /uri HTTP/1.1").parse();
 
         assertEquals("/uri", request.getURI());
+    }
+
+    @Test
+    public void testParsesRawHTTPRequestWithQueryStringParameters() {
+        Request request = new HTTPRequest("GET /uri?foo=bar&bar=baz HTTP/1.1").parse();
+
+        assertEquals("/uri", request.getURI());
+        assertEquals("bar", request.getParameters().get("foo"));
+        assertEquals("baz", request.getParameters().get("bar"));
     }
 
     @Test

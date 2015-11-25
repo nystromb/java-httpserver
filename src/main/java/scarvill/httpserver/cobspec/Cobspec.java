@@ -7,6 +7,7 @@ import scarvill.httpserver.Router;
 import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.ChangeResourceHandler;
+import scarvill.httpserver.handlers.EchoParametersHandler;
 import scarvill.httpserver.handlers.GetResourceHandler;
 import scarvill.httpserver.handlers.IndifferentHandler;
 
@@ -45,6 +46,8 @@ public class Cobspec {
 
         router.addRoute("/file1", Method.GET, STATUS_OK_HANDLER);
         router.addRoute("/text-file.txt", Method.GET, STATUS_OK_HANDLER);
+
+        router.addRoute("/parameters", Method.GET, new EchoParametersHandler());
 
         return router;
     }

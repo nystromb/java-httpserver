@@ -6,7 +6,7 @@ import scarvill.httpserver.constants.Status;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class LoggerTest {
     @Test

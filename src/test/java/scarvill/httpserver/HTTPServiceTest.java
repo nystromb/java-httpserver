@@ -5,7 +5,7 @@ import scarvill.httpserver.constants.Status;
 
 import java.io.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class HTTPServiceTest {
 

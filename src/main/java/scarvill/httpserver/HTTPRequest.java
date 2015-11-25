@@ -2,6 +2,8 @@ package scarvill.httpserver;
 
 import scarvill.httpserver.constants.Method;
 
+import java.util.HashMap;
+
 import static scarvill.httpserver.constants.Method.*;
 
 public class HTTPRequest {
@@ -15,6 +17,7 @@ public class HTTPRequest {
         return new Request.Builder()
             .setMethod(parseMethod())
             .setURI(parseURI())
+            .setParameters(parseParameters())
             .setBody(parseBody())
             .build();
     }
@@ -33,7 +36,15 @@ public class HTTPRequest {
     }
 
     private String parseURI() {
-        return rawRequest.split(" ")[1];
+        return rawRequest.split(" ")[1].split("\\?")[0];
+    }
+
+    private HashMap<String, String> parseParameters() {
+        if (hasQueryStringParameters()) {
+            return new QueryString().parse(rawRequest.split(" ")[1].split("\\?")[1]);
+        } else {
+            return new HashMap<>();
+        }
     }
 
     private String parseBody() {
@@ -45,5 +56,9 @@ public class HTTPRequest {
         } else {
             return rawRequest.substring(bodyStartIndex + bodyDelimiter.length());
         }
+    }
+
+    private boolean hasQueryStringParameters() {
+        return rawRequest.split(" ")[1].split("\\?").length > 1;
     }
 }

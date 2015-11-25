@@ -8,7 +8,7 @@ import scarvill.httpserver.constants.Status;
 
 import java.util.function.Function;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ChangeResourceHandlerTest {
     @Test

@@ -43,6 +43,9 @@ public class Cobspec {
         router.addRoute("/method_options", Method.POST, STATUS_OK_HANDLER);
         router.addRoute("/method_options", Method.HEAD, STATUS_OK_HANDLER);
 
+        router.addRoute("/file1", Method.GET, STATUS_OK_HANDLER);
+        router.addRoute("/text-file.txt", Method.GET, STATUS_OK_HANDLER);
+
         return router;
     }
 }

@@ -7,6 +7,7 @@ import scarvill.httpserver.handlers.RouteHandler;
 import scarvill.httpserver.mocks.MockHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
@@ -44,5 +45,38 @@ public class RouterTest {
         Response response = router.routeRequest(request);
 
         assertEquals(expectedResponseStatus, response.getStatus());
+    }
+
+    @Test
+    public void testDynamicallyHandlesOptionsRequests() {
+        Request request = new Request.Builder().setMethod(Method.OPTIONS).setURI("/").build();
+        Router router = new Router();
+        router.addRoute("/", Method.GET, new MockHandler(Status.OK));
+
+        Response response = router.routeRequest(request);
+
+        assertEquals(Status.OK, response.getStatus());
+        String allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
+
+        assertTrue(allowHeader.contains("GET"));
+        assertTrue(allowHeader.contains("OPTIONS"));
+
+        router.addRoute("/", Method.POST, new MockHandler(Status.OK));
+
+        response = router.routeRequest(request);
+        allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
+
+        assertTrue(allowHeader.contains("GET"));
+        assertTrue(allowHeader.contains("POST"));
+        assertTrue(allowHeader.contains("OPTIONS"));
+    }
+
+    private String getHeaderContaining(String substring, List<String> headers) {
+        for (String header : headers) {
+            if (header.contains(substring)) {
+                return header;
+            }
+        }
+        return "";
     }
 }

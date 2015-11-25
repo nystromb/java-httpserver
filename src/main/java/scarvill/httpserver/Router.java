@@ -8,7 +8,9 @@ import java.beans.MethodDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Router {
     private final Function<Request, Response> NOT_FOUND_HANDLER =
@@ -22,6 +24,7 @@ public class Router {
         HashMap<Method, Function<Request, Response>> methodHandlers =
             routes.getOrDefault(uri, new HashMap<>());
         methodHandlers.put(method, handler);
+        methodHandlers.put(Method.OPTIONS, optionsHandler(methodHandlers.keySet()));
         routes.put(uri, methodHandlers);
     }
 
@@ -34,5 +37,24 @@ public class Router {
                 methodHandlers.getOrDefault(request.getMethod(), METHOD_NOT_ALLOWED_HANDLER);
             return handler.apply(request);
         }
+    }
+
+    private Function<Request, Response> optionsHandler(Set<Method> allowedMethods) {
+        return new IndifferentHandler(
+            new Response.Builder()
+                .setStatus(Status.OK)
+                .setHeaders(new String[]{"Allow: " + optionsMethodString(allowedMethods) + "\r\n"})
+                .build());
+    }
+
+    private String optionsMethodString(Set<Method> allowedMethods) {
+        String methodString =
+            allowedMethods.stream().map(Method::toString).collect(Collectors.joining(","));
+
+        if (!methodString.contains(Method.OPTIONS.toString())) {
+            methodString += "," + Method.OPTIONS.toString();
+        }
+
+        return methodString;
     }
 }

@@ -3,12 +3,9 @@ package scarvill.httpserver;
 import org.junit.Test;
 import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
-import scarvill.httpserver.handlers.RouteHandler;
 import scarvill.httpserver.mocks.MockHandler;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
 
 import static org.junit.Assert.*;
 

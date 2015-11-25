@@ -2,7 +2,7 @@ package scarvill.httpserver;
 
 import org.junit.Test;
 
-import java.util.List;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,24 +10,25 @@ public class QueryStringTest {
 
     @Test
     public void testParsesQueryString() {
-        assertEquals("foo=bar", new QueryString().parse("foo=bar").get(0));
+        assertEquals("bar", new QueryString().parse("foo=bar").get("foo"));
     }
 
     @Test
     public void testSeparatesQueryStringArguments() {
-        List<String> queryStringArgs = new QueryString().parse("foo=bar&foobar=foobaz");
+        HashMap<String, String> parameters = new QueryString().parse("foo=bar&bar=baz");
 
-        assertEquals("foo=bar", queryStringArgs.get(0));
-        assertEquals("foobar=foobaz", queryStringArgs.get(1));
+        assertEquals("bar", parameters.get("foo"));
+        assertEquals("baz", parameters.get("bar"));
     }
 
     @Test
     public void testTranslatesSpecialCharacterCodes() {
-        String query = "%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40" +
-            "%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F";
+        String query = "message=%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26" +
+            "%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F";
 
-        String translatedQuery = "<, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
+        String translatedMessage =
+            "<, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 
-        assertEquals(translatedQuery, new QueryString().parse(query).get(0));
+        assertEquals(translatedMessage, new QueryString().parse(query).get("message"));
     }
 }

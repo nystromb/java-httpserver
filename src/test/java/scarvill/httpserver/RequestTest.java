@@ -3,6 +3,8 @@ package scarvill.httpserver;
 import org.junit.Test;
 import scarvill.httpserver.constants.Method;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
 
 public class RequestTest {
@@ -18,6 +20,18 @@ public class RequestTest {
         Request request = new Request.Builder().setURI("/foo/bar").build();
 
         assertEquals("/foo/bar", request.getURI());
+    }
+
+    @Test
+    public void testHasQueryStringParameters() {
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("foo", "bar");
+        parameters.put("bar", "baz");
+
+        Request request = new Request.Builder().setParameters(parameters).build();
+
+        assertEquals("bar", request.getParameters().get("foo"));
+        assertEquals("baz", request.getParameters().get("bar"));
     }
 
     @Test

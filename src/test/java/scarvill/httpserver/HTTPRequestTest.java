@@ -29,6 +29,15 @@ public class HTTPRequestTest {
     }
 
     @Test
+    public void testParsesRawHTTPRequestWithQueryStringParameters() {
+        Request request = new HTTPRequest("GET /uri?foo=bar&bar=baz HTTP/1.1").parse();
+
+        assertEquals("/uri", request.getURI());
+        assertEquals("bar", request.getParameters().get("foo"));
+        assertEquals("baz", request.getParameters().get("bar"));
+    }
+
+    @Test
     public void testParsesRawHTTPRequestWithNoBody() {
         Request request = new HTTPRequest("GET /uri HTTP/1.1").parse();
 

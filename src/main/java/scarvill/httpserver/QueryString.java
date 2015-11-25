@@ -1,22 +1,24 @@
 package scarvill.httpserver;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class QueryString {
-    public List<String> parse(String query) {
-        List<String> arguments = separateArguments(query);
+    public HashMap<String, String> parse(String query) {
+        HashMap<String, String> parameters = separateParameters(query);
 
-        return arguments;
+        return parameters;
     }
 
-    private List<String> separateArguments(String query) {
-        List<String> arguments = new ArrayList<>();
+    private HashMap<String, String> separateParameters(String query) {
+        HashMap<String, String> parameters = new HashMap<>();
+
         for (String argument : query.split("&")) {
-            arguments.add(translateSpecialCharacters(argument));
+            String parameterName = translateSpecialCharacters(argument.split("=")[0]);
+            String parameterValue = translateSpecialCharacters(argument.split("=")[1]);
+            parameters.put(parameterName, parameterValue);
         }
 
-        return arguments;
+        return parameters;
     }
 
     private String translateSpecialCharacters(String query) {

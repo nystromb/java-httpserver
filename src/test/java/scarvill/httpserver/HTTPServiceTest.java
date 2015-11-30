@@ -1,7 +1,12 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
+import scarvill.httpserver.request.Request;
+import scarvill.httpserver.routes.Router;
 
 import java.io.*;
 import java.net.Socket;

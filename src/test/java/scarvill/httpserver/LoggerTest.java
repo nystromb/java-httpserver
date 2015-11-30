@@ -1,7 +1,9 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

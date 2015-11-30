@@ -3,7 +3,6 @@ package scarvill.httpserver.cobspec;
 import scarvill.httpserver.HTTPService;
 import scarvill.httpserver.Logger;
 import scarvill.httpserver.Server;
-import scarvill.httpserver.ServerArguments;
 
 import java.io.IOException;
 

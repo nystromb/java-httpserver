@@ -7,6 +7,7 @@ import java.util.HashMap;
 import static scarvill.httpserver.constants.Method.*;
 
 public class HTTPRequest {
+    public static final String BODY_DELIMETER = "\r\n\r\n";
     private String rawRequest;
 
     public HTTPRequest(String rawRequest) {
@@ -14,7 +15,7 @@ public class HTTPRequest {
     }
 
     public Request parse() {
-        return new Request.Builder()
+        return new RequestBuilder()
             .setMethod(parseMethod())
             .setURI(parseURI())
             .setParameters(parseParameters())
@@ -48,13 +49,12 @@ public class HTTPRequest {
     }
 
     private String parseBody() {
-        String bodyDelimiter = "\r\n\r\n";
-        int bodyStartIndex = rawRequest.indexOf(bodyDelimiter);
+        int bodyStartIndex = rawRequest.indexOf(BODY_DELIMETER);
 
         if (bodyStartIndex == -1) {
             return "";
         } else {
-            return rawRequest.substring(bodyStartIndex + bodyDelimiter.length());
+            return rawRequest.substring(bodyStartIndex + BODY_DELIMETER.length());
         }
     }
 

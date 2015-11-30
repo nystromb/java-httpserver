@@ -24,15 +24,20 @@ public class HTTPService implements Serveable {
     @Override
     public void run() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            Request request = readRequest(in);
-            sendResponse(out, request);
-            out.close();
+            serveRequest();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void serveRequest() throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+        Request request = readRequest(in);
+        Response response = router.routeRequest(request);
+        sendResponse(out, response);
+        out.close();
     }
 
     private Request readRequest(BufferedReader in) throws IOException {
@@ -44,8 +49,8 @@ public class HTTPService implements Serveable {
         return new HTTPRequest(rawRequest).parse();
     }
 
-    private void sendResponse(PrintWriter out, Request request) {
-        String rawResponse = new HTTPResponse().generate(router.routeRequest(request));
+    private void sendResponse(PrintWriter out, Response response) {
+        String rawResponse = new HTTPResponse().generate(response);
         logger.logResponse(rawResponse);
         out.print(rawResponse);
     }

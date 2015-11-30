@@ -2,6 +2,7 @@ package scarvill.httpserver.handlers;
 
 import org.junit.Test;
 import scarvill.httpserver.Request;
+import scarvill.httpserver.RequestBuilder;
 import scarvill.httpserver.Response;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class EchoParametersHandlerTest {
         HashMap<String , String> parameters = new HashMap<>();
         parameters.put("foo", "bar");
         parameters.put("bar", "baz");
-        Request request = new Request.Builder().setParameters(parameters).build();
+        Request request = new RequestBuilder().setParameters(parameters).build();
 
         Response response = handler.apply(request);
 

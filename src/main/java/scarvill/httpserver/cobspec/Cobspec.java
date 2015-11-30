@@ -1,9 +1,6 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.Request;
-import scarvill.httpserver.Resource;
-import scarvill.httpserver.Response;
-import scarvill.httpserver.Router;
+import scarvill.httpserver.*;
 import scarvill.httpserver.constants.Method;
 import scarvill.httpserver.constants.Status;
 import scarvill.httpserver.handlers.ChangeResourceHandler;
@@ -16,13 +13,13 @@ import java.util.function.Function;
 public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
         new IndifferentHandler(
-            new Response.Builder()
+            new ResponseBuilder()
                 .setStatus(Status.FOUND)
                 .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
                 .build());
     private static final Function<Request, Response> STATUS_OK_HANDLER =
         new IndifferentHandler(
-            new Response.Builder()
+            new ResponseBuilder()
                 .setStatus(Status.OK)
                 .build());
 

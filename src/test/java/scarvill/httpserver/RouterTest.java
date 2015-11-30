@@ -14,7 +14,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
-        Request request = new Request.Builder().setURI("/unconfigured").build();
+        Request request = new RequestBuilder().setURI("/unconfigured").build();
         Router router = new Router();
 
         Response response = router.routeRequest(request);
@@ -24,7 +24,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
-        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
+        Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Router router = new Router();
         router.addRoute("/", Method.POST, new MockHandler(Status.OK));
 
@@ -35,7 +35,7 @@ public class RouterTest {
 
     @Test
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
-        Request request = new Request.Builder().setMethod(Method.GET).setURI("/").build();
+        Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
         Router router = new Router();
         router.addRoute("/", Method.GET, new MockHandler(expectedResponseStatus));
@@ -47,7 +47,7 @@ public class RouterTest {
 
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
-        Request request = new Request.Builder().setMethod(Method.OPTIONS).setURI("/").build();
+        Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
         Router router = new Router();
         router.addRoute("/", Method.GET, new MockHandler(Status.OK));
 

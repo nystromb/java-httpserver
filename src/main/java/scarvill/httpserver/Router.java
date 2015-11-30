@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public class Router {
     private final Function<Request, Response> NOT_FOUND_HANDLER =
-        new IndifferentHandler(new Response.Builder().setStatus(Status.NOT_FOUND).build());
+        new IndifferentHandler(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
     private final Function<Request, Response> METHOD_NOT_ALLOWED_HANDLER =
-        new IndifferentHandler(new Response.Builder().setStatus(Status.METHOD_NOT_ALLOWED).build());
+        new IndifferentHandler(new ResponseBuilder().setStatus(Status.METHOD_NOT_ALLOWED).build());
 
     private HashMap<String, HashMap<Method, Function<Request, Response>>> routes = new HashMap<>();
 
@@ -38,7 +38,7 @@ public class Router {
 
     private Function<Request, Response> optionsHandler(Set<Method> allowedMethods) {
         return new IndifferentHandler(
-            new Response.Builder()
+            new ResponseBuilder()
                 .setStatus(Status.OK)
                 .setHeaders(new String[]{"Allow: " + optionsMethodString(allowedMethods) + "\r\n"})
                 .build());

@@ -9,7 +9,7 @@ public class HTTPResponseTest {
     @Test
     public void testGeneratesAWellFormedHTTPResponseFromResponseObject() {
         String[] headers = {"Foo: a random header\r\n", "Bar: another header\r\n"};
-        Response response = new Response.Builder()
+        Response response = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeaders(headers)
             .setBody("this is the response body")

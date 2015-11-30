@@ -10,14 +10,14 @@ import static org.junit.Assert.assertEquals;
 public class RequestTest {
     @Test
     public void testHasMethod() {
-        Request request = new Request.Builder().setMethod(Method.GET).build();
+        Request request = new RequestBuilder().setMethod(Method.GET).build();
 
         assertEquals(Method.GET, request.getMethod());
     }
 
     @Test
     public void testHasURI() {
-        Request request = new Request.Builder().setURI("/foo/bar").build();
+        Request request = new RequestBuilder().setURI("/foo/bar").build();
 
         assertEquals("/foo/bar", request.getURI());
     }
@@ -28,7 +28,7 @@ public class RequestTest {
         parameters.put("foo", "bar");
         parameters.put("bar", "baz");
 
-        Request request = new Request.Builder().setParameters(parameters).build();
+        Request request = new RequestBuilder().setParameters(parameters).build();
 
         assertEquals("bar", request.getParameters().get("foo"));
         assertEquals("baz", request.getParameters().get("bar"));
@@ -36,7 +36,7 @@ public class RequestTest {
 
     @Test
     public void testHasBody() throws Exception {
-        Request request = new Request.Builder().setBody("body").build();
+        Request request = new RequestBuilder().setBody("body").build();
 
         assertEquals("body", request.getBody());
     }

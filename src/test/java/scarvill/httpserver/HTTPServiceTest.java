@@ -16,7 +16,7 @@ public class HTTPServiceTest {
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         MockSocket clientSocket = new MockSocket(inputStream, outputStream);
-        Response expectedResponse = new Response.Builder()
+        Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeaders(new String[]{"Header: a header\r\n"})
             .build();

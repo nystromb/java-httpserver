@@ -33,35 +33,5 @@ public class Request {
         return parameters;
     }
 
-    public static class Builder {
-        private Method method;
-        private String uri;
-        private HashMap<String, String> parameters;
-        private String body;
-
-        public Request build() {
-            return new Request(method, uri, parameters, body);
-        }
-
-        public Builder setMethod(Method method) {
-            this.method = method;
-            return this;
-        }
-
-        public Builder setURI(String uri) {
-            this.uri = uri;
-            return this;
-        }
-
-        public Builder setParameters(HashMap<String, String> parameters) {
-            this.parameters = parameters;
-            return this;
-        }
-
-        public Builder setBody(String body) {
-            this.body = body;
-            return this;
-        }
-    }
 }
 

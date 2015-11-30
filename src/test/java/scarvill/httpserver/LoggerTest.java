@@ -25,7 +25,7 @@ public class LoggerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
         String rawResponse = new HTTPResponse().generate(
-            new Response.Builder().setStatus(Status.OK).build());
+            new ResponseBuilder().setStatus(Status.OK).build());
         logger.logResponse(rawResponse);
 
         assertTrue(out.toString().contains("Sent response:"));

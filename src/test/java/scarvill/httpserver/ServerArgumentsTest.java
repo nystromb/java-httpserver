@@ -1,6 +1,7 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
+import scarvill.httpserver.cobspec.ServerArguments;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,9 +1,15 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
+import scarvill.httpserver.request.Request;
+import scarvill.httpserver.routes.Router;
 
 import java.io.*;
+import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,16 +20,37 @@ public class HTTPServiceTest {
         String rawRequest = "GET / HTTP/1.1";
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
-        Response expectedResponse = new Response.Builder()
+        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
+        Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeaders(new String[]{"Header: a header\r\n"})
             .build();
         Logger logger = new Logger(new NullPrintStream());
         HTTPService service = new HTTPService(new MockRouter(expectedResponse), logger);
 
-        service.accept(inputStream, outputStream);
+        service.serve(clientSocket).run();
 
         assertEquals(new HTTPResponse().generate(expectedResponse), outputStream.toString());
+    }
+
+    private class MockSocket extends Socket {
+        private final OutputStream outputStream;
+        private final InputStream inputStream;
+
+        public MockSocket(InputStream inputStream, OutputStream outputStream) {
+            this.outputStream = outputStream;
+            this.inputStream = inputStream;
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            return inputStream;
+        }
+
+        @Override
+        public OutputStream getOutputStream() {
+            return outputStream;
+        }
     }
 
     private class MockRouter extends Router {

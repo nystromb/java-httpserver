@@ -4,11 +4,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiConsumer;
 
 import static org.junit.Assert.*;
 
@@ -22,25 +24,25 @@ public class ServerTest {
 
     @Test
     public void testServerRunsThenStops() throws Exception {
-        Server server = new Server(0, echoService());
+        Server server = new Server(0, new EchoService());
         threadPool.submit(server::start);
 
         assertTrue(server.isRunning());
 
-        server.stop();
+        server.stopServingNewConnections();
 
         assertFalse(server.isRunning());
     }
 
     @Test
     public void testServesConnectionAccordingToInjectedService() throws Exception {
-        Server server = new Server(0, echoService());
+        Server server = new Server(0, new EchoService());
         threadPool.submit(server::start);
         String echoMessage = "foo";
 
         assertEquals(echoMessage, getServerReplyTo(echoMessage, server));
 
-        server.stop();
+        server.stopServingNewConnections();
     }
 
     @After
@@ -48,14 +50,26 @@ public class ServerTest {
         threadPool.shutdown();
     }
 
-    private static BiConsumer<InputStream, OutputStream> echoService() {
-        return (inputStream, outputStream) -> {
-            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            PrintWriter out = new PrintWriter(outputStream, true);
+    private class EchoService implements Serveable {
+        private Socket clientSocket;
 
-            try { out.println(in.readLine()); }
-            catch (IOException e) { throw new RuntimeException(e); }
-        };
+        public EchoService serve(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+            return this;
+        }
+
+        @Override
+        public void run() {
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                out.println(in.readLine());
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private String getServerReplyTo(String message, Server server) throws IOException {

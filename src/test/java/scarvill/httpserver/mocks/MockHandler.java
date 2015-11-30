@@ -1,8 +1,9 @@
 package scarvill.httpserver.mocks;
 
-import scarvill.httpserver.Request;
-import scarvill.httpserver.Response;
-import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.request.Request;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 
 import java.util.function.Function;
 
@@ -15,6 +16,6 @@ public class MockHandler implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        return new Response.Builder().setStatus(expectedResponseStatus).build();
+        return new ResponseBuilder().setStatus(expectedResponseStatus).build();
     }
 }

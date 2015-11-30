@@ -1,7 +1,9 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
-import scarvill.httpserver.constants.Status;
+import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -25,7 +27,7 @@ public class LoggerTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
         String rawResponse = new HTTPResponse().generate(
-            new Response.Builder().setStatus(Status.OK).build());
+            new ResponseBuilder().setStatus(Status.OK).build());
         logger.logResponse(rawResponse);
 
         assertTrue(out.toString().contains("Sent response:"));

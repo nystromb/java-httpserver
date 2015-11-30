@@ -1,41 +1,42 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.Request;
-import scarvill.httpserver.Resource;
-import scarvill.httpserver.Response;
-import scarvill.httpserver.Router;
-import scarvill.httpserver.constants.Method;
-import scarvill.httpserver.constants.Status;
-import scarvill.httpserver.handlers.ChangeResourceHandler;
-import scarvill.httpserver.handlers.EchoParametersHandler;
-import scarvill.httpserver.handlers.GetResourceHandler;
-import scarvill.httpserver.handlers.IndifferentHandler;
+import scarvill.httpserver.request.Method;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
+import scarvill.httpserver.cobspec.route_behavior.ModifyRouteResource;
+import scarvill.httpserver.cobspec.route_behavior.EchoRequestParameters;
+import scarvill.httpserver.cobspec.route_behavior.GetRouteResource;
+import scarvill.httpserver.cobspec.route_behavior.StaticRouteResponse;
+import scarvill.httpserver.request.Request;
+import scarvill.httpserver.routes.Resource;
+import scarvill.httpserver.routes.Router;
 
 import java.util.function.Function;
 
 public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
-        new IndifferentHandler(
-            new Response.Builder()
+        new StaticRouteResponse(
+            new ResponseBuilder()
                 .setStatus(Status.FOUND)
                 .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
                 .build());
     private static final Function<Request, Response> STATUS_OK_HANDLER =
-        new IndifferentHandler(
-            new Response.Builder()
+        new StaticRouteResponse(
+            new ResponseBuilder()
                 .setStatus(Status.OK)
                 .build());
 
     public static Router configuredRouter() {
         Router router = new Router();
 
-        router.addRoute("/", Method.GET, new GetResourceHandler(new Resource("")));
+        router.addRoute("/", Method.GET, new GetRouteResource(new Resource("")));
 
         Resource formResource = new Resource("");
-        router.addRoute("/form", Method.GET, new GetResourceHandler(formResource));
-        router.addRoute("/form", Method.POST, new ChangeResourceHandler(formResource));
-        router.addRoute("/form", Method.PUT, new ChangeResourceHandler(formResource));
-        router.addRoute("/form", Method.DELETE, new ChangeResourceHandler(formResource));
+        router.addRoute("/form", Method.GET, new GetRouteResource(formResource));
+        router.addRoute("/form", Method.POST, new ModifyRouteResource(formResource));
+        router.addRoute("/form", Method.PUT, new ModifyRouteResource(formResource));
+        router.addRoute("/form", Method.DELETE, new ModifyRouteResource(formResource));
 
         router.addRoute("/redirect", Method.GET, REDIRECT_HANDLER);
 
@@ -47,7 +48,7 @@ public class Cobspec {
         router.addRoute("/file1", Method.GET, STATUS_OK_HANDLER);
         router.addRoute("/text-file.txt", Method.GET, STATUS_OK_HANDLER);
 
-        router.addRoute("/parameters", Method.GET, new EchoParametersHandler());
+        router.addRoute("/parameters", Method.GET, new EchoRequestParameters());
 
         return router;
     }

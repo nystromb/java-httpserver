@@ -13,4 +13,12 @@ public class ResourceTest {
 
         assertEquals("foo", resource.getData());
     }
+
+    @Test
+    public void testSetResourceData() {
+        Resource resource = new Resource("foo");
+        resource.setData("bar");
+
+        assertEquals("bar", resource.getData());
+    }
 }

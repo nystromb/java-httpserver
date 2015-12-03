@@ -1,4 +1,4 @@
-package scarvill.httpserver.cobspec.route_behavior;
+package scarvill.httpserver.cobspec.route_strategies;
 
 import org.junit.Test;
 import scarvill.httpserver.request.Request;
@@ -11,13 +11,13 @@ import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
-public class StaticRouteResponseTest {
+public class GiveStaticResponseTest {
     @Test
     public void testReturnsResponseDefinedAtInitialization() throws Exception {
         Function<Request, Response> statusOKHandler =
-            new StaticRouteResponse(new ResponseBuilder().setStatus(Status.OK).build());
+            new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
         Function<Request, Response> statusNotFoundHandler =
-            new StaticRouteResponse(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
+            new GiveStaticResponse(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
         Request anyRequest = new RequestBuilder().build();
 
         assertEquals(Status.OK, statusOKHandler.apply(anyRequest).getStatus());

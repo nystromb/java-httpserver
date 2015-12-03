@@ -1,14 +1,14 @@
-package scarvill.httpserver.cobspec.route_behavior;
+package scarvill.httpserver.cobspec.route_strategies;
 
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 
 import java.util.function.Function;
 
-public class StaticRouteResponse implements Function<Request, Response> {
+public class GiveStaticResponse implements Function<Request, Response> {
     private Response response;
 
-    public StaticRouteResponse(Response responseToGive) {
+    public GiveStaticResponse(Response responseToGive) {
         response = responseToGive;
     }
 

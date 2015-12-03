@@ -4,10 +4,10 @@ import scarvill.httpserver.request.Method;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.cobspec.route_behavior.ModifyRouteResource;
-import scarvill.httpserver.cobspec.route_behavior.EchoRequestParameters;
-import scarvill.httpserver.cobspec.route_behavior.GetRouteResource;
-import scarvill.httpserver.cobspec.route_behavior.StaticRouteResponse;
+import scarvill.httpserver.cobspec.route_strategies.ModifyRouteResource;
+import scarvill.httpserver.cobspec.route_strategies.EchoRequestParameters;
+import scarvill.httpserver.cobspec.route_strategies.GetRouteResource;
+import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.routes.Resource;
 import scarvill.httpserver.routes.Router;
@@ -16,13 +16,13 @@ import java.util.function.Function;
 
 public class Cobspec {
     private static final Function<Request, Response> REDIRECT_HANDLER =
-        new StaticRouteResponse(
+        new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.FOUND)
                 .setHeaders(new String[]{"Location: http://localhost:5000/\r\n"})
                 .build());
     private static final Function<Request, Response> STATUS_OK_HANDLER =
-        new StaticRouteResponse(
+        new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.OK)
                 .build());

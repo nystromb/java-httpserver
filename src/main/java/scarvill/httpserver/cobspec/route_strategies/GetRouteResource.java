@@ -1,6 +1,7 @@
-package scarvill.httpserver.cobspec.route_behavior;
+package scarvill.httpserver.cobspec.route_strategies;
 
 import scarvill.httpserver.request.Request;
+import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.routes.Resource;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
@@ -17,6 +18,9 @@ public class GetRouteResource implements Function<Request, Response> {
     @Override
     public Response apply(Request request) {
         String contentLength = "Content-Length: " + resource.getData().length() + "\r\n";
-        return new Response(Status.OK, new String[]{contentLength}, resource.getData());
+        return new ResponseBuilder().setStatus(Status.OK)
+                                    .setHeaders(new String[]{contentLength})
+                                    .setBody(resource.getData())
+                                    .build();
     }
 }

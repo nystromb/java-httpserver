@@ -1,4 +1,4 @@
-package scarvill.httpserver.cobspec.route_behavior;
+package scarvill.httpserver.cobspec.route_strategies;
 
 import org.junit.Test;
 import scarvill.httpserver.request.Request;

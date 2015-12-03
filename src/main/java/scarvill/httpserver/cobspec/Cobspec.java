@@ -10,6 +10,7 @@ import scarvill.httpserver.cobspec.route_strategies.GetRouteResource;
 import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.routes.Resource;
+import scarvill.httpserver.routes.StringResource;
 import scarvill.httpserver.routes.Router;
 
 import java.util.function.Function;
@@ -30,9 +31,9 @@ public class Cobspec {
     public static Router configuredRouter() {
         Router router = new Router();
 
-        router.addRoute("/", Method.GET, new GetRouteResource(new Resource("")));
+        router.addRoute("/", Method.GET, new GetRouteResource(new StringResource("")));
 
-        Resource formResource = new Resource("");
+        Resource formResource = new StringResource("");
         router.addRoute("/form", Method.GET, new GetRouteResource(formResource));
         router.addRoute("/form", Method.POST, new ModifyRouteResource(formResource));
         router.addRoute("/form", Method.PUT, new ModifyRouteResource(formResource));

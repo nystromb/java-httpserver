@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileResource {
+public class FileResource implements Resource {
     private Path filepath;
 
     public FileResource(Path filepath) {
         this.filepath = filepath;
     }
 
+    @Override
     public byte[] getData() {
         try {
             return Files.readAllBytes(filepath);
@@ -21,6 +22,7 @@ public class FileResource {
         }
     }
 
+    @Override
     public void setData(byte[] data) {
         try {
             File file = new File(filepath.toString());

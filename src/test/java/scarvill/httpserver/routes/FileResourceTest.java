@@ -34,6 +34,18 @@ public class FileResourceTest {
         assertEquals(fileContents, new String(resource.getData(), StandardCharsets.UTF_8));
     }
 
+    @Test
+    public void testOverwritesExistingData() throws IOException {
+        String newFileContents = "baz";
+        Path filepath = testFile();
+        Files.write(filepath, "foobar".getBytes(), StandardOpenOption.WRITE);
+
+        FileResource resource = new FileResource(filepath);
+        resource.setData(newFileContents.getBytes());
+
+        assertEquals(newFileContents, new String(resource.getData(), StandardCharsets.UTF_8));
+    }
+
     private Path testFile() {
         try {
             return Files.createTempFile("testfile", ".tmp");

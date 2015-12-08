@@ -11,6 +11,7 @@ import scarvill.httpserver.routes.Router;
 import java.io.*;
 import java.net.Socket;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class HTTPServiceTest {
@@ -19,7 +20,7 @@ public class HTTPServiceTest {
     public void testRespondsToARequest() throws Exception {
         String rawRequest = "GET / HTTP/1.1\r\n";
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
-        OutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         MockSocket clientSocket = new MockSocket(inputStream, outputStream);
         Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
@@ -30,7 +31,7 @@ public class HTTPServiceTest {
 
         service.serve(clientSocket).run();
 
-        assertEquals(new HTTPResponse().generate(expectedResponse), outputStream.toString());
+        assertArrayEquals(new HTTPResponse().generate(expectedResponse), outputStream.toByteArray());
     }
 
     private class MockSocket extends Socket {

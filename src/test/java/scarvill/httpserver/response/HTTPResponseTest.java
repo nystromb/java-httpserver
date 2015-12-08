@@ -1,10 +1,6 @@
 package scarvill.httpserver.response;
 
 import org.junit.Test;
-import scarvill.httpserver.response.HTTPResponse;
-import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.ResponseBuilder;
-import scarvill.httpserver.response.Status;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -25,6 +21,6 @@ public class HTTPResponseTest {
             "\r\n" +
             "this is the response body";
 
-        assertArrayEquals(expectedRawResponse.getBytes(), new HTTPResponse().generateBytes(response));
+        assertArrayEquals(expectedRawResponse.getBytes(), new HTTPResponse().generate(response));
     }
 }

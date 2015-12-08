@@ -26,11 +26,11 @@ public class LoggerTest {
     public void testLogsResponseToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(out));
-        String rawResponse = new HTTPResponse().generate(
+        byte[] rawResponse = new HTTPResponse().generate(
             new ResponseBuilder().setStatus(Status.OK).build());
-        logger.logResponse(rawResponse);
+        logger.logResponse(new String(rawResponse));
 
         assertTrue(out.toString().contains("Sent response:"));
-        assertTrue(out.toString().contains(rawResponse));
+        assertTrue(out.toString().contains(new String(rawResponse)));
     }
 }

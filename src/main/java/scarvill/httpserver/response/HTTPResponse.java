@@ -5,18 +5,7 @@ import java.io.IOException;
 
 public class HTTPResponse {
 
-    public String generate(Response response) {
-        String generatedResponse = statusToString(response.getStatus());
-        for (String header : response.getHeaders()) {
-            generatedResponse = generatedResponse.concat(header);
-        }
-        generatedResponse = generatedResponse.concat("\r\n");
-        generatedResponse = generatedResponse.concat(response.getBody());
-
-        return generatedResponse;
-    }
-
-    public byte[] generateBytes(Response response) {
+    public byte[] generate(Response response) {
         try {
             return assembleResponse(response);
         } catch (IOException e) {

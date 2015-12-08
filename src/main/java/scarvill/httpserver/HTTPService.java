@@ -56,8 +56,8 @@ public class HTTPService implements Serveable {
     }
 
     private void sendResponse(PrintWriter out, Response response) {
-        String rawResponse = new HTTPResponse().generate(response);
-        logger.logResponse(rawResponse);
-        out.print(rawResponse);
+        byte[] rawResponse = new HTTPResponse().generate(response);
+        logger.logResponse(new String(rawResponse));
+        out.print(new String(rawResponse));
     }
 }

@@ -14,10 +14,10 @@ public class EchoRequestParametersTest {
     @Test
     public void testReturnsRequestParametersInResponseBody() {
         Function<Request, Response> handler = new EchoRequestParameters();
-        HashMap<String , String> parameters = new HashMap<>();
-        parameters.put("foo", "bar");
-        parameters.put("bar", "baz");
-        Request request = new RequestBuilder().setParameters(parameters).build();
+        Request request = new RequestBuilder()
+            .setParameter("foo", "bar")
+            .setParameter("bar", "baz")
+            .build();
 
         Response response = handler.apply(request);
 

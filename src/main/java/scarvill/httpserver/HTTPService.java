@@ -41,15 +41,13 @@ public class HTTPService implements Serveable {
         Response response = router.routeRequest(request);
         sendResponse(out, response);
 
+        logTransaction(request, response);
         out.close();
     }
 
     private Request readRequest(BufferedReader in) throws IOException {
         String requestLineAndHeaders = readRequestLineAndHeaders(in);
         byte[] body = readBody(in);
-
-        logger.logRequest(requestLineAndHeaders +
-            "With body of length " + Integer.toString(body.length) + "\r\n");
 
         return new HTTPRequest(requestLineAndHeaders, body).parse();
     }
@@ -77,8 +75,11 @@ public class HTTPService implements Serveable {
     private void sendResponse(OutputStream out, Response response) throws IOException {
         byte[] rawResponse = new HTTPResponse().generate(response);
 
-        logger.logResponse(new String(rawResponse));
-
         out.write(rawResponse, 0, rawResponse.length);
+    }
+
+    private void logTransaction(Request request, Response response) {
+        logger.logRequest(request);
+        logger.logResponse(response);
     }
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class RequestBuilder {
     private Method method;
     private String uri;
-    private HashMap<String, String> parameters;
+    private HashMap<String, String> parameters = new HashMap<>();
     private byte[] body;
 
     public Request build() {
@@ -22,8 +22,13 @@ public class RequestBuilder {
         return this;
     }
 
+    public RequestBuilder setParameter(String name, String value) {
+        this.parameters.put(name, value);
+        return this;
+    }
+
     public RequestBuilder setParameters(HashMap<String, String> parameters) {
-        this.parameters = parameters;
+        this.parameters.putAll(parameters);
         return this;
     }
 

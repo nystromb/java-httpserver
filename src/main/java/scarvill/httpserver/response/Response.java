@@ -1,7 +1,5 @@
 package scarvill.httpserver.response;
 
-import scarvill.httpserver.response.Status;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,9 +7,9 @@ import java.util.List;
 public class Response {
     private final Status status;
     private List<String> headers = new ArrayList<>();
-    private String body;
+    private byte[] body;
 
-    public Response(Status status, String[] headers, String body) {
+    public Response(Status status, String[] headers, byte[] body) {
         this.status = status;
         Collections.addAll(this.headers, headers);
         this.body = body;
@@ -25,6 +23,6 @@ public class Response {
         return headers;
     }
 
-    public String getBody() { return body; }
+    public byte[] getBody() { return body; }
 
 }

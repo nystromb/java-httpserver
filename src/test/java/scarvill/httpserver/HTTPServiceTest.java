@@ -1,25 +1,25 @@
 package scarvill.httpserver;
 
 import org.junit.Test;
+import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.request.Request;
 import scarvill.httpserver.routes.Router;
 
 import java.io.*;
 import java.net.Socket;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 public class HTTPServiceTest {
 
     @Test
     public void testRespondsToARequest() throws Exception {
-        String rawRequest = "GET / HTTP/1.1";
-        InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
-        OutputStream outputStream = new ByteArrayOutputStream();
+        byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         MockSocket clientSocket = new MockSocket(inputStream, outputStream);
         Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
@@ -30,7 +30,7 @@ public class HTTPServiceTest {
 
         service.serve(clientSocket).run();
 
-        assertEquals(new HTTPResponse().generate(expectedResponse), outputStream.toString());
+        assertArrayEquals(new HTTPResponse().generate(expectedResponse), outputStream.toByteArray());
     }
 
     private class MockSocket extends Socket {

@@ -5,8 +5,8 @@ import java.util.HashMap;
 public class RequestBuilder {
     private Method method;
     private String uri;
-    private HashMap<String, String> parameters;
-    private String body;
+    private HashMap<String, String> parameters = new HashMap<>();
+    private byte[] body;
 
     public Request build() {
         return new Request(method, uri, parameters, body);
@@ -22,12 +22,17 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setParameters(HashMap<String, String> parameters) {
-        this.parameters = parameters;
+    public RequestBuilder setParameter(String name, String value) {
+        this.parameters.put(name, value);
         return this;
     }
 
-    public RequestBuilder setBody(String body) {
+    public RequestBuilder setParameters(HashMap<String, String> parameters) {
+        this.parameters.putAll(parameters);
+        return this;
+    }
+
+    public RequestBuilder setBody(byte[] body) {
         this.body = body;
         return this;
     }

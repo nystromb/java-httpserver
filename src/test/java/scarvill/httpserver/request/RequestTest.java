@@ -1,12 +1,10 @@
 package scarvill.httpserver.request;
 
 import org.junit.Test;
-import scarvill.httpserver.request.Method;
-import scarvill.httpserver.request.Request;
-import scarvill.httpserver.request.RequestBuilder;
 
 import java.util.HashMap;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class RequestTest {
@@ -38,8 +36,8 @@ public class RequestTest {
 
     @Test
     public void testHasBody() throws Exception {
-        Request request = new RequestBuilder().setBody("body").build();
+        Request request = new RequestBuilder().setBody("body".getBytes()).build();
 
-        assertEquals("body", request.getBody());
+        assertArrayEquals("body".getBytes(), request.getBody());
     }
 }

@@ -1,12 +1,8 @@
 package scarvill.httpserver.response;
 
 import org.junit.Test;
-import scarvill.httpserver.response.HTTPResponse;
-import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.ResponseBuilder;
-import scarvill.httpserver.response.Status;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 public class HTTPResponseTest {
     @Test
@@ -15,7 +11,7 @@ public class HTTPResponseTest {
         Response response = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeaders(headers)
-            .setBody("this is the response body")
+            .setBody("this is the response body".getBytes())
             .build();
         String expectedRawResponse =
             "HTTP/1.1 200 OK\r\n" +
@@ -24,6 +20,6 @@ public class HTTPResponseTest {
             "\r\n" +
             "this is the response body";
 
-        assertEquals(expectedRawResponse, new HTTPResponse().generate(response));
+        assertArrayEquals(expectedRawResponse.getBytes(), new HTTPResponse().generate(response));
     }
 }

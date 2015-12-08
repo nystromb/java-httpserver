@@ -1,15 +1,12 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.routes.Router;
 import scarvill.httpserver.request.HTTPRequest;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
+import scarvill.httpserver.routes.Router;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class HTTPService implements Serveable {
@@ -38,26 +35,51 @@ public class HTTPService implements Serveable {
 
     private void serveRequest() throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+        BufferedOutputStream out = new BufferedOutputStream(clientSocket.getOutputStream());
 
         Request request = readRequest(in);
         Response response = router.routeRequest(request);
         sendResponse(out, response);
+
+        logTransaction(request, response);
         out.close();
     }
 
     private Request readRequest(BufferedReader in) throws IOException {
-        String rawRequest = in.readLine() + "\r\n";
-        while (in.ready()) {
-            rawRequest = rawRequest.concat(Character.toString((char) in.read()));
-        }
-        logger.logRequest(rawRequest);
-        return new HTTPRequest(rawRequest).parse();
+        String requestLineAndHeaders = readRequestLineAndHeaders(in);
+        byte[] body = readBody(in);
+
+        return new HTTPRequest(requestLineAndHeaders, body).parse();
     }
 
-    private void sendResponse(PrintWriter out, Response response) {
-        String rawResponse = new HTTPResponse().generate(response);
-        logger.logResponse(rawResponse);
-        out.print(rawResponse);
+    private String readRequestLineAndHeaders(BufferedReader in) throws IOException {
+        String requestLineAndHeaders = "";
+
+        while (!requestLineAndHeaders.contains("\r\n\r\n")) {
+            requestLineAndHeaders += in.readLine() + "\r\n";
+        }
+
+        return requestLineAndHeaders;
+    }
+
+    private byte[] readBody(BufferedReader in) throws IOException {
+        ByteArrayOutputStream body = new ByteArrayOutputStream();
+
+        while (in.ready()) {
+            body.write(in.read());
+        }
+
+        return body.toByteArray();
+    }
+
+    private void sendResponse(OutputStream out, Response response) throws IOException {
+        byte[] rawResponse = new HTTPResponse().generate(response);
+
+        out.write(rawResponse, 0, rawResponse.length);
+    }
+
+    private void logTransaction(Request request, Response response) {
+        logger.logRequest(request);
+        logger.logResponse(response);
     }
 }

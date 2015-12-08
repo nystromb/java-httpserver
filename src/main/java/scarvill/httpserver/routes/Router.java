@@ -1,11 +1,11 @@
 package scarvill.httpserver.routes;
 
+import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Method;
+import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
-import scarvill.httpserver.request.Request;
 
 import java.util.HashMap;
 import java.util.Set;

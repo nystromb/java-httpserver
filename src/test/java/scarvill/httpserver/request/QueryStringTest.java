@@ -1,7 +1,6 @@
 package scarvill.httpserver.request;
 
 import org.junit.Test;
-import scarvill.httpserver.request.QueryString;
 
 import java.util.HashMap;
 

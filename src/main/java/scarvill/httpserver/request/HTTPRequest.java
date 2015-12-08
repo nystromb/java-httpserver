@@ -5,11 +5,16 @@ import java.util.HashMap;
 import static scarvill.httpserver.request.Method.*;
 
 public class HTTPRequest {
-    public static final String BODY_DELIMETER = "\r\n\r\n";
-    private String rawRequest;
+    private String requestLineAndHeaders;
+    private byte[] body = new byte[]{};
 
-    public HTTPRequest(String rawRequest) {
-        this.rawRequest = rawRequest;
+    public HTTPRequest(String requestLineAndHeaders, byte[] body) {
+        this.requestLineAndHeaders = requestLineAndHeaders;
+        this.body = body;
+    }
+
+    public HTTPRequest(String requestLineAndHeaders) {
+        this.requestLineAndHeaders = requestLineAndHeaders;
     }
 
     public Request parse() {
@@ -17,12 +22,12 @@ public class HTTPRequest {
             .setMethod(parseMethod())
             .setURI(parseURI())
             .setParameters(parseParameters())
-            .setBody(parseBody())
+            .setBody(body)
             .build();
     }
 
     private Method parseMethod() {
-        String method = rawRequest.split(" ")[0];
+        String method = requestLineAndHeaders.split(" ")[0];
         switch (method) {
             case "GET":     return GET;
             case "HEAD":    return HEAD;
@@ -35,28 +40,18 @@ public class HTTPRequest {
     }
 
     private String parseURI() {
-        return rawRequest.split(" ")[1].split("\\?")[0];
+        return requestLineAndHeaders.split(" ")[1].split("\\?")[0];
     }
 
     private HashMap<String, String> parseParameters() {
         if (hasQueryStringParameters()) {
-            return new QueryString().parse(rawRequest.split(" ")[1].split("\\?")[1]);
+            return new QueryString().parse(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
         } else {
             return new HashMap<>();
         }
     }
 
-    private String parseBody() {
-        int bodyStartIndex = rawRequest.indexOf(BODY_DELIMETER);
-
-        if (bodyStartIndex == -1) {
-            return "";
-        } else {
-            return rawRequest.substring(bodyStartIndex + BODY_DELIMETER.length());
-        }
-    }
-
     private boolean hasQueryStringParameters() {
-        return rawRequest.split(" ")[1].split("\\?").length > 1;
+        return requestLineAndHeaders.split(" ")[1].split("\\?").length > 1;
     }
 }

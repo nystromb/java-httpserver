@@ -17,13 +17,13 @@ public class EchoRequestParameters implements Function<Request, Response> {
             .build();
     }
 
-    private String assembleResponseBody(HashMap<String, String> parameters) {
+    private byte[] assembleResponseBody(HashMap<String, String> parameters) {
         String body = "";
 
         for (String key : parameters.keySet()) {
             body += key + " = " + parameters.get(key) + "\r\n";
         }
 
-        return body;
+        return body.getBytes();
     }
 }

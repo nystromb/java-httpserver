@@ -21,7 +21,7 @@ public class EchoRequestParametersTest {
 
         Response response = handler.apply(request);
 
-        assertTrue(response.getBody().contains("foo = bar"));
-        assertTrue(response.getBody().contains("bar = baz"));
+        assertTrue(new String(response.getBody()).contains("foo = bar"));
+        assertTrue(new String(response.getBody()).contains("bar = baz"));
     }
 }

@@ -3,7 +3,7 @@ package scarvill.httpserver.response;
 public class ResponseBuilder {
     private Status status;
     private String[] headers = new String[]{};
-    private String body = "";
+    private byte[] body = new byte[]{};
 
     public ResponseBuilder setStatus(Status status) {
         this.status = status;
@@ -15,13 +15,8 @@ public class ResponseBuilder {
         return this;
     }
 
-    public ResponseBuilder setBody(String body) {
-        this.body = body;
-        return this;
-    }
-
     public ResponseBuilder setBody(byte[] body) {
-        this.body = body.toString();
+        this.body = body;
         return this;
     }
 

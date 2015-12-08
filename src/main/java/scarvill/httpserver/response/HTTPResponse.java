@@ -21,7 +21,7 @@ public class HTTPResponse {
             rawResponseByteStream.write(header.getBytes());
         }
         rawResponseByteStream.write("\r\n".getBytes());
-        rawResponseByteStream.write(response.getBody().getBytes());
+        rawResponseByteStream.write(response.getBody());
 
         return rawResponseByteStream.toByteArray();
     }

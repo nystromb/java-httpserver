@@ -12,7 +12,7 @@ public class HTTPResponseTest {
         Response response = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeaders(headers)
-            .setBody("this is the response body")
+            .setBody("this is the response body".getBytes())
             .build();
         String expectedRawResponse =
             "HTTP/1.1 200 OK\r\n" +

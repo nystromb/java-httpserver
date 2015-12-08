@@ -48,7 +48,8 @@ public class HTTPService implements Serveable {
         String requestLineAndHeaders = readRequestLineAndHeaders(in);
         byte[] body = readBody(in);
 
-        logger.logRequest(requestLineAndHeaders + new String(body));
+        logger.logRequest(requestLineAndHeaders +
+            "With body of length " + Integer.toString(body.length) + "\r\n");
 
         return new HTTPRequest(requestLineAndHeaders, body).parse();
     }

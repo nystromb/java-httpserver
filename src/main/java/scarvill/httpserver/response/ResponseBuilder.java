@@ -20,6 +20,11 @@ public class ResponseBuilder {
         return this;
     }
 
+    public ResponseBuilder setBody(byte[] body) {
+        this.body = body.toString();
+        return this;
+    }
+
     public Response build() {
         return new Response(status, headers, body);
     }

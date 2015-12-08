@@ -17,7 +17,7 @@ public class HTTPServiceTest {
 
     @Test
     public void testRespondsToARequest() throws Exception {
-        String rawRequest = "GET / HTTP/1.1";
+        String rawRequest = "GET / HTTP/1.1\r\n";
         InputStream inputStream = new ByteArrayInputStream(rawRequest.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         MockSocket clientSocket = new MockSocket(inputStream, outputStream);

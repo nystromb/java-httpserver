@@ -48,6 +48,12 @@ public class Cobspec {
         Resource jpeg = new FileResource(new File(publicDirectory + "/image.jpeg").toPath());
         router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));
 
+        Resource png = new FileResource(new File(publicDirectory + "/image.png").toPath());
+        router.addRoute("/image.png", Method.GET, new GetRouteResource(png));
+
+        Resource gif = new FileResource(new File(publicDirectory + "/image.gif").toPath());
+        router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
+
         return router;
     }
 

@@ -10,6 +10,7 @@ import scarvill.httpserver.response.Status;
 
 import java.util.function.Function;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class ModifyRouteResourceTest {
@@ -17,18 +18,18 @@ public class ModifyRouteResourceTest {
     public void testChangesAssociatedResourceToMatchRequestBody() throws Exception {
         Resource resource = new StringResource("initial data");
         Function<Request, Response> handler = new ModifyRouteResource(resource);
-        Request request = new RequestBuilder().setBody("new data").build();
+        Request request = new RequestBuilder().setBody("new data".getBytes()).build();
 
         handler.apply(request);
 
-        assertEquals("new data", new String(resource.getData()));
+        assertArrayEquals("new data".getBytes(), resource.getData());
     }
 
     @Test
     public void testReturnsStatusOKResponse() throws Exception {
         Resource resource = new StringResource("initial data");
         Function<Request, Response> handler = new ModifyRouteResource(resource);
-        Request request = new RequestBuilder().setBody("new data").build();
+        Request request = new RequestBuilder().setBody("new data".getBytes()).build();
 
         Response response = handler.apply(request);
 

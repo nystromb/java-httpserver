@@ -17,7 +17,7 @@ public class HTTPRequest {
             .setMethod(parseMethod())
             .setURI(parseURI())
             .setParameters(parseParameters())
-            .setBody(parseBody())
+            .setBody(parseBody().getBytes())
             .build();
     }
 

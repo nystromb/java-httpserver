@@ -6,7 +6,7 @@ public class RequestBuilder {
     private Method method;
     private String uri;
     private HashMap<String, String> parameters;
-    private String body;
+    private byte[] body;
 
     public Request build() {
         return new Request(method, uri, parameters, body);
@@ -27,7 +27,7 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setBody(String body) {
+    public RequestBuilder setBody(byte[] body) {
         this.body = body;
         return this;
     }

@@ -4,6 +4,7 @@ import org.junit.Test;
 import scarvill.httpserver.request.HTTPRequest;
 import scarvill.httpserver.request.Request;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static scarvill.httpserver.request.Method.GET;
 import static scarvill.httpserver.request.Method.NULL_METHOD;
@@ -43,13 +44,13 @@ public class HTTPRequestTest {
     public void testParsesRawHTTPRequestWithNoBody() {
         Request request = new HTTPRequest("GET /uri HTTP/1.1").parse();
 
-        assertEquals("", request.getBody());
+        assertArrayEquals("".getBytes(), request.getBody());
     }
 
     @Test
     public void testParsesRawHTTPRequestWithBody() {
         Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\nbody").parse();
 
-        assertEquals("body", request.getBody());
+        assertArrayEquals("body".getBytes(), request.getBody());
     }
 }

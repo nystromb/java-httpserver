@@ -13,7 +13,7 @@ public class Logger {
     }
 
     public void logRequest(Request request) {
-        out.println("Received request:");
+        out.println("*** Received Request ***");
         out.println("Method: " + request.getMethod().toString());
         out.println("Path: " + request.getURI());
         out.print("Parameters:");
@@ -24,7 +24,7 @@ public class Logger {
     }
 
     public void logResponse(Response response) {
-        out.println("Sent response:");
+        out.println("*** Sent Response ***");
         out.println("Status: " + response.getStatus().toString());
         out.println("Headers:");
         response.getHeaders().forEach((header) -> out.print("- " + header));

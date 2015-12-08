@@ -26,7 +26,7 @@ public class LoggerTest {
             .build();
         logger.logRequest(request);
 
-        assertTrue(out.toString().contains("Received request:"));
+        assertTrue(out.toString().contains("*** Received Request ***"));
         assertTrue(out.toString().contains("Method: " + request.getMethod().toString()));
         assertTrue(out.toString().contains("Path: " + request.getURI()));
         assertTrue(out.toString().contains("Parameters: " + "name=value"));
@@ -44,7 +44,7 @@ public class LoggerTest {
             .build();
         logger.logResponse(response);
 
-        assertTrue(out.toString().contains("Sent response:"));
+        assertTrue(out.toString().contains("*** Sent Response ***"));
         assertTrue(out.toString().contains("Status: " + response.getStatus().toString()));
         assertTrue(out.toString().contains("Headers:"));
         assertTrue(out.toString().contains("- " + "Header: a header\r\n"));

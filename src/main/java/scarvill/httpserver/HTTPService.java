@@ -44,18 +44,18 @@ public class HTTPService implements Serveable {
     }
 
     private Request readRequest(BufferedReader in) throws IOException {
-        String statusAndHeaders = readStatusAndHeaders(in);
-        byte[] body = readBody(in);
-        logger.logRequest(statusAndHeaders);
-        return new HTTPRequest(statusAndHeaders + new String(body)).parse();
+        String requestLineAndHeaders = readRequestLineAndHeaders(in);
+        logger.logRequest(requestLineAndHeaders);
+
+        return new HTTPRequest(requestLineAndHeaders, readBody(in)).parse();
     }
 
-    private String readStatusAndHeaders(BufferedReader in) throws IOException {
-        String statusAndHeaders = "";
-        while (!statusAndHeaders.contains("\r\n\r\n")) {
-            statusAndHeaders += in.readLine() + "\r\n";
+    private String readRequestLineAndHeaders(BufferedReader in) throws IOException {
+        String requestLineAndHeaders = "";
+        while (!requestLineAndHeaders.contains("\r\n\r\n")) {
+            requestLineAndHeaders += in.readLine() + "\r\n";
         }
-        return statusAndHeaders;
+        return requestLineAndHeaders;
     }
 
     private byte[] readBody(BufferedReader in) throws IOException {

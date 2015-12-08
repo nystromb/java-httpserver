@@ -6,10 +6,7 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class HTTPService implements Serveable {
@@ -47,12 +44,26 @@ public class HTTPService implements Serveable {
     }
 
     private Request readRequest(BufferedReader in) throws IOException {
-        String rawRequest = in.readLine() + "\r\n";
-        while (in.ready()) {
-            rawRequest = rawRequest.concat(Character.toString((char) in.read()));
+        String statusAndHeaders = readStatusAndHeaders(in);
+        byte[] body = readBody(in);
+        logger.logRequest(statusAndHeaders);
+        return new HTTPRequest(statusAndHeaders + new String(body)).parse();
+    }
+
+    private String readStatusAndHeaders(BufferedReader in) throws IOException {
+        String statusAndHeaders = "";
+        while (!statusAndHeaders.contains("\r\n\r\n")) {
+            statusAndHeaders += in.readLine() + "\r\n";
         }
-        logger.logRequest(rawRequest);
-        return new HTTPRequest(rawRequest).parse();
+        return statusAndHeaders;
+    }
+
+    private byte[] readBody(BufferedReader in) throws IOException {
+        ByteArrayOutputStream body = new ByteArrayOutputStream();
+        while (in.ready()) {
+            body.write(in.read());
+        }
+        return body.toByteArray();
     }
 
     private void sendResponse(PrintWriter out, Response response) {

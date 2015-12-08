@@ -1,13 +1,12 @@
 package scarvill.httpserver.routes;
 
 import org.junit.Test;
-import scarvill.httpserver.request.Method;
-import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.Status;
 import scarvill.httpserver.mocks.MockHandler;
+import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
-import scarvill.httpserver.routes.Router;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.Status;
 
 import java.util.List;
 

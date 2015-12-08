@@ -1,18 +1,18 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.request.Method;
-import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.ResponseBuilder;
-import scarvill.httpserver.response.Status;
-import scarvill.httpserver.cobspec.route_strategies.ModifyRouteResource;
 import scarvill.httpserver.cobspec.route_strategies.EchoRequestParameters;
 import scarvill.httpserver.cobspec.route_strategies.GetRouteResource;
 import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
+import scarvill.httpserver.cobspec.route_strategies.ModifyRouteResource;
+import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
+import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routes.FileResource;
 import scarvill.httpserver.routes.Resource;
-import scarvill.httpserver.routes.StringResource;
 import scarvill.httpserver.routes.Router;
+import scarvill.httpserver.routes.StringResource;
 
 import java.io.File;
 import java.util.function.Function;

@@ -1,7 +1,5 @@
 package scarvill.httpserver.response;
 
-import scarvill.httpserver.response.Status;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

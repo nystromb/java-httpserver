@@ -1,13 +1,8 @@
 package scarvill.httpserver.response;
 
 import org.junit.Test;
-import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.ResponseBuilder;
-import scarvill.httpserver.response.Status;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ResponseTest {
     @Test

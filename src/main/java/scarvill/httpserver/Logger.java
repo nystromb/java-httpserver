@@ -2,7 +2,6 @@ package scarvill.httpserver;
 
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
-import scarvill.httpserver.routes.Resource;
 
 import java.io.PrintStream;
 

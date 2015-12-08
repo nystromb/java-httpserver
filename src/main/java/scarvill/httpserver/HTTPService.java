@@ -1,10 +1,10 @@
 package scarvill.httpserver;
 
-import scarvill.httpserver.routes.Router;
 import scarvill.httpserver.request.HTTPRequest;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
+import scarvill.httpserver.routes.Router;
 
 import java.io.*;
 import java.net.Socket;

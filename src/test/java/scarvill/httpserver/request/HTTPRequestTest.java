@@ -1,8 +1,6 @@
 package scarvill.httpserver.request;
 
 import org.junit.Test;
-import scarvill.httpserver.request.HTTPRequest;
-import scarvill.httpserver.request.Request;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

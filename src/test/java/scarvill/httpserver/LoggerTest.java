@@ -4,7 +4,6 @@ import org.junit.Test;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
-import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
@@ -12,7 +11,6 @@ import scarvill.httpserver.response.Status;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LoggerTest {

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ServerArguments {
     public static final int DEFAULT_PORT = 5000;
-    public static final String DEFAULT_PUBLIC_DIRECTORY = "some directory";
+    public static final String DEFAULT_PUBLIC_DIRECTORY = "./cob_spec/public";
 
     public int port = DEFAULT_PORT;
     public String publicDirectory = DEFAULT_PUBLIC_DIRECTORY;

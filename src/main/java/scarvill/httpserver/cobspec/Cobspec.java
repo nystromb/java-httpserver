@@ -14,7 +14,13 @@ import scarvill.httpserver.routes.Resource;
 import scarvill.httpserver.routes.Router;
 import scarvill.httpserver.routes.StringResource;
 
+import javax.swing.text.html.HTMLDocument;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Function;
 
 public class Cobspec {
@@ -22,7 +28,8 @@ public class Cobspec {
     public static Router configuredRouter(String publicDirectory) {
         Router router = new Router();
 
-        router.addRoute("/", Method.GET, new GetRouteResource(new StringResource("")));
+        router.addRoute("/", Method.GET, new GetRouteResource(
+            new StringResource(indexPage(publicDirectory))));
 
         router.addRoute("/parameters", Method.GET, new EchoRequestParameters());
 
@@ -39,25 +46,54 @@ public class Cobspec {
         router.addRoute("/form", Method.PUT, new ModifyRouteResource(formResource));
         router.addRoute("/form", Method.DELETE, new ModifyRouteResource(formResource));
 
-        Resource file1 = new FileResource(new File(publicDirectory + "/file1").toPath());
+        Resource file1 = new FileResource(Paths.get(publicDirectory + "/file1"));
         router.addRoute("/file1", Method.GET, new GetRouteResource(file1));
 
-        Resource textfile = new FileResource(new File(publicDirectory + "/text-file.txt").toPath());
+        Resource textfile = new FileResource(Paths.get(publicDirectory + "/text-file.txt"));
         router.addRoute("/text-file.txt", Method.GET, new GetRouteResource(textfile));
 
-        Resource jpeg = new FileResource(new File(publicDirectory + "/image.jpeg").toPath());
+        Resource jpeg = new FileResource(Paths.get(publicDirectory + "/image.jpeg"));
         router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));
 
-        Resource png = new FileResource(new File(publicDirectory + "/image.png").toPath());
+        Resource png = new FileResource(Paths.get(publicDirectory + "/image.png"));
         router.addRoute("/image.png", Method.GET, new GetRouteResource(png));
 
-        Resource gif = new FileResource(new File(publicDirectory + "/image.gif").toPath());
+        Resource gif = new FileResource(Paths.get(publicDirectory + "/image.gif"));
         router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
 
-        Resource partialContent = new FileResource(new File(publicDirectory + "/partial_content.txt").toPath());
+        Resource partialContent =
+            new FileResource(Paths.get(publicDirectory + "/partial_content.txt"));
         router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
 
         return router;
+    }
+
+    private static String indexPage(String publicDirectory) {
+        return "<!DOCTYPE html>\n" +
+            "<html lang=\"en\">\n" +
+            "<head>\n" +
+            "<meta charset=\"utf-8\">\n" +
+            "<title>Index</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "<ul>\n" +
+            directoryListEntries(publicDirectory) +
+            "</ul>\n" +
+            "</body>\n" +
+            "</html>\n";
+    }
+
+    private static String directoryListEntries(String publicDirectory) {
+        String directoryList = "";
+        try {
+            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(publicDirectory));
+            for (Path entry : stream) {
+                directoryList += "<li>" + entry.getFileName().toString() + "</li>\n";
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return  directoryList;
     }
 
     private static Function<Request, Response> giveRedirectResponse(String redirectLocation) {

@@ -11,6 +11,7 @@ import scarvill.httpserver.response.Status;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LoggerTest {
@@ -22,15 +23,25 @@ public class LoggerTest {
             .setMethod(Method.GET)
             .setURI("/a/route")
             .setParameter("name", "value")
+            .setParameter("foo", "bar")
+            .setHeader("Header", "a header")
+            .setHeader("Other", "other header")
             .setBody("body".getBytes())
             .build();
+
+        String expectedLog = "*** Received Request ***\n" +
+            "Method: GET\n" +
+            "Path: /a/route\n" +
+            "Parameters: foo=bar name=value\n" +
+            "Headers:\n" +
+            "- Header: a header\n" +
+            "- Other: other header\n" +
+            "Body-length: 4\n" +
+            "\n";
+
         logger.logRequest(request);
 
-        assertTrue(out.toString().contains("Received request:"));
-        assertTrue(out.toString().contains("Method: " + request.getMethod().toString()));
-        assertTrue(out.toString().contains("Path: " + request.getURI()));
-        assertTrue(out.toString().contains("Parameters: " + "name=value"));
-        assertTrue(out.toString().contains("Body-length: " + request.getBody().length));
+        assertEquals(expectedLog, out.toString());
     }
 
     @Test
@@ -39,16 +50,20 @@ public class LoggerTest {
         Logger logger = new Logger(new PrintStream(out));
         Response response = new ResponseBuilder()
             .setStatus(Status.OK)
-            .setHeaders(new String[]{"Header: a header\r\n", "Other: other header\r\n"})
+            .setHeaders(new String[]{"Header: a header\n", "Other: other header\n"})
             .setBody("body".getBytes())
             .build();
+
+        String expectedLog = "*** Sent Response ***\n" +
+            "Status: 200 OK\n" +
+            "Headers:\n" +
+            "- Header: a header\n" +
+            "- Other: other header\n" +
+            "Body-length: 4\n" +
+            "\n";
+
         logger.logResponse(response);
 
-        assertTrue(out.toString().contains("Sent response:"));
-        assertTrue(out.toString().contains("Status: " + response.getStatus().toString()));
-        assertTrue(out.toString().contains("Headers:"));
-        assertTrue(out.toString().contains("- " + "Header: a header\r\n"));
-        assertTrue(out.toString().contains("- " + "Other: other header\r\n"));
-        assertTrue(out.toString().contains("Body-length: " + response.getBody().length));
+        assertEquals(expectedLog, out.toString());
     }
 }

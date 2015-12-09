@@ -24,14 +24,24 @@ public class RequestTest {
 
     @Test
     public void testHasQueryStringParameters() {
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("foo", "bar");
-        parameters.put("bar", "baz");
-
-        Request request = new RequestBuilder().setParameters(parameters).build();
+        Request request = new RequestBuilder()
+            .setParameter("foo", "bar")
+            .setParameter("bar", "baz")
+            .build();
 
         assertEquals("bar", request.getParameters().get("foo"));
         assertEquals("baz", request.getParameters().get("bar"));
+    }
+
+    @Test
+    public void testHasHeaders() {
+        Request request = new RequestBuilder()
+            .setHeader("Header:", "a header")
+            .setHeader("Other:", "another header")
+            .build();
+
+        assertEquals("a header", request.getHeaders().get("Header:"));
+        assertEquals("another header", request.getHeaders().get("Other:"));
     }
 
     @Test

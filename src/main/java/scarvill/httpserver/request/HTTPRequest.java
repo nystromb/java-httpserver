@@ -1,5 +1,6 @@
 package scarvill.httpserver.request;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static scarvill.httpserver.request.Method.*;
@@ -22,6 +23,7 @@ public class HTTPRequest {
             .setMethod(parseMethod())
             .setURI(parseURI())
             .setParameters(parseParameters())
+            .setHeaders(parseHeaders())
             .setBody(body)
             .build();
     }
@@ -44,14 +46,33 @@ public class HTTPRequest {
     }
 
     private HashMap<String, String> parseParameters() {
-        if (hasQueryStringParameters()) {
-            return new QueryString().parse(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
-        } else {
-            return new HashMap<>();
+        HashMap<String, String> parameters = new HashMap<>();
+
+        if (requestHasQueryStringParameters()) {
+            parameters = new QueryString().parse(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
         }
+
+        return parameters;
     }
 
-    private boolean hasQueryStringParameters() {
+    private HashMap<String,String> parseHeaders() {
+        HashMap<String, String> headers = new HashMap<>();
+        String[] requestLines = requestLineAndHeaders.split("\\r\\n");
+
+        if (includesHeaders(requestLines)) {
+            Arrays.stream(requestLines, 1, requestLines.length).forEach(
+                (header) -> headers.put(header.split(": ")[0], header.split(": ")[1])
+            );
+        }
+
+        return headers;
+    }
+
+    private boolean requestHasQueryStringParameters() {
         return requestLineAndHeaders.split(" ")[1].split("\\?").length > 1;
+    }
+
+    private boolean includesHeaders(String[] requestLines) {
+        return requestLines.length > 2;
     }
 }

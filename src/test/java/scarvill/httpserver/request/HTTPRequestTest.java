@@ -39,6 +39,18 @@ public class HTTPRequestTest {
     }
 
     @Test
+    public void testParsesRawHTTPRequestHeaders() {
+        String rawRequest = "GET /uri HTTP/1.1\r\n" +
+            "Header: a header\r\n" +
+            "Other: other header\r\n" +
+            "\r\n";
+        Request request = new HTTPRequest(rawRequest).parse();
+
+        assertEquals("a header", request.getHeaders().get("Header"));
+        assertEquals("other header", request.getHeaders().get("Other"));
+    }
+
+    @Test
     public void testParsesRawHTTPRequestWithNoBody() {
         Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 

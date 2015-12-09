@@ -13,18 +13,20 @@ public class Logger {
     }
 
     public void logRequest(Request request) {
-        out.println("Received request:");
+        out.println("*** Received Request ***");
         out.println("Method: " + request.getMethod().toString());
         out.println("Path: " + request.getURI());
         out.print("Parameters:");
         request.getParameters().forEach((name, value) -> out.print(" " + name + "=" + value));
-        out.print("\n");
+        out.println();
+        out.println("Headers:");
+        request.getHeaders().forEach((keyword, value) -> out.println("- " + keyword + ": " + value));
         out.println("Body-length: " + request.getBody().length);
         out.println();
     }
 
     public void logResponse(Response response) {
-        out.println("Sent response:");
+        out.println("*** Sent Response ***");
         out.println("Status: " + response.getStatus().toString());
         out.println("Headers:");
         response.getHeaders().forEach((header) -> out.print("- " + header));

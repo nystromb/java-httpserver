@@ -54,6 +54,9 @@ public class Cobspec {
         Resource gif = new FileResource(new File(publicDirectory + "/image.gif").toPath());
         router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
 
+        Resource partialContent = new FileResource(new File(publicDirectory + "/partial_content.txt").toPath());
+        router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
+
         return router;
     }
 

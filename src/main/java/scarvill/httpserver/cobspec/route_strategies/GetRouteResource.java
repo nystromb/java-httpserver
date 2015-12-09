@@ -7,8 +7,8 @@ import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routes.Resource;
 
 import java.util.Arrays;
+import java.util.StringTokenizer;
 import java.util.function.Function;
-import java.util.function.IntBinaryOperator;
 
 public class GetRouteResource implements Function<Request, Response> {
     private Resource resource;
@@ -35,9 +35,7 @@ public class GetRouteResource implements Function<Request, Response> {
     }
 
     private Response partialResourceResponse(String rangeInformation) {
-        int start = startIndex(rangeInformation);
-        int end = endIndex(rangeInformation);
-        byte[] partialContent = Arrays.copyOfRange(resource.getData(), start, end + 1);
+        byte[] partialContent = readPartialResourceData(rangeInformation);
         String contentLength = "Content-Length: " + partialContent.length + "\r\n";
 
         return new ResponseBuilder().setStatus(Status.PARTIAL_CONTENT)
@@ -46,24 +44,44 @@ public class GetRouteResource implements Function<Request, Response> {
             .build();
     }
 
-    private int startIndex(String rangeInformation) {
-        String startIndexString = rangeInformation.split("=")[1].split("-")[0];
-
-        if (startIndexString == "") {
-            startIndexString = "0";
-        }
-
-        return Integer.parseInt(startIndexString);
+    private byte[] readPartialResourceData(String rangeInformation) {
+        int startIndex = resourceReadStartIndex(rangeInformation);
+        int endIndex = resourceReadEndIndex(rangeInformation);
+        return Arrays.copyOfRange(resource.getData(), startIndex, endIndex + 1);
     }
 
-    private int endIndex(String rangeInformation) {
-        String[] startAndEndIndexes = rangeInformation.split("=")[1].split("-");
-        int endIndex = resource.getData().length - 1;
+    private int resourceReadStartIndex(String rangeInformation) {
+        if (rangeStartIsSpecified(rangeInformation)) {
+            return rangeStart(rangeInformation);
+        } else {
+            return resource.getData().length - rangeEnd(rangeInformation);
+        }
+    }
 
-        if (startAndEndIndexes.length > 1) {
-            endIndex = Integer.parseInt(startAndEndIndexes[1]);
+    private int resourceReadEndIndex(String rangeInformation) {
+        int resourceDataLength = resource.getData().length;
+        int endIndex = resourceDataLength - 1;
+
+        if (rangeStartIsSpecified(rangeInformation) && rangeEndIsSpecified(rangeInformation)) {
+            endIndex = Integer.min(resourceDataLength - 1, rangeEnd(rangeInformation));
         }
 
         return endIndex;
+    }
+
+    private boolean rangeStartIsSpecified(String rangeInformation) {
+        return !rangeInformation.split("=")[1].split("-")[0].equals("");
+    }
+
+    private boolean rangeEndIsSpecified(String rangeInformation) {
+        return rangeInformation.split("=")[1].split("-").length > 1;
+    }
+
+    private int rangeStart(String rangeInformation) {
+        return Integer.parseInt(rangeInformation.split("=")[1].split("-")[0]);
+    }
+
+    private int rangeEnd(String rangeInformation) {
+        return Integer.parseInt(rangeInformation.split("=")[1].split("-")[1]);
     }
 }

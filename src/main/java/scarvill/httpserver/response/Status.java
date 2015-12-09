@@ -4,7 +4,8 @@ public enum Status {
     OK("200 OK"),
     NOT_FOUND("404 Not Found"),
     METHOD_NOT_ALLOWED("405 Method Not Allowed"),
-    FOUND("302 Found");
+    FOUND("302 Found"),
+    PARTIAL_CONTENT("206 Partial Content");
 
     private final String statusString;
 

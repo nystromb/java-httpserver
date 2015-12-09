@@ -18,7 +18,9 @@ public class Logger {
         out.println("Path: " + request.getURI());
         out.print("Parameters:");
         request.getParameters().forEach((name, value) -> out.print(" " + name + "=" + value));
-        out.print("\n");
+        out.println();
+        out.println("Headers:");
+        request.getHeaders().forEach((keyword, value) -> out.println("- " + keyword + ": " + value));
         out.println("Body-length: " + request.getBody().length);
         out.println();
     }

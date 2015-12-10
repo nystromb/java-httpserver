@@ -1,9 +1,6 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.cobspec.route_strategies.EchoRequestParameters;
-import scarvill.httpserver.cobspec.route_strategies.GetRouteResource;
-import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
-import scarvill.httpserver.cobspec.route_strategies.ModifyRouteResource;
+import scarvill.httpserver.cobspec.route_strategies.*;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
@@ -45,6 +42,11 @@ public class Cobspec {
         router.addRoute("/form", Method.POST, new ModifyRouteResource(formResource));
         router.addRoute("/form", Method.PUT, new ModifyRouteResource(formResource));
         router.addRoute("/form", Method.DELETE, new ModifyRouteResource(formResource));
+
+        Resource logsResource = new StringResource("");
+        router.addRoute("/logs", Method.GET,
+            new VerifyRequestAuthorization("admin", "hunter2", "Logging",
+                new GetRouteResource(logsResource)));
 
         Resource file1 = new FileResource(Paths.get(publicDirectory + "/file1"));
         router.addRoute("/file1", Method.GET, new GetRouteResource(file1));

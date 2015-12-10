@@ -25,7 +25,7 @@ public class VerifyRequestAuthorizationTest {
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
         Response response =
-            new VerifyRequestAuthorization("username", "password", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
 
         assertEquals(Status.OK, response.getStatus());
 
@@ -40,9 +40,23 @@ public class VerifyRequestAuthorizationTest {
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
         Response response =
-            new VerifyRequestAuthorization("username", "password", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
+    }
+
+    @Test
+    public void testIncludesWWWAuthenticateHeaderIn401Response() {
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/")
+            .build();
+        Function<Request, Response> routeStrategy =
+            new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+        Response response =
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+
+        assertEquals("Basic realm=FortKnox", response.getHeaders().get("WWW-Authenticate"));
     }
 
     @Test
@@ -56,7 +70,7 @@ public class VerifyRequestAuthorizationTest {
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
         Response response =
-            new VerifyRequestAuthorization("username", "password", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }
@@ -72,7 +86,7 @@ public class VerifyRequestAuthorizationTest {
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
         Response response =
-            new VerifyRequestAuthorization("username", "password", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }

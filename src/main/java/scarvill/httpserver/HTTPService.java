@@ -26,23 +26,22 @@ public class HTTPService implements Serveable {
 
     @Override
     public void run() {
-        try {
-            serveRequest();
+        try (BufferedReader in =
+                 new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             BufferedOutputStream out =
+                 new BufferedOutputStream(clientSocket.getOutputStream())
+        ) {
+            serveRequest(in, out);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void serveRequest() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        BufferedOutputStream out = new BufferedOutputStream(clientSocket.getOutputStream());
-
+    private void serveRequest(BufferedReader in, BufferedOutputStream out) throws IOException {
         Request request = readRequest(in);
         Response response = router.routeRequest(request);
         sendResponse(out, response);
-
         logTransaction(request, response);
-        out.close();
     }
 
     private Request readRequest(BufferedReader in) throws IOException {

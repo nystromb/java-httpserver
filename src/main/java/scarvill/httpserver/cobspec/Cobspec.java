@@ -88,7 +88,8 @@ public class Cobspec {
         try {
             DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(publicDirectory));
             for (Path entry : stream) {
-                directoryList += "<li>" + entry.getFileName().toString() + "</li>\n";
+                String filename = entry.getFileName().toString();
+                directoryList += "<li><a href=" + filename + ">" + filename + "</a></li>\n";
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

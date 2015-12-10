@@ -14,8 +14,9 @@ public class Logger {
 
     public void logRequest(Request request) {
         out.println("*** Received Request ***");
-        out.println("Method: " + request.getMethod().toString());
-        out.println("Path: " + request.getURI());
+        out.println("MethodLine: "
+            + request.getMethod().toString() + " "
+            + request.getURI() + " HTTP/1.1");
         out.print("Parameters:");
         request.getParameters().forEach((name, value) -> out.print(" " + name + "=" + value));
         out.println();

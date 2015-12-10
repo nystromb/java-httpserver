@@ -29,9 +29,9 @@ public class LoggerTest {
             .setBody("body".getBytes())
             .build();
 
-        String expectedLog = "*** Received Request ***\n" +
-            "Method: GET\n" +
-            "Path: /a/route\n" +
+        String expectedLog =
+            "*** Received Request ***\n" +
+            "MethodLine: GET /a/route HTTP/1.1\n" +
             "Parameters: foo=bar name=value\n" +
             "Headers:\n" +
             "- Header: a header\n" +
@@ -55,7 +55,8 @@ public class LoggerTest {
             .setBody("body".getBytes())
             .build();
 
-        String expectedLog = "*** Sent Response ***\n" +
+        String expectedLog =
+            "*** Sent Response ***\n" +
             "Status: 200 OK\n" +
             "Headers:\n" +
             "- Header: a header\n" +

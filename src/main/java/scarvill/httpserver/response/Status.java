@@ -5,7 +5,8 @@ public enum Status {
     NOT_FOUND("404 Not Found"),
     METHOD_NOT_ALLOWED("405 Method Not Allowed"),
     FOUND("302 Found"),
-    PARTIAL_CONTENT("206 Partial Content");
+    PARTIAL_CONTENT("206 Partial Content"),
+    UNAUTHORIZED("401 Unauthorized");
 
     private final String statusString;
 

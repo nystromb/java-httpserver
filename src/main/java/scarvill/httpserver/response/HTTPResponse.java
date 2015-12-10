@@ -2,6 +2,7 @@ package scarvill.httpserver.response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class HTTPResponse {
 
@@ -14,20 +15,22 @@ public class HTTPResponse {
     }
 
     private byte[] assembleResponse(Response response) throws IOException {
-        ByteArrayOutputStream rawResponseByteStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
 
-        rawResponseByteStream.write(statusToString(response.getStatus()).getBytes());
-        for (String header : response.getHeaders()) {
-            rawResponseByteStream.write(header.getBytes());
-        }
-        rawResponseByteStream.write("\r\n".getBytes());
-        rawResponseByteStream.write(response.getBody());
+        rawResponse.write(statusAndHeaders(response).getBytes());
+        rawResponse.write(response.getBody());
 
-        return rawResponseByteStream.toByteArray();
+        return rawResponse.toByteArray();
     }
 
 
-    private String statusToString(Status status) {
-        return "HTTP/1.1 " + status.toString() + "\r\n";
+    private String statusAndHeaders(Response response) {
+        String statusAndHeaders = "HTTP/1.1 " + response.getStatus().toString() + "\r\n";
+
+        for (Map.Entry<String, String > header : response.getHeaders().entrySet()) {
+            statusAndHeaders += header.getKey() + ": " + header.getValue() + "\r\n";
+        }
+
+        return statusAndHeaders + "\r\n";
     }
 }

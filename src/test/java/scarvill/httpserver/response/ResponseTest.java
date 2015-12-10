@@ -15,11 +15,13 @@ public class ResponseTest {
     @Test
     public void testHasHeaders() {
         String[] headers = new String[]{"Foo: a header", "Bar: another header"};
-        Response response = new ResponseBuilder().setHeaders(headers).build();
+        Response response = new ResponseBuilder()
+            .setHeader("Foo", "a header")
+            .setHeader("Bar", "another header")
+            .build();
 
-        for (String header : headers) {
-            assertTrue(response.getHeaders().contains(header));
-        }
+        assertEquals("a header", response.getHeaders().get("Foo"));
+        assertEquals("another header", response.getHeaders().get("Bar"));
     }
 
     @Test

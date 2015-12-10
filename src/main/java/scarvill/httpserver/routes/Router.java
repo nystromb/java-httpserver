@@ -43,7 +43,7 @@ public class Router {
         return new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.OK)
-                .setHeaders(new String[]{"Allow: " + allowedMethodsString(allowedMethods) + "\r\n"})
+                .setHeader("Allow", allowedMethodsString(allowedMethods))
                 .build());
     }
 

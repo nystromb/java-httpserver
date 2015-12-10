@@ -57,27 +57,14 @@ public class RouterTest {
         Response response = router.routeRequest(request);
 
         assertEquals(Status.OK, response.getStatus());
-        String allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
-
-        assertTrue(allowHeader.contains("GET"));
-        assertTrue(allowHeader.contains("OPTIONS"));
+        assertTrue(response.getHeaders().get("Allow").contains("GET"));
+        assertTrue(response.getHeaders().get("Allow").contains("OPTIONS"));
 
         router.addRoute("/", Method.POST, new MockHandler(Status.OK));
-
         response = router.routeRequest(request);
-        allowHeader = getHeaderContaining("Allow: ", response.getHeaders());
 
-        assertTrue(allowHeader.contains("GET"));
-        assertTrue(allowHeader.contains("POST"));
-        assertTrue(allowHeader.contains("OPTIONS"));
-    }
-
-    private String getHeaderContaining(String substring, List<String> headers) {
-        for (String header : headers) {
-            if (header.contains(substring)) {
-                return header;
-            }
-        }
-        return "";
+        assertTrue(response.getHeaders().get("Allow").contains("GET"));
+        assertTrue(response.getHeaders().get("Allow").contains("POST"));
+        assertTrue(response.getHeaders().get("Allow").contains("OPTIONS"));
     }
 }

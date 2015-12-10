@@ -23,7 +23,7 @@ public class HTTPServiceTest {
         MockSocket clientSocket = new MockSocket(inputStream, outputStream);
         Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
-            .setHeaders(new String[]{"Header: a header\r\n"})
+            .setHeader("Header", "a header")
             .build();
         Logger logger = new Logger(new NullPrintStream());
         HTTPService service = new HTTPService(new MockRouter(expectedResponse), logger);

@@ -36,6 +36,7 @@ public class HTTPRequest {
             case "OPTIONS": return OPTIONS;
             case "PUT":     return PUT;
             case "POST":    return POST;
+            case "PATCH":   return PATCH;
             case "DELETE":  return DELETE;
             default:        return NULL_METHOD;
         }

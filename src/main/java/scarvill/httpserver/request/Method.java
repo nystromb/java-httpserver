@@ -7,7 +7,8 @@ public enum Method {
     PUT("PUT"),
     POST("POST"),
     DELETE("DELETE"),
-    NULL_METHOD("");
+    PATCH("PATCH"),
+    NULL_METHOD("UNRECOGNIZED_METHOD");
 
     private final String methodString;
 

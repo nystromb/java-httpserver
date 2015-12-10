@@ -50,7 +50,8 @@ public class LoggerTest {
         Logger logger = new Logger(new PrintStream(out));
         Response response = new ResponseBuilder()
             .setStatus(Status.OK)
-            .setHeaders(new String[]{"Header: a header\n", "Other: other header\n"})
+            .setHeader("Header", "a header")
+            .setHeader("Other", "other header")
             .setBody("body".getBytes())
             .build();
 

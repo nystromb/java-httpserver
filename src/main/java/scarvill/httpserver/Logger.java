@@ -20,7 +20,7 @@ public class Logger {
         request.getParameters().forEach((name, value) -> out.print(" " + name + "=" + value));
         out.println();
         out.println("Headers:");
-        request.getHeaders().forEach((keyword, value) -> out.println("- " + keyword + ": " + value));
+        request.getHeaders().forEach((keyword, content) -> out.println("- " + keyword + ": " + content));
         out.println("Body-length: " + request.getBody().length);
         out.println();
     }
@@ -29,7 +29,7 @@ public class Logger {
         out.println("*** Sent Response ***");
         out.println("Status: " + response.getStatus().toString());
         out.println("Headers:");
-        response.getHeaders().forEach((header) -> out.print("- " + header));
+        response.getHeaders().forEach((keyword, content) -> out.println("- " + keyword + ": " + content));
         out.println("Body-length: " + response.getBody().length);
         out.println();
     }

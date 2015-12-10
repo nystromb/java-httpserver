@@ -36,14 +36,14 @@ public class GetRouteResourceTest {
     }
 
     @Test
-    public void testReturnsResponseWithContentLengthHeader() throws Exception {
+    public void testReturnsResponseWithCorrectContentLengthHeader() throws Exception {
         Resource resource = new StringResource("data");
         Function<Request, Response> routeStrategy = new GetRouteResource(resource);
         Request request = new RequestBuilder().build();
         Response response = routeStrategy.apply(request);
-        String expectedHeader = "Content-Length: " + resource.getData().length + "\r\n";
 
-        assertTrue(response.getHeaders().contains(expectedHeader));
+        assertEquals(String.valueOf(resource.getData().length),
+                     response.getHeaders().get("Content-Length"));
     }
 
     @Test
@@ -55,6 +55,16 @@ public class GetRouteResourceTest {
 
         assertEquals(Status.PARTIAL_CONTENT, response.getStatus());
         assertArrayEquals("012".getBytes(), response.getBody());
+    }
+
+    @Test
+    public void testReturnsPartialContentResponseWithCorrectContentLengthHeader() throws Exception {
+        Resource resource = new StringResource("0123456789");
+        Function<Request, Response> routeStrategy = new GetRouteResource(resource);
+        Request request = new RequestBuilder().setHeader("Range", "bytes=0-2").build();
+        Response response = routeStrategy.apply(request);
+
+        assertEquals(String.valueOf(3), response.getHeaders().get("Content-Length"));
     }
 
     @Test

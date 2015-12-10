@@ -1,17 +1,15 @@
 package scarvill.httpserver.response;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 
 public class Response {
     private final Status status;
-    private List<String> headers = new ArrayList<>();
+    private HashMap<String, String> headers = new HashMap<>();
     private byte[] body;
 
-    public Response(Status status, String[] headers, byte[] body) {
+    public Response(Status status, HashMap<String, String> headers, byte[] body) {
         this.status = status;
-        Collections.addAll(this.headers, headers);
+        this.headers = headers;
         this.body = body;
     }
 
@@ -19,7 +17,7 @@ public class Response {
         return status;
     }
 
-    public List<String> getHeaders() {
+    public HashMap<String, String> getHeaders() {
         return headers;
     }
 

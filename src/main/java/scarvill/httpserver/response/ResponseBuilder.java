@@ -1,8 +1,10 @@
 package scarvill.httpserver.response;
 
+import java.util.HashMap;
+
 public class ResponseBuilder {
     private Status status;
-    private String[] headers = new String[]{};
+    private HashMap<String, String> headers = new HashMap<>();
     private byte[] body = new byte[]{};
 
     public ResponseBuilder setStatus(Status status) {
@@ -10,8 +12,13 @@ public class ResponseBuilder {
         return this;
     }
 
-    public ResponseBuilder setHeaders(String[] headers) {
+    public ResponseBuilder setHeaders(HashMap<String, String> headers) {
         this.headers = headers;
+        return this;
+    }
+
+    public ResponseBuilder setHeader(String keyword, String content) {
+        this.headers.put(keyword, content);
         return this;
     }
 

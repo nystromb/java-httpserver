@@ -107,7 +107,7 @@ public class Cobspec {
         return new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.FOUND)
-                .setHeaders(new String[]{"Location: " + redirectLocation + "\r\n"})
+                .setHeader("Location", redirectLocation)
                 .build());
     }
 

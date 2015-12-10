@@ -27,19 +27,17 @@ public class GetRouteResource implements Function<Request, Response> {
     }
 
     private Response  entireResourceResponse() {
-        String contentLength = "Content-Length: " + resource.getData().length + "\r\n";
         return new ResponseBuilder().setStatus(Status.OK)
-            .setHeaders(new String[]{contentLength})
+            .setHeader("Content-Length", String.valueOf(resource.getData().length))
             .setBody(resource.getData())
             .build();
     }
 
     private Response partialResourceResponse(String rangeInformation) {
         byte[] partialContent = readPartialResourceData(rangeInformation);
-        String contentLength = "Content-Length: " + partialContent.length + "\r\n";
 
         return new ResponseBuilder().setStatus(Status.PARTIAL_CONTENT)
-            .setHeaders(new String[]{contentLength})
+            .setHeader("Content-Length", String.valueOf(partialContent.length))
             .setBody(partialContent)
             .build();
     }

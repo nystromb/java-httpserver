@@ -75,7 +75,10 @@ public class Cobspec {
         router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
 
         Resource patchContent = new FileResource(Paths.get(publicDirectory + "/patch-content.txt"));
-        router.addRoute("/patch-content.txt", Method.GET, new GetRouteResource(patchContent));
+        router.addRoute("/patch-content.txt", Method.GET,
+            new GetRouteResource(patchContent));
+        router.addRoute("/patch-content.txt", Method.PATCH,
+            new ModifyRouteResource(patchContent, Status.NO_CONTENT));
 
         Resource jpeg = new FileResource(Paths.get(publicDirectory + "/image.jpeg"));
         router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));

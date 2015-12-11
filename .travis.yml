@@ -5,4 +5,4 @@ notifications:
   email: false
 script:
   - mvn test -B
-  - cd cob_spec && mvn package && java -jar fitnesse.jar -c "HttpTestSuite.ResponseTestSuite?responder=suite&runTestsMatchingAnyTag=should_pass&format=text"
+  - cd cob_spec && mvn package && java -jar fitnesse.jar -c "HttpTestSuite?responder=suite&runTestsMatchingAnyTag=should_pass&format=text"

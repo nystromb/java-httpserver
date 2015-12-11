@@ -12,29 +12,24 @@ import java.net.Socket;
 public class HTTPService implements Serveable {
     private Router router;
     private Logger logger;
-    private Socket clientSocket;
 
     public HTTPService(Router router, Logger logger) {
         this.router = router;
         this.logger = logger;
     }
 
-    public HTTPService serve(Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        return this;
-    }
-
-    @Override
-    public void run() {
-        try (BufferedReader in =
-                 new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             BufferedOutputStream out =
-                 new BufferedOutputStream(clientSocket.getOutputStream())
-        ) {
-            serveRequest(in, out);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Runnable serve(Socket clientSocket) {
+        return () -> {
+            try (BufferedReader in =
+                     new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                 BufferedOutputStream out =
+                     new BufferedOutputStream(clientSocket.getOutputStream())
+            ) {
+                serveRequest(in, out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     private void serveRequest(BufferedReader in, BufferedOutputStream out) throws IOException {

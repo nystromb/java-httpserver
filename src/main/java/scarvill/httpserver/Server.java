@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private ServerSocket serverSocket;
@@ -27,10 +29,12 @@ public class Server {
     }
 
     public void start() {
+        ExecutorService threadPool = Executors.newFixedThreadPool(16);
+
         while(isRunning()) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(service.serve(clientSocket)).start();
+                threadPool.execute(service.serve(clientSocket));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -51,24 +51,18 @@ public class ServerTest {
     }
 
     private class EchoService implements Serveable {
-        private Socket clientSocket;
 
-        public EchoService serve(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-            return this;
-        }
+        public Runnable serve(Socket clientSocket) {
+            return () -> {
+                try {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        @Override
-        public void run() {
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-                out.println(in.readLine());
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                    out.println(in.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            };
         }
     }
 

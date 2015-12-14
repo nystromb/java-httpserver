@@ -10,8 +10,8 @@ import java.io.*;
 import java.net.Socket;
 
 public class HTTPService implements Serveable {
-    private Router router;
-    private Logger logger;
+    private final Router router;
+    private final Logger logger;
 
     public HTTPService(Router router, Logger logger) {
         this.router = router;

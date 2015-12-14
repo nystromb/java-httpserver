@@ -26,7 +26,7 @@ public class HTTPServiceTest {
             .setHeader("Header", "a header")
             .build();
         Logger logger = new Logger(new NullPrintStream());
-        HTTPService service = new HTTPService(new MockRouter(expectedResponse), logger);
+        HTTPService service = new HTTPService(logger, new MockRouter(expectedResponse));
 
         service.serve(clientSocket).run();
 

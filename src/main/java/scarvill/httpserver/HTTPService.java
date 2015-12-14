@@ -13,7 +13,7 @@ public class HTTPService implements Serveable {
     private final Router router;
     private final Logger logger;
 
-    public HTTPService(Router router, Logger logger) {
+    public HTTPService(Logger logger, Router router) {
         this.router = router;
         this.logger = logger;
     }

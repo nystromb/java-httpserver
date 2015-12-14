@@ -1,20 +1,30 @@
 package scarvill.httpserver.cobspec;
 
+import scarvill.httpserver.ServerConfiguration;
+
 import java.util.Arrays;
 import java.util.List;
 
-public class ServerArguments {
+public class CommandLineArguments implements ServerConfiguration {
     public static final int DEFAULT_PORT = 5000;
     public static final String DEFAULT_PUBLIC_DIRECTORY = "./cob_spec/public";
 
-    public int port = DEFAULT_PORT;
-    public String publicDirectory = DEFAULT_PUBLIC_DIRECTORY;
+    private int port = DEFAULT_PORT;
+    private String publicDirectory = DEFAULT_PUBLIC_DIRECTORY;
     private List<String> argList;
 
-    public ServerArguments(String[] args) {
+    public CommandLineArguments(String[] args) {
         argList = Arrays.asList(args);
         setPortIfSpecified();
         setPublicDirectoryIfSpecified();
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getPublicDirectory() {
+        return publicDirectory;
     }
 
     private void setPortIfSpecified() {

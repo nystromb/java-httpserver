@@ -1,4 +1,4 @@
-package scarvill.httpserver.routes;
+package scarvill.httpserver.routing;
 
 public class StringResource implements Resource{
     private String data;

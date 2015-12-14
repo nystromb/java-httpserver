@@ -1,4 +1,4 @@
-package scarvill.httpserver.routes;
+package scarvill.httpserver.routing;
 
 import org.junit.Test;
 import scarvill.httpserver.mocks.MockHandler;
@@ -7,8 +7,6 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

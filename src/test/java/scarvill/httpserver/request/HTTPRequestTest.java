@@ -2,8 +2,6 @@ package scarvill.httpserver.request;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static scarvill.httpserver.request.Method.GET;

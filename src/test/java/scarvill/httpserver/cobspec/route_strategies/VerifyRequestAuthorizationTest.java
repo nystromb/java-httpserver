@@ -11,7 +11,7 @@ import scarvill.httpserver.response.Status;
 import java.util.Base64;
 import java.util.function.Function;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class VerifyRequestAuthorizationTest {
     @Test

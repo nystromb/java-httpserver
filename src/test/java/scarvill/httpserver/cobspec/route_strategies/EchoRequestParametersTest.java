@@ -5,7 +5,6 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 
-import java.util.HashMap;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertTrue;

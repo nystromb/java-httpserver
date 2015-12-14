@@ -1,4 +1,4 @@
-package scarvill.httpserver.routes;
+package scarvill.httpserver.routing;
 
 import java.io.File;
 import java.io.FileOutputStream;

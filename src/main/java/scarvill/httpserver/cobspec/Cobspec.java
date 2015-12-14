@@ -7,12 +7,11 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routes.FileResource;
-import scarvill.httpserver.routes.Resource;
-import scarvill.httpserver.routes.Router;
-import scarvill.httpserver.routes.StringResource;
+import scarvill.httpserver.routing.FileResource;
+import scarvill.httpserver.routing.Resource;
+import scarvill.httpserver.routing.Router;
+import scarvill.httpserver.routing.StringResource;
 
-import javax.swing.text.html.HTMLDocument;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;

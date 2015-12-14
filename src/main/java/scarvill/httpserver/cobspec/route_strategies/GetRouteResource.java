@@ -4,10 +4,8 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routes.Resource;
+import scarvill.httpserver.routing.Resource;
 
-import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.function.Function;
 
 public class GetRouteResource implements Function<Request, Response> {

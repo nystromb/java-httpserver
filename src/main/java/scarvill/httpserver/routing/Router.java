@@ -1,4 +1,4 @@
-package scarvill.httpserver.routes;
+package scarvill.httpserver.routing;
 
 import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Method;

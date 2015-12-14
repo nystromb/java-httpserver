@@ -6,7 +6,7 @@ import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routes.Router;
+import scarvill.httpserver.routing.Router;
 
 import java.io.*;
 import java.net.Socket;

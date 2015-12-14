@@ -5,14 +5,13 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routes.Resource;
-import scarvill.httpserver.routes.StringResource;
+import scarvill.httpserver.routing.Resource;
+import scarvill.httpserver.routing.StringResource;
 
 import java.util.function.Function;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class GetRouteResourceTest {
     @Test

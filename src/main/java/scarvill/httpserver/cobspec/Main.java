@@ -8,7 +8,7 @@ import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 
-public class ServerRunner {
+public class Main {
     public static void main(String[] args) throws IOException {
         ServerArguments arguments = new ServerArguments(args);
         Logger logger = Cobspec.fileLogger(arguments.publicDirectory);

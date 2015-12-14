@@ -29,7 +29,8 @@ public class Server {
     }
 
     public void start() {
-        ExecutorService threadPool = Executors.newFixedThreadPool(16);
+        ExecutorService threadPool =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         while(isRunning()) {
             try {

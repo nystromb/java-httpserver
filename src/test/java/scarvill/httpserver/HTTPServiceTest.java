@@ -12,11 +12,28 @@ import java.io.*;
 import java.net.Socket;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HTTPServiceTest {
+    @Test
+    public void testLogsHTTPTransactions() {
+        byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
+        MockSocket clientSocket =
+            new MockSocket(new ByteArrayInputStream(rawRequest), new ByteArrayOutputStream());
+        Response expectedResponse = new ResponseBuilder().setStatus(Status.OK).build();
+        ByteArrayOutputStream logStream = new ByteArrayOutputStream();
+        Logger logger = new Logger(new PrintStream(logStream));
+        HTTPService service = new HTTPService(logger, new MockRouter(expectedResponse));
+
+        service.serve(clientSocket).run();
+
+        assertTrue(new String(logStream.toByteArray()).contains("Received Request"));
+        assertTrue(new String(logStream.toByteArray()).contains("Sent Response"));
+    }
 
     @Test
-    public void testRespondsToARequest() throws Exception {
+    public void testSendsResponseToClientRequest() throws Exception {
         byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -24,13 +41,15 @@ public class HTTPServiceTest {
         Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeader("Header", "a header")
+            .setBody("body".getBytes())
             .build();
         Logger logger = new Logger(new NullPrintStream());
         HTTPService service = new HTTPService(logger, new MockRouter(expectedResponse));
+        String expectedResponseString = new String(new HTTPResponse().generate(expectedResponse));
 
         service.serve(clientSocket).run();
 
-        assertArrayEquals(new HTTPResponse().generate(expectedResponse), outputStream.toByteArray());
+        assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
     }
 
     private class MockSocket extends Socket {

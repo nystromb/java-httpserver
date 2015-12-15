@@ -1,5 +1,6 @@
 package scarvill.httpserver.routing;
 
+import scarvill.httpserver.routing.route_strategies.GetRouteOptions;
 import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
@@ -25,7 +26,7 @@ public class VirtualRouter implements Router {
         HashMap<Method, Function<Request, Response>> routeStrategies =
             routes.getOrDefault(uri, new HashMap<>());
         routeStrategies.put(method, strategy);
-        routeStrategies.put(Method.OPTIONS, routeOptionsStrategy(routeStrategies.keySet()));
+        routeStrategies.put(Method.OPTIONS, new GetRouteOptions(routeStrategies.keySet()));
         routes.put(uri, routeStrategies);
     }
 
@@ -44,24 +45,5 @@ public class VirtualRouter implements Router {
         Function<Request, Response> strategy =
             routeStrategies.getOrDefault(request.getMethod(), METHOD_NOT_ALLOWED_STRATEGY);
         return strategy.apply(request);
-    }
-
-    private Function<Request, Response> routeOptionsStrategy(Set<Method> allowedMethods) {
-        return new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.OK)
-                .setHeader("Allow", allowedMethodsString(allowedMethods))
-                .build());
-    }
-
-    private String allowedMethodsString(Set<Method> allowedMethods) {
-        String methodsString =
-            allowedMethods.stream().map(Method::toString).collect(Collectors.joining(","));
-
-        if (!methodsString.contains(Method.OPTIONS.toString())) {
-            methodsString += "," + Method.OPTIONS.toString();
-        }
-
-        return methodsString;
     }
 }

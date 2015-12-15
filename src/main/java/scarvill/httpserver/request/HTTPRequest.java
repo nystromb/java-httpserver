@@ -1,5 +1,7 @@
 package scarvill.httpserver.request;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -49,8 +51,26 @@ public class HTTPRequest {
     private HashMap<String, String> parseParameters() {
         HashMap<String, String> parameters = new HashMap<>();
 
-        if (requestHasQueryStringParameters()) {
-            parameters = new QueryString().parse(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
+        if (requestHasQueryString()) {
+            try {
+                parameters = parseQueryStringParameters(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
+            } catch (UnsupportedEncodingException ignored) {}
+        }
+
+        return parameters;
+    }
+
+    private boolean requestHasQueryString() {
+        return requestLineAndHeaders.split(" ")[1].split("\\?").length > 1;
+    }
+
+    private HashMap<String, String> parseQueryStringParameters(String query) throws UnsupportedEncodingException {
+        HashMap<String, String> parameters = new HashMap<>();
+
+        for (String argument : query.split("&")) {
+            String parameterName = URLDecoder.decode(argument.split("=")[0], "UTF-8");
+            String parameterValue = URLDecoder.decode(argument.split("=")[1], "UTF-8");
+            parameters.put(parameterName, parameterValue);
         }
 
         return parameters;
@@ -67,10 +87,6 @@ public class HTTPRequest {
         }
 
         return headers;
-    }
-
-    private boolean requestHasQueryStringParameters() {
-        return requestLineAndHeaders.split(" ")[1].split("\\?").length > 1;
     }
 
     private boolean includesHeaders(String[] requestLines) {

@@ -39,6 +39,18 @@ public class HTTPRequestTest {
     }
 
     @Test
+    public void testTranslatesSpecialCharacterCodesInQueryString() {
+        String query = "message=%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26" +
+            "%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F";
+        String translatedMessage =
+            "<, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
+
+        Request request = new HTTPRequest("GET /uri?" + query + " HTTP/1.1\r\n\r\n").parse();
+
+        assertEquals(translatedMessage, request.getParameters().get("message"));
+    }
+
+    @Test
     public void testParsesRawHTTPRequestHeaders() {
         String rawRequest = "GET /uri HTTP/1.1\r\n" +
             "Header: a header\r\n" +

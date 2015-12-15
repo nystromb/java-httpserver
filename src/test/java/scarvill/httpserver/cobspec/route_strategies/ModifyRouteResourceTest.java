@@ -7,6 +7,7 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.Resource;
 import scarvill.httpserver.routing.StringResource;
+import scarvill.httpserver.routing.route_strategies.ModifyRouteResource;
 
 import java.util.function.Function;
 

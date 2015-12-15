@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.cobspec;
 
 import org.junit.Test;
 import scarvill.httpserver.cobspec.CommandLineArguments;

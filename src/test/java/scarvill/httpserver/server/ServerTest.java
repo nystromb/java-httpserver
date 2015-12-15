@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.server;
 
 import org.junit.After;
 import org.junit.Before;

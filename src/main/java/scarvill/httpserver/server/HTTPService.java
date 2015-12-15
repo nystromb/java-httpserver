@@ -1,12 +1,13 @@
-package scarvill.httpserver;
+package scarvill.httpserver.server;
 
-import scarvill.httpserver.request.HTTPRequest;
 import scarvill.httpserver.request.Request;
-import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.routing.Router;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class HTTPService implements Serveable {

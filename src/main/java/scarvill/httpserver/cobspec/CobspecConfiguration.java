@@ -1,9 +1,5 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.HTTPService;
-import scarvill.httpserver.Logger;
-import scarvill.httpserver.Serveable;
-import scarvill.httpserver.ServerConfiguration;
 import scarvill.httpserver.cobspec.route_strategies.*;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
@@ -14,6 +10,10 @@ import scarvill.httpserver.routing.FileResource;
 import scarvill.httpserver.routing.Resource;
 import scarvill.httpserver.routing.Router;
 import scarvill.httpserver.routing.StringResource;
+import scarvill.httpserver.server.HTTPService;
+import scarvill.httpserver.server.Logger;
+import scarvill.httpserver.server.Serveable;
+import scarvill.httpserver.server.ServerConfiguration;
 
 import java.io.File;
 import java.io.IOException;

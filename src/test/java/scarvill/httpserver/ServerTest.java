@@ -3,6 +3,9 @@ package scarvill.httpserver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import scarvill.httpserver.server.Serveable;
+import scarvill.httpserver.server.Server;
+import scarvill.httpserver.server.ServerConfiguration;
 
 import java.io.BufferedReader;
 import java.io.IOException;

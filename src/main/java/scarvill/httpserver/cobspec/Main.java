@@ -1,7 +1,7 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.Server;
-import scarvill.httpserver.ServerConfiguration;
+import scarvill.httpserver.server.Server;
+import scarvill.httpserver.server.ServerConfiguration;
 
 import java.io.IOException;
 

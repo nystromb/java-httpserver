@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.server;
 
 import java.net.Socket;
 

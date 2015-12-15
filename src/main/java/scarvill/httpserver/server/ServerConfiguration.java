@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.server;
 
 public interface ServerConfiguration {
     int getPort();

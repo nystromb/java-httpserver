@@ -1,4 +1,4 @@
-package scarvill.httpserver;
+package scarvill.httpserver.server;
 
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;

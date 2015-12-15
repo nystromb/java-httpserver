@@ -7,11 +7,12 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.Router;
+import scarvill.httpserver.server.HTTPService;
+import scarvill.httpserver.server.Logger;
 
 import java.io.*;
 import java.net.Socket;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

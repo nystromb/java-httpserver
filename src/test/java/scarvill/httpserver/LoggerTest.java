@@ -7,6 +7,7 @@ import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
+import scarvill.httpserver.server.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

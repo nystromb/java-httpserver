@@ -25,11 +25,11 @@ public class FileSystemRouter implements Router {
         new GiveStaticResponse(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
 
     private final Path publicDirectory;
-    private VirtualRouter virtualRouter;
+    private VirtualResourceRouter virtualRouter;
 
     public FileSystemRouter(Path publicDirectory) {
         this.publicDirectory = publicDirectory;
-        this.virtualRouter = new VirtualRouter();
+        this.virtualRouter = new VirtualResourceRouter();
     }
 
     @Override

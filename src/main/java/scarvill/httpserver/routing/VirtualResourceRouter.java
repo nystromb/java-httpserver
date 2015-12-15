@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class VirtualRouter implements Router {
+public class VirtualResourceRouter implements Router {
     private final Function<Request, Response> NOT_FOUND_STRATEGY =
         new GiveStaticResponse(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
     private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =

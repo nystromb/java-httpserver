@@ -9,17 +9,15 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
-import java.util.function.Function;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class VirtualRouterTest {
+public class VirtualResourceRouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
         Request request = new RequestBuilder().setURI("/unconfigured").build();
-        Router router = new VirtualRouter();
+        Router router = new VirtualResourceRouter();
 
         Response response = router.routeRequest(request);
 
@@ -29,7 +27,7 @@ public class VirtualRouterTest {
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        Router router = new VirtualRouter();
+        Router router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.POST, new GiveStaticResponse(response));
 
@@ -42,7 +40,7 @@ public class VirtualRouterTest {
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
-        Router router = new VirtualRouter();
+        Router router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
@@ -54,7 +52,7 @@ public class VirtualRouterTest {
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
-        Router router = new VirtualRouter();
+        Router router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 

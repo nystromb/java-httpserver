@@ -8,7 +8,6 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.Router;
-import scarvill.httpserver.routing.VirtualRouter;
 
 import java.io.*;
 import java.net.Socket;

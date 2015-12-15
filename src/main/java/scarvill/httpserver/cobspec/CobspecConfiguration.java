@@ -69,7 +69,7 @@ public class CobspecConfiguration implements ServerConfiguration {
     }
 
     private Router configuredRouter(String publicDirectory) {
-        Router router = new VirtualRouter();
+        Router router = new VirtualResourceRouter();
 
         router.addRoute("/", Method.GET, new GetRouteResource(
             new StringResource(indexPage(publicDirectory))));

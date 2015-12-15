@@ -7,6 +7,7 @@ import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
+import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
 import java.util.function.Function;
 
@@ -29,11 +30,12 @@ public class VirtualRouterTest {
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Router router = new VirtualRouter();
-        router.addRoute("/", Method.POST, new GiveStaticStatusResponse(Status.OK));
+        Response response = new ResponseBuilder().setStatus(Status.OK).build();
+        router.addRoute("/", Method.POST, new GiveStaticResponse(response));
 
-        Response response = router.routeRequest(request);
+        Response routerResponse = router.routeRequest(request);
 
-        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals(Status.METHOD_NOT_ALLOWED, routerResponse.getStatus());
     }
 
     @Test
@@ -41,43 +43,32 @@ public class VirtualRouterTest {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
         Router router = new VirtualRouter();
-        router.addRoute("/", Method.GET, new GiveStaticStatusResponse(expectedResponseStatus));
+        Response response = new ResponseBuilder().setStatus(Status.OK).build();
+        router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
-        Response response = router.routeRequest(request);
+        Response routerResponse = router.routeRequest(request);
 
-        assertEquals(expectedResponseStatus, response.getStatus());
+        assertEquals(expectedResponseStatus, routerResponse.getStatus());
     }
 
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
         Router router = new VirtualRouter();
-        router.addRoute("/", Method.GET, new GiveStaticStatusResponse(Status.OK));
+        Response response = new ResponseBuilder().setStatus(Status.OK).build();
+        router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
-        Response response = router.routeRequest(request);
+        Response routerResponse = router.routeRequest(request);
 
         assertEquals(Status.OK, response.getStatus());
-        assertTrue(response.getHeaders().get("Allow").contains("GET"));
-        assertTrue(response.getHeaders().get("Allow").contains("OPTIONS"));
+        assertTrue(routerResponse.getHeaders().get("Allow").contains("GET"));
+        assertTrue(routerResponse.getHeaders().get("Allow").contains("OPTIONS"));
 
-        router.addRoute("/", Method.POST, new GiveStaticStatusResponse(Status.OK));
-        response = router.routeRequest(request);
+        router.addRoute("/", Method.POST, new GiveStaticResponse(response));
+        Response newRouterResponse = router.routeRequest(request);
 
-        assertTrue(response.getHeaders().get("Allow").contains("GET"));
-        assertTrue(response.getHeaders().get("Allow").contains("POST"));
-        assertTrue(response.getHeaders().get("Allow").contains("OPTIONS"));
-    }
-
-    private class GiveStaticStatusResponse implements Function<Request, Response> {
-        private Status expectedResponseStatus;
-
-        public GiveStaticStatusResponse(Status expectedResponseStatus) {
-            this.expectedResponseStatus = expectedResponseStatus;
-        }
-
-        @Override
-        public Response apply(Request request) {
-            return new ResponseBuilder().setStatus(expectedResponseStatus).build();
-        }
+        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("GET"));
+        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("POST"));
+        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("OPTIONS"));
     }
 }

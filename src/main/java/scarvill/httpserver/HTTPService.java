@@ -12,10 +12,12 @@ import java.net.Socket;
 public class HTTPService implements Serveable {
     private final Router router;
     private final Logger logger;
+    private final ServerIO io;
 
     public HTTPService(Logger logger, Router router) {
         this.router = router;
         this.logger = logger;
+        this.io = new ServerIO();
     }
 
     public Runnable serve(Socket clientSocket) {
@@ -33,43 +35,10 @@ public class HTTPService implements Serveable {
     }
 
     private void serveRequest(BufferedReader in, BufferedOutputStream out) throws IOException {
-        Request request = readRequest(in);
+        Request request = io.readRequest(in);
         Response response = router.routeRequest(request);
-        sendResponse(out, response);
+        io.writeResponse(out, response);
         logTransaction(request, response);
-    }
-
-    private Request readRequest(BufferedReader in) throws IOException {
-        String requestLineAndHeaders = readRequestLineAndHeaders(in);
-        byte[] body = readBody(in);
-
-        return new HTTPRequest(requestLineAndHeaders, body).parse();
-    }
-
-    private String readRequestLineAndHeaders(BufferedReader in) throws IOException {
-        String requestLineAndHeaders = "";
-
-        while (!requestLineAndHeaders.contains("\r\n\r\n")) {
-            requestLineAndHeaders += in.readLine() + "\r\n";
-        }
-
-        return requestLineAndHeaders;
-    }
-
-    private byte[] readBody(BufferedReader in) throws IOException {
-        ByteArrayOutputStream body = new ByteArrayOutputStream();
-
-        while (in.ready()) {
-            body.write(in.read());
-        }
-
-        return body.toByteArray();
-    }
-
-    private void sendResponse(OutputStream out, Response response) throws IOException {
-        byte[] rawResponse = new HTTPResponse().generate(response);
-
-        out.write(rawResponse, 0, rawResponse.length);
     }
 
     private void logTransaction(Request request, Response response) {

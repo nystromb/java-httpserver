@@ -11,9 +11,9 @@ public class Server {
     private ServerSocket serverSocket;
     private Serveable service;
 
-    public Server(int port, Serveable service) throws IOException {
-        this.serverSocket = new ServerSocket(port);
-        this.service = service;
+    public Server(ServerConfiguration configuration) throws IOException {
+        this.serverSocket = new ServerSocket(configuration.getPort());
+        this.service = configuration.getService();
     }
 
     public boolean isRunning() {

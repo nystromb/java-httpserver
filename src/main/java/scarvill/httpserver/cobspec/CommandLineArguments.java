@@ -1,11 +1,9 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.ServerConfiguration;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class CommandLineArguments implements ServerConfiguration {
+public class CommandLineArguments {
     public static final int DEFAULT_PORT = 5000;
     public static final String DEFAULT_PUBLIC_DIRECTORY = "./cob_spec/public";
 

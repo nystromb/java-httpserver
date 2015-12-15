@@ -24,7 +24,8 @@ public class ServerTest {
 
     @Test
     public void testServerRunsThenStops() throws Exception {
-        Server server = new Server(0, new EchoService());
+        int port = 0;
+        Server server = new Server(new TestingServerConfiguration(port, new EchoService()));
         threadPool.submit(server::start);
 
         assertTrue(server.isRunning());
@@ -35,8 +36,9 @@ public class ServerTest {
     }
 
     @Test
-    public void testServesConnectionAccordingToInjectedService() throws Exception {
-        Server server = new Server(0, new EchoService());
+    public void testServesConnectionAccordingToServiceInServerConfiguration() throws Exception {
+        int port = 0;
+        Server server = new Server(new TestingServerConfiguration(port, new EchoService()));
         threadPool.submit(server::start);
         String echoMessage = "foo";
 
@@ -48,6 +50,34 @@ public class ServerTest {
     @After
     public void tearDown() throws Exception {
         threadPool.shutdown();
+    }
+
+    private class TestingServerConfiguration implements ServerConfiguration {
+        private int port;
+        private Serveable service;
+
+        public TestingServerConfiguration(int port, Serveable service) {
+            this.port = port;
+            this.service = service;
+        }
+
+        @Override
+        public int getPort() {
+            return port;
+        }
+
+        @Override
+        public String getPublicDirectory() {
+            return null;
+        }
+
+        @Override
+        public Serveable getService() {
+            return service;
+        }
+
+        @Override
+        public void serverTearDown() {}
     }
 
     private class EchoService implements Serveable {

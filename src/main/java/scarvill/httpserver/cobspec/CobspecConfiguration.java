@@ -1,6 +1,9 @@
 package scarvill.httpserver.cobspec;
 
+import scarvill.httpserver.HTTPService;
 import scarvill.httpserver.Logger;
+import scarvill.httpserver.Serveable;
+import scarvill.httpserver.ServerConfiguration;
 import scarvill.httpserver.cobspec.route_strategies.*;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
@@ -21,9 +24,36 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
-public class Cobspec {
+public class CobspecConfiguration implements ServerConfiguration {
+    private CommandLineArguments arguments;
 
-    public static Logger fileLogger(String publicDirectory) {
+    public CobspecConfiguration(CommandLineArguments arguments) {
+        this.arguments = arguments;
+    }
+
+    @Override
+    public int getPort() {
+        return arguments.getPort();
+    }
+
+    @Override
+    public String getPublicDirectory() {
+        return arguments.getPublicDirectory();
+    }
+
+    @Override
+    public Serveable getService() {
+        return new HTTPService(
+            fileLogger(getPublicDirectory()),
+            configuredRouter(getPublicDirectory()));
+    }
+
+    @Override
+    public void serverTearDown() {
+        new File(arguments.getPublicDirectory() + "/logs").delete();
+    }
+
+    private Logger fileLogger(String publicDirectory) {
         try {
             File logFile = new File(publicDirectory + "/logs");
             logFile.createNewFile();
@@ -34,7 +64,7 @@ public class Cobspec {
         }
     }
 
-    public static Router configuredRouter(String publicDirectory) {
+    private Router configuredRouter(String publicDirectory) {
         Router router = new Router();
 
         router.addRoute("/", Method.GET, new GetRouteResource(
@@ -91,11 +121,22 @@ public class Cobspec {
         return router;
     }
 
-    public static void serverTeardown(String publicDirectory) {
-        new File(publicDirectory + "/logs").delete();
+    private Function<Request, Response> giveRedirectResponse(String redirectLocation) {
+        return new GiveStaticResponse(
+            new ResponseBuilder()
+                .setStatus(Status.FOUND)
+                .setHeader("Location", redirectLocation)
+                .build());
     }
 
-    private static String indexPage(String publicDirectory) {
+    private Function<Request, Response> giveStatusResponse(Status status) {
+        return new GiveStaticResponse(
+            new ResponseBuilder()
+                .setStatus(status)
+                .build());
+    }
+
+    private String indexPage(String publicDirectory) {
         return "<!DOCTYPE html>\n" +
             "<html lang=\"en\">\n" +
             "<head>\n" +
@@ -110,7 +151,7 @@ public class Cobspec {
             "</html>\n";
     }
 
-    private static String directoryListEntries(String publicDirectory) {
+    private String directoryListEntries(String publicDirectory) {
         String directoryList = "";
         try {
             DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(publicDirectory));
@@ -122,20 +163,5 @@ public class Cobspec {
             throw new RuntimeException(e);
         }
         return  directoryList;
-    }
-
-    private static Function<Request, Response> giveRedirectResponse(String redirectLocation) {
-        return new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.FOUND)
-                .setHeader("Location", redirectLocation)
-                .build());
-    }
-
-    private static Function<Request, Response> giveStatusResponse(Status status) {
-        return new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(status)
-                .build());
     }
 }

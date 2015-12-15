@@ -13,12 +13,12 @@ import java.util.function.Function;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class RouterTest {
+public class VirtualRouterTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
         Request request = new RequestBuilder().setURI("/unconfigured").build();
-        Router router = new Router();
+        Router router = new VirtualRouter();
 
         Response response = router.routeRequest(request);
 
@@ -28,7 +28,7 @@ public class RouterTest {
     @Test
     public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        Router router = new Router();
+        Router router = new VirtualRouter();
         router.addRoute("/", Method.POST, new GiveStaticStatusResponse(Status.OK));
 
         Response response = router.routeRequest(request);
@@ -40,7 +40,7 @@ public class RouterTest {
     public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
-        Router router = new Router();
+        Router router = new VirtualRouter();
         router.addRoute("/", Method.GET, new GiveStaticStatusResponse(expectedResponseStatus));
 
         Response response = router.routeRequest(request);
@@ -51,7 +51,7 @@ public class RouterTest {
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
-        Router router = new Router();
+        Router router = new VirtualRouter();
         router.addRoute("/", Method.GET, new GiveStaticStatusResponse(Status.OK));
 
         Response response = router.routeRequest(request);

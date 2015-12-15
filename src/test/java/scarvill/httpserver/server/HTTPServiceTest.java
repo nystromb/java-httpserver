@@ -1,17 +1,18 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
+import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.Router;
-import scarvill.httpserver.server.HTTPService;
-import scarvill.httpserver.server.Logger;
+import scarvill.httpserver.routing.VirtualRouter;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,12 +74,15 @@ public class HTTPServiceTest {
         }
     }
 
-    private class MockRouter extends Router {
+    private class MockRouter implements Router {
         private Response response;
 
         public MockRouter(Response expectedResponse) {
             this.response = expectedResponse;
         }
+
+        @Override
+        public void addRoute(String uri, Method method, Function<Request, Response> strategy) {}
 
         @Override
         public Response routeRequest(Request request) {

@@ -6,10 +6,7 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.FileResource;
-import scarvill.httpserver.routing.Resource;
-import scarvill.httpserver.routing.Router;
-import scarvill.httpserver.routing.StringResource;
+import scarvill.httpserver.routing.*;
 import scarvill.httpserver.routing.route_strategies.GetRouteResource;
 import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.routing.route_strategies.ModifyRouteResource;
@@ -69,7 +66,7 @@ public class CobspecConfiguration implements ServerConfiguration {
     }
 
     private Router configuredRouter(String publicDirectory) {
-        Router router = new Router();
+        Router router = new VirtualRouter();
 
         router.addRoute("/", Method.GET, new GetRouteResource(
             new StringResource(indexPage(publicDirectory))));

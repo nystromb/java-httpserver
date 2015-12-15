@@ -33,10 +33,15 @@ public class Router {
         if (routeStrategies == null) {
             return NOT_FOUND_STRATEGY.apply(request);
         } else {
-            Function<Request, Response> strategy =
-                routeStrategies.getOrDefault(request.getMethod(), METHOD_NOT_ALLOWED_STRATEGY);
-            return strategy.apply(request);
+            return routeRequestByMethod(request, routeStrategies);
         }
+    }
+
+    private Response routeRequestByMethod(
+        Request request, HashMap<Method, Function<Request, Response>> routeStrategies) {
+        Function<Request, Response> strategy =
+            routeStrategies.getOrDefault(request.getMethod(), METHOD_NOT_ALLOWED_STRATEGY);
+        return strategy.apply(request);
     }
 
     private Function<Request, Response> routeOptionsStrategy(Set<Method> allowedMethods) {

@@ -5,9 +5,8 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.Resource;
-import scarvill.httpserver.routing.StringResource;
-import scarvill.httpserver.routing.route_strategies.ModifyRouteResource;
+import scarvill.httpserver.routing.resource.Resource;
+import scarvill.httpserver.routing.resource.StringResource;
 
 import java.util.function.Function;
 

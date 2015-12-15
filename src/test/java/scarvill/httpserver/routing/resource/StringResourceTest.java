@@ -1,6 +1,8 @@
-package scarvill.httpserver.routing;
+package scarvill.httpserver.routing.resource;
 
 import org.junit.Test;
+import scarvill.httpserver.routing.resource.Resource;
+import scarvill.httpserver.routing.resource.StringResource;
 
 import static org.junit.Assert.assertEquals;
 

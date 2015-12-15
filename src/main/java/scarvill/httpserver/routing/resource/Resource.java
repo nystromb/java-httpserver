@@ -1,4 +1,4 @@
-package scarvill.httpserver.routing;
+package scarvill.httpserver.routing.resource;
 
 public interface Resource {
     byte[] getData();

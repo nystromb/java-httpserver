@@ -13,7 +13,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import static scarvill.httpserver.request.Method.*;
+import static scarvill.httpserver.request.Method.GET;
+import static scarvill.httpserver.request.Method.OPTIONS;
 
 public class RouteToDirectoryResources implements Function<Request, Response> {
     private Path rootDirectory;

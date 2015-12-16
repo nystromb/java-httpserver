@@ -1,7 +1,6 @@
 package scarvill.httpserver.routing.resource;
 
 import org.junit.Test;
-import scarvill.httpserver.routing.resource.FileResource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

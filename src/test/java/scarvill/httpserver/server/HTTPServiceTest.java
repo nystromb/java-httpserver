@@ -5,7 +5,7 @@ import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
+import scarvill.httpserver.routing.GiveStaticResponse;
 
 import java.io.*;
 import java.net.Socket;

@@ -6,11 +6,7 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.resource.FileResource;
 import scarvill.httpserver.routing.resource.Resource;
-import scarvill.httpserver.routing.route_strategies.GetRouteOptions;
-import scarvill.httpserver.routing.route_strategies.GetRouteResource;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

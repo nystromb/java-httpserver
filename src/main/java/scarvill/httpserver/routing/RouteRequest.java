@@ -1,7 +1,5 @@
 package scarvill.httpserver.routing;
 
-import scarvill.httpserver.routing.route_strategies.GetRouteOptions;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;

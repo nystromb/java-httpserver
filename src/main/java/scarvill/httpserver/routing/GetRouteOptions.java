@@ -1,4 +1,4 @@
-package scarvill.httpserver.routing.route_strategies;
+package scarvill.httpserver.routing;
 
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;

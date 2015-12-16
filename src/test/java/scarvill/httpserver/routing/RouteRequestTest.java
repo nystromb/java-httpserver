@@ -7,7 +7,6 @@ import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,6 +1,5 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.cobspec.route_strategies.*;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
@@ -10,10 +9,10 @@ import scarvill.httpserver.routing.*;
 import scarvill.httpserver.routing.resource.FileResource;
 import scarvill.httpserver.routing.resource.Resource;
 import scarvill.httpserver.routing.resource.StringResource;
-import scarvill.httpserver.routing.route_strategies.GetRouteResource;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
-import scarvill.httpserver.routing.route_strategies.ModifyRouteResource;
-import scarvill.httpserver.routing.route_strategies.VerifyRequestAuthorization;
+import scarvill.httpserver.routing.GetRouteResource;
+import scarvill.httpserver.routing.GiveStaticResponse;
+import scarvill.httpserver.routing.ModifyRouteResource;
+import scarvill.httpserver.routing.VerifyRequestAuthorization;
 import scarvill.httpserver.server.HTTPService;
 import scarvill.httpserver.server.Logger;
 import scarvill.httpserver.server.Serveable;

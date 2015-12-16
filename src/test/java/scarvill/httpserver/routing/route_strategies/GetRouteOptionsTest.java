@@ -6,6 +6,7 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
+import scarvill.httpserver.routing.GetRouteOptions;
 
 import java.util.Arrays;
 import java.util.Collection;

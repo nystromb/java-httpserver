@@ -1,5 +1,6 @@
 package scarvill.httpserver.routing;
 
+import scarvill.httpserver.cobspec.HtmlPage;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
@@ -24,38 +25,13 @@ public class GetDirectoryIndex implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String indexPage = htmlIndexPage(request.getURI());
+        String indexPage = new HtmlPage().indexPage(directoryFileNames(request.getURI()));
 
         return new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeader("Content-Length", String.valueOf(indexPage.length()))
             .setBody(indexPage.getBytes())
             .build();
-    }
-
-    private String htmlIndexPage(String uri) {
-        return "<!DOCTYPE html>\n" +
-            "<html lang=\"en\">\n" +
-            "<head>\n" +
-            "<meta charset=\"utf-8\">\n" +
-            "<title>Index</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "<ul>\n" +
-            formatHtmlListEntries(directoryFileNames(uri)) +
-            "</ul>\n" +
-            "</body>\n" +
-            "</html>\n";
-    }
-
-    private String formatHtmlListEntries(Collection<String> entries) {
-        String listElements = "";
-
-        for (String entry : entries) {
-            listElements += "<li><a href=/" + entry + ">" + entry + "</a></li>\n";
-        }
-
-        return listElements;
     }
 
     private List<String> directoryFileNames(String uri) {

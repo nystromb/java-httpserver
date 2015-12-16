@@ -18,47 +18,21 @@ public class GetDirectoryIndexTest {
     @Test
     public void testResponseContainsDirectoryContents() throws IOException {
         Path directory = Files.createTempDirectory("directory");
-        Path subdirectory = Files.createTempDirectory(directory, "subdirectory");
-        Path file = createTempFileWithContent(subdirectory, "".getBytes());
+        Path file1 = createTempFileWithContent(directory, "".getBytes());
+        Path file2 = createTempFileWithContent(directory, "".getBytes());
 
-        GetDirectoryIndex getDirectoryIndex = new GetDirectoryIndex(directory);
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/" + subdirectory.getFileName())
-            .build();
-
-        Response response = getDirectoryIndex.apply(request);
-
-        assertTrue(new String(response.getBody()).contains(file.getFileName().toString()));
-
-        deleteFiles(Arrays.asList(file, subdirectory, directory));
-    }
-
-    @Test
-    public void testResponseContainsWellFormattedHtml() throws IOException {
-        Path directory = Files.createTempDirectory("directory");
         GetDirectoryIndex getDirectoryIndex = new GetDirectoryIndex(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/")
             .build();
-        String htmlTemplate = "<!DOCTYPE html>\n" +
-            "<html lang=\"en\">\n" +
-            "<head>\n" +
-            "<meta charset=\"utf-8\">\n" +
-            "<title>Index</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "<ul>\n" +
-            "</ul>\n" +
-            "</body>\n" +
-            "</html>\n";
 
         Response response = getDirectoryIndex.apply(request);
 
-        assertEquals(htmlTemplate, new String(response.getBody()));
+        assertTrue(new String(response.getBody()).contains(file1.getFileName().toString()));
+        assertTrue(new String(response.getBody()).contains(file2.getFileName().toString()));
 
-        deleteFiles(Arrays.asList(directory));
+        deleteFiles(Arrays.asList(file1, file2, directory));
     }
 
     private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {

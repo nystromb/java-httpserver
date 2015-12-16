@@ -58,6 +58,43 @@ public class RouteToDirectoryResourcesTest {
     }
 
     @Test
+    public void testReturnsRootDirectoryContents() throws IOException {
+        Path directory = Files.createTempDirectory("directory");
+        Path file = createTempFileWithContent(directory, "".getBytes());
+
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/")
+            .build();
+
+        Response response = router.apply(request);
+
+        assertTrue(new String(response.getBody()).contains(file.getFileName().toString()));
+
+        deleteFiles(Arrays.asList(file, directory));
+    }
+
+    @Test
+    public void testReturnsNestedDirectoryContents() throws IOException {
+        Path directory = Files.createTempDirectory("directory");
+        Path subdirectory = Files.createTempDirectory(directory, "subdirectory");
+        Path file = createTempFileWithContent(subdirectory, "".getBytes());
+
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/" + subdirectory.getFileName())
+            .build();
+
+        Response response = router.apply(request);
+
+        assertTrue(new String(response.getBody()).contains(file.getFileName().toString()));
+
+        deleteFiles(Arrays.asList(file, subdirectory, directory));
+    }
+
+    @Test
     public void testRoutesOptionsRequestsForExtantResources() throws IOException {
         Path directory = Files.createTempDirectory("dir");
         Path file = createTempFileWithContent(directory, "".getBytes());

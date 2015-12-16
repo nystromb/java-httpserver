@@ -1,4 +1,4 @@
-package scarvill.httpserver.cobspec.route_strategies;
+package scarvill.httpserver.cobspec;
 
 import org.junit.Test;
 import scarvill.httpserver.cobspec.EchoRequestParameters;

@@ -1,4 +1,4 @@
-package scarvill.httpserver.routing.route_strategies;
+package scarvill.httpserver.routing;
 
 import org.junit.Test;
 import scarvill.httpserver.request.Request;

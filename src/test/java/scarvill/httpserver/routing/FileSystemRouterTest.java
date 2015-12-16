@@ -84,17 +84,6 @@ public class FileSystemRouterTest {
         deleteFiles(Arrays.asList(file, publicDirectory));
     }
 
-//    @Test
-//    public void testTracksIfHasConfiguredRouteForGivenURI() throws IOException {
-//        Path publicDirectory = Files.createTempDirectory("public");
-//        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", "".getBytes());
-//
-//        Router router = new FileSystemRouter(publicDirectory);
-//
-//        assertFalse(router.hasRoute("/"));
-//        assertTrue(router.hasRoute("/" + file.getFileName()));
-//    }
-
     private Path createTempFileWithContent(
         Path dir, String prefix, String suffix, byte[] content) throws IOException {
         Path file = Files.createTempFile(dir, prefix, suffix);

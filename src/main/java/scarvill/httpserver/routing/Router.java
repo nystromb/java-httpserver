@@ -8,6 +8,5 @@ import java.util.function.Function;
 
 public interface Router {
     void addRoute(String uri, Method method, Function<Request, Response> strategy);
-
     Response routeRequest(Request request);
 }

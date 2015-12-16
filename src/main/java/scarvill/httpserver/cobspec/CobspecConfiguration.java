@@ -69,7 +69,7 @@ public class CobspecConfiguration implements ServerConfiguration {
     }
 
     private Router configuredRouter(String publicDirectory) {
-        Router router = new VirtualResourceRouter();
+        Router router = new FileSystemRouter(Paths.get(publicDirectory));
 
         router.addRoute("/", Method.GET, new GetRouteResource(
             new StringResource(indexPage(publicDirectory))));
@@ -94,33 +94,11 @@ public class CobspecConfiguration implements ServerConfiguration {
             new VerifyRequestAuthorization("admin", "hunter2", "Logging",
                 new GetRouteResource(logsResource)));
 
-        Resource file1 = new FileResource(Paths.get(publicDirectory + "/file1"));
-        router.addRoute("/file1", Method.GET, new GetRouteResource(file1));
-
-        Resource file2 = new FileResource(Paths.get(publicDirectory + "/file2"));
-        router.addRoute("/file2", Method.GET, new GetRouteResource(file2));
-
-        Resource textfile = new FileResource(Paths.get(publicDirectory + "/text-file.txt"));
-        router.addRoute("/text-file.txt", Method.GET, new GetRouteResource(textfile));
-
-        Resource partialContent =
-            new FileResource(Paths.get(publicDirectory + "/partial_content.txt"));
-        router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
-
         Resource patchContent = new FileResource(Paths.get(publicDirectory + "/patch-content.txt"));
         router.addRoute("/patch-content.txt", Method.GET,
             new GetRouteResource(patchContent));
         router.addRoute("/patch-content.txt", Method.PATCH,
             new ModifyRouteResource(patchContent, Status.NO_CONTENT));
-
-        Resource jpeg = new FileResource(Paths.get(publicDirectory + "/image.jpeg"));
-        router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));
-
-        Resource png = new FileResource(Paths.get(publicDirectory + "/image.png"));
-        router.addRoute("/image.png", Method.GET, new GetRouteResource(png));
-
-        Resource gif = new FileResource(Paths.get(publicDirectory + "/image.gif"));
-        router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
 
         return router;
     }

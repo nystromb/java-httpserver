@@ -67,17 +67,14 @@ public class CobspecConfiguration implements ServerConfiguration {
         RouteRequest router = new RouteRequest();
         router.routeToResourcesInDirectory(Paths.get(publicDirectory));
 
-        router.addRoute("/", Method.GET, new GetRouteResource(
-            new StringResource(indexPage(publicDirectory))));
-
         router.addRoute("/parameters", Method.GET, new EchoRequestParameters());
 
         router.addRoute("/redirect", Method.GET, giveRedirectResponse("http://localhost:5000/"));
 
-        router.addRoute("/method_options", Method.GET, giveStatusResponse(Status.OK));
-        router.addRoute("/method_options", Method.PUT, giveStatusResponse(Status.OK));
-        router.addRoute("/method_options", Method.POST, giveStatusResponse(Status.OK));
-        router.addRoute("/method_options", Method.HEAD, giveStatusResponse(Status.OK));
+        router.addRoute("/method_options", Method.GET, giveStatusOKResponse());
+        router.addRoute("/method_options", Method.PUT, giveStatusOKResponse());
+        router.addRoute("/method_options", Method.POST, giveStatusOKResponse());
+        router.addRoute("/method_options", Method.HEAD, giveStatusOKResponse());
 
         Resource formResource = new StringResource("");
         router.addRoute("/form", Method.GET, new GetRouteResource(formResource));
@@ -107,39 +104,10 @@ public class CobspecConfiguration implements ServerConfiguration {
                 .build());
     }
 
-    private Function<Request, Response> giveStatusResponse(Status status) {
+    private Function<Request, Response> giveStatusOKResponse() {
         return new GiveStaticResponse(
             new ResponseBuilder()
-                .setStatus(status)
+                .setStatus(Status.OK)
                 .build());
-    }
-
-    private String indexPage(String publicDirectory) {
-        return "<!DOCTYPE html>\n" +
-            "<html lang=\"en\">\n" +
-            "<head>\n" +
-            "<meta charset=\"utf-8\">\n" +
-            "<title>Index</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "<ul>\n" +
-            directoryListEntries(publicDirectory) +
-            "</ul>\n" +
-            "</body>\n" +
-            "</html>\n";
-    }
-
-    private String directoryListEntries(String publicDirectory) {
-        String directoryList = "";
-        try {
-            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(publicDirectory));
-            for (Path entry : stream) {
-                String filename = entry.getFileName().toString();
-                directoryList += "<li><a href=/" + filename + ">" + filename + "</a></li>\n";
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return  directoryList;
     }
 }

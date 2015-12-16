@@ -1,11 +1,12 @@
 package scarvill.httpserver.cobspec;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HtmlPage {
 
-    public String indexPage(List<String> listItems) {
+    public String indexPage(HashMap<String, String> directoryFileNamesAndPaths) {
         return "<!DOCTYPE html>\n" +
             "<html lang=\"en\">\n" +
             "<head>\n" +
@@ -14,17 +15,17 @@ public class HtmlPage {
             "</head>\n" +
             "<body>\n" +
             "<ul>\n" +
-            formatIndexLinks(listItems) +
+            formatIndexLinks(directoryFileNamesAndPaths) +
             "</ul>\n" +
             "</body>\n" +
             "</html>\n";
     }
 
-    private String formatIndexLinks(Collection<String> entries) {
+    private String formatIndexLinks(HashMap<String, String> fileNamesAndPaths) {
         String listElements = "";
 
-        for (String entry : entries) {
-            listElements += "<li><a href=/" + entry + ">" + entry + "</a></li>\n";
+        for (Map.Entry<String, String> entry : fileNamesAndPaths.entrySet()) {
+            listElements += "<li><a href=" + entry.getValue() + ">" + entry.getKey() + "</a></li>\n";
         }
 
         return listElements;

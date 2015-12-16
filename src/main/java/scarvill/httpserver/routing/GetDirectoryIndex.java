@@ -11,9 +11,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.function.Function;
 
 public class GetDirectoryIndex implements Function<Request, Response> {
@@ -25,7 +23,7 @@ public class GetDirectoryIndex implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String indexPage = new HtmlPage().indexPage(directoryFileNames(request.getURI()));
+        String indexPage = new HtmlPage().indexPage(directoryFileNamesAndPaths(request.getURI()));
 
         return new ResponseBuilder()
             .setStatus(Status.OK)
@@ -34,16 +32,25 @@ public class GetDirectoryIndex implements Function<Request, Response> {
             .build();
     }
 
-    private List<String> directoryFileNames(String uri) {
-        List<String> contents = new ArrayList<>();
+    private HashMap<String, String> directoryFileNamesAndPaths(String uri) {
+        HashMap<String, String> fileNamesAndPaths = new HashMap<>();
         try {
-            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(rootDirectory + uri));
-            for (Path entry : stream) {
-                contents.add(entry.getFileName().toString());
+            DirectoryStream<Path> contents = Files.newDirectoryStream(Paths.get(rootDirectory + uri));
+            for (Path path : contents) {
+                String fileName = path.getFileName().toString();
+                fileNamesAndPaths.put(fileName, filePath(uri, fileName));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return contents;
+        return fileNamesAndPaths;
+    }
+
+    private String filePath(String uri, String fileName) {
+        if (uri.equals("/")) {
+            return "/" + fileName;
+        } else {
+            return uri + "/" + fileName;
+        }
     }
 }

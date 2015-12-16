@@ -35,6 +35,29 @@ public class GetDirectoryIndexTest {
         deleteFiles(Arrays.asList(file1, file2, directory));
     }
 
+    @Test
+    public void testResponseContainsCorrectPathsToNestedDirectoryContents() throws IOException {
+        Path directory = Files.createTempDirectory("directory");
+        Path subdirectory = Files.createTempDirectory(directory, "subdirectory");
+        Path file1 = createTempFileWithContent(subdirectory, "".getBytes());
+        Path file2 = createTempFileWithContent(subdirectory, "".getBytes());
+
+        GetDirectoryIndex getDirectoryIndex = new GetDirectoryIndex(directory);
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/" + subdirectory.getFileName())
+            .build();
+
+        Response response = getDirectoryIndex.apply(request);
+
+        assertTrue(new String(response.getBody())
+            .contains("/" + subdirectory.getFileName() + "/" + file1.getFileName()));
+        assertTrue(new String(response.getBody())
+            .contains("/" + subdirectory.getFileName() + "/" + file2.getFileName()));
+
+        deleteFiles(Arrays.asList(file1, file2, subdirectory, directory));
+    }
+
     private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {
         Path file = Files.createTempFile(dir, "temp", "");
         Files.write(file, content);

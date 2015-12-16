@@ -1,6 +1,5 @@
 package scarvill.httpserver.routing;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
@@ -10,7 +9,12 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
-import static junit.framework.TestCase.assertFalse;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +23,7 @@ public class VirtualResourceRouterTest {
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
         Request request = new RequestBuilder().setURI("/unconfigured").build();
-        Router router = new VirtualResourceRouter();
+        VirtualResourceRouter router = new VirtualResourceRouter();
 
         Response response = router.routeRequest(request);
 
@@ -29,7 +33,7 @@ public class VirtualResourceRouterTest {
     @Test
     public void testReturnsMethodNotAllowedWhenNoStrategyExistsForRequestMethod() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        Router router = new VirtualResourceRouter();
+        VirtualResourceRouter router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.POST, new GiveStaticResponse(response));
 
@@ -42,7 +46,7 @@ public class VirtualResourceRouterTest {
     public void testReturnsResultOfApplyingConfiguredRouteStrategy() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
-        Router router = new VirtualResourceRouter();
+        VirtualResourceRouter router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
@@ -54,7 +58,7 @@ public class VirtualResourceRouterTest {
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
-        Router router = new VirtualResourceRouter();
+        VirtualResourceRouter router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
@@ -73,13 +77,36 @@ public class VirtualResourceRouterTest {
     }
 
     @Test
-    public void testTracksIfHasConfiguredRouteForGivenURI() {
+    public void testCanDelegateHandlingUnconfiguredRoutesToFileSystemRouter() throws IOException {
+        String fileContents = "contents";
+        Path directory = Files.createTempDirectory("dir");
+        Path file = createTempFileWithContent(directory, fileContents.getBytes());
+
         VirtualResourceRouter router = new VirtualResourceRouter();
+        router.addFilesystemRouter(new FileSystemRouter(directory));
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/" + file.getFileName())
+            .build();
 
-        assertFalse(router.hasRoute("/"));
+        Response response = router.routeRequest(request);
 
-        router.addRoute("/", Method.GET, new GiveStaticResponse(new ResponseBuilder().build()));
+        assertEquals(Status.OK, response.getStatus());
+        assertEquals(fileContents, new String(response.getBody()));
 
-        assertTrue(router.hasRoute("/"));
+        deleteFiles(Arrays.asList(file, directory));
+    }
+
+    private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {
+        Path file = Files.createTempFile(dir, "temp", "");
+        Files.write(file, content);
+
+        return file;
+    }
+
+    private void deleteFiles(List<Path> paths) throws IOException {
+        for (Path path : paths) {
+            Files.delete(path);
+        }
     }
 }

@@ -81,9 +81,6 @@ public class HTTPServiceTest {
         }
 
         @Override
-        public void addRoute(String uri, Method method, Function<Request, Response> strategy) {}
-
-        @Override
         public Response routeRequest(Request request) {
             return response;
         }

@@ -20,35 +20,12 @@ import static org.junit.Assert.*;
 public class FileSystemRouterTest {
 
     @Test
-    public void testDelegatesToConfigurableRouterIfRouteHasBeenManuallyConfigured() throws IOException {
-        Path publicDirectory = Files.createTempDirectory("public");
-        Path file = createTempFileWithContent(publicDirectory, "should NOT get this".getBytes());
-        String fileRoute = "/" + file.getFileName();
-
-        String expectedContent = "should get this";
-        Response response = new ResponseBuilder()
-            .setStatus(Status.OK)
-            .setBody(expectedContent.getBytes())
-            .build();
-        Router router = new FileSystemRouter(publicDirectory);
-        router.addRoute(fileRoute, Method.GET, new GiveStaticResponse(response));
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI(fileRoute)
-            .build();
-
-        Response routerResponse = router.routeRequest(request);
-
-        assertEquals(expectedContent, new String(routerResponse.getBody()));
-    }
-
-    @Test
     public void testReturnsFilesInRouterDirectory() throws IOException {
         String fileContents = "file contents";
-        Path publicDirectory = Files.createTempDirectory("public");
-        Path file = createTempFileWithContent(publicDirectory, fileContents.getBytes());
+        Path directory = Files.createTempDirectory("dir");
+        Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
-        Router router = new FileSystemRouter(publicDirectory);
+        FileSystemRouter router = new FileSystemRouter(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/" + file.getFileName())
@@ -58,15 +35,15 @@ public class FileSystemRouterTest {
 
         assertEquals(fileContents, new String(response.getBody()));
 
-        deleteFiles(Arrays.asList(file, publicDirectory));
+        deleteFiles(Arrays.asList(file, directory));
     }
 
     @Test
     public void testRoutesOptionsRequestsForExtantResources() throws IOException {
-        Path publicDirectory = Files.createTempDirectory("public");
-        Path file = createTempFileWithContent(publicDirectory, "".getBytes());
+        Path directory = Files.createTempDirectory("dir");
+        Path file = createTempFileWithContent(directory, "".getBytes());
 
-        Router router = new FileSystemRouter(publicDirectory);
+        FileSystemRouter router = new FileSystemRouter(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.OPTIONS)
             .setURI("/" + file.getFileName())
@@ -78,7 +55,7 @@ public class FileSystemRouterTest {
         assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));
         assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
 
-        deleteFiles(Arrays.asList(file, publicDirectory));
+        deleteFiles(Arrays.asList(file, directory));
     }
 
     private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {

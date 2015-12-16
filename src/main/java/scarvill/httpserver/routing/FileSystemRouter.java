@@ -1,13 +1,16 @@
 package scarvill.httpserver.routing;
 
-import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.resource.FileResource;
 import scarvill.httpserver.routing.resource.Resource;
 import scarvill.httpserver.routing.route_strategies.GetRouteOptions;
 import scarvill.httpserver.routing.route_strategies.GetRouteResource;
+import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,30 +20,46 @@ import java.util.function.Function;
 import static scarvill.httpserver.request.Method.*;
 
 public class FileSystemRouter implements Router {
-    private final Path publicDirectory;
-    private VirtualResourceRouter configurableRouter;
+    private Path rootDirectory;
 
-    public FileSystemRouter(Path publicDirectory) {
-        this.publicDirectory = publicDirectory;
-        this.configurableRouter = new VirtualResourceRouter();
+    public final Function<Request, Response> NOT_FOUND_STRATEGY =
+        new GiveStaticResponse(
+            new ResponseBuilder()
+                .setStatus(Status.NOT_FOUND)
+                .build());
+
+    public final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
+        new GiveStaticResponse(
+            new ResponseBuilder()
+                .setStatus(Status.METHOD_NOT_ALLOWED)
+                .build());
+
+    public FileSystemRouter() {}
+
+    public FileSystemRouter(Path rootDirectory) {
+        setRootDirectory(rootDirectory);
     }
 
-    @Override
-    public void addRoute(String uri, Method method, Function<Request, Response> strategy) {
-        configurableRouter.addRoute(uri, method, strategy);
+    public void setRootDirectory(Path directory) {
+        rootDirectory = directory;
     }
 
     @Override
     public Response routeRequest(Request request) {
-        Path filePath = Paths.get(publicDirectory + request.getURI());
-
-        if (configurableRouter.hasRoute(request.getURI())) {
-            return configurableRouter.routeRequest(request);
-        } else if (Files.notExists(filePath)) {
-            return configurableRouter.NOT_FOUND_STRATEGY.apply(request);
+        if (servedDirectoryNotSet() || Files.notExists(filePath(request.getURI()))) {
+            return NOT_FOUND_STRATEGY.apply(request);
         } else {
-            return applyDefaultFileRoutingStrategy(request, new FileResource(filePath));
+            Resource resource = new FileResource(filePath(request.getURI()));
+            return applyDefaultFileRoutingStrategy(request, resource);
         }
+    }
+
+    private boolean servedDirectoryNotSet() {
+        return rootDirectory == null;
+    }
+
+    private Path filePath(String uri) {
+        return Paths.get(rootDirectory + uri);
     }
 
     private Response applyDefaultFileRoutingStrategy(Request request, Resource resource) {
@@ -50,7 +69,7 @@ public class FileSystemRouter implements Router {
             case OPTIONS:
                 return new GetRouteOptions(Arrays.asList(GET, OPTIONS)).apply(request);
             default:
-                return configurableRouter.METHOD_NOT_ALLOWED_STRATEGY.apply(request);
+                return METHOD_NOT_ALLOWED_STRATEGY.apply(request);
         }
     }
 }

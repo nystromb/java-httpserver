@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 public class VirtualResourceRouter implements Router {
     private HashMap<String, HashMap<Method, Function<Request, Response>>> routes = new HashMap<>();
+    private FileSystemRouter directoryRouter = new FileSystemRouter();
 
     public final Function<Request, Response> NOT_FOUND_STRATEGY =
         new GiveStaticResponse(
@@ -26,7 +27,6 @@ public class VirtualResourceRouter implements Router {
                 .setStatus(Status.METHOD_NOT_ALLOWED)
                 .build());
 
-    @Override
     public void addRoute(String uri, Method method, Function<Request, Response> strategy) {
         HashMap<Method, Function<Request, Response>> routeStrategies =
             routes.getOrDefault(uri, new HashMap<>());
@@ -40,14 +40,14 @@ public class VirtualResourceRouter implements Router {
         HashMap<Method, Function<Request, Response>> routeStrategies = routes.get(request.getURI());
 
         if (routeStrategies == null) {
-            return NOT_FOUND_STRATEGY.apply(request);
+            return directoryRouter.routeRequest(request);
         } else {
             return routeRequestByMethod(request, routeStrategies);
         }
     }
 
-    public boolean hasRoute(String uri) {
-        return routes.containsKey(uri);
+    public void addFilesystemRouter(FileSystemRouter fileSystemRouter) {
+        this.directoryRouter = fileSystemRouter;
     }
 
     private Response routeRequestByMethod(

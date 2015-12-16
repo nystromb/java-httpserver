@@ -1,4 +1,4 @@
-package scarvill.httpserver.cobspec.route_strategies;
+package scarvill.httpserver.cobspec;
 
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;

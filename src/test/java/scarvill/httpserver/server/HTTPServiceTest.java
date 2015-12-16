@@ -1,14 +1,11 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
-import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HTTPResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.Router;
-import scarvill.httpserver.server.HTTPService;
-import scarvill.httpserver.server.Logger;
+import scarvill.httpserver.routing.GiveStaticResponse;
 
 import java.io.*;
 import java.net.Socket;
@@ -25,7 +22,7 @@ public class HTTPServiceTest {
         Response expectedResponse = new ResponseBuilder().setStatus(Status.OK).build();
         ByteArrayOutputStream logStream = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(logStream));
-        HTTPService service = new HTTPService(logger, new MockRouter(expectedResponse));
+        HTTPService service = new HTTPService(logger, new GiveStaticResponse(expectedResponse));
 
         service.serve(clientSocket).run();
 
@@ -45,7 +42,7 @@ public class HTTPServiceTest {
             .setBody("body".getBytes())
             .build();
         Logger logger = new Logger(new NullPrintStream());
-        HTTPService service = new HTTPService(logger, new MockRouter(expectedResponse));
+        HTTPService service = new HTTPService(logger, new GiveStaticResponse(expectedResponse));
         String expectedResponseString = new String(new HTTPResponse().generate(expectedResponse));
 
         service.serve(clientSocket).run();
@@ -70,19 +67,6 @@ public class HTTPServiceTest {
         @Override
         public OutputStream getOutputStream() {
             return outputStream;
-        }
-    }
-
-    private class MockRouter extends Router {
-        private Response response;
-
-        public MockRouter(Response expectedResponse) {
-            this.response = expectedResponse;
-        }
-
-        @Override
-        public Response routeRequest(Request request) {
-            return response;
         }
     }
 

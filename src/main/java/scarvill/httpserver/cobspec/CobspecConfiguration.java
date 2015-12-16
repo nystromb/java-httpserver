@@ -1,19 +1,14 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.cobspec.route_strategies.*;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.FileResource;
-import scarvill.httpserver.routing.Resource;
-import scarvill.httpserver.routing.Router;
-import scarvill.httpserver.routing.StringResource;
-import scarvill.httpserver.routing.route_strategies.GetRouteResource;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
-import scarvill.httpserver.routing.route_strategies.ModifyRouteResource;
-import scarvill.httpserver.routing.route_strategies.VerifyRequestAuthorization;
+import scarvill.httpserver.routing.*;
+import scarvill.httpserver.routing.resource.FileResource;
+import scarvill.httpserver.routing.resource.Resource;
+import scarvill.httpserver.routing.resource.StringResource;
 import scarvill.httpserver.server.HTTPService;
 import scarvill.httpserver.server.Logger;
 import scarvill.httpserver.server.Serveable;
@@ -68,8 +63,9 @@ public class CobspecConfiguration implements ServerConfiguration {
         }
     }
 
-    private Router configuredRouter(String publicDirectory) {
-        Router router = new Router();
+    private Function<Request, Response> configuredRouter(String publicDirectory) {
+        RouteRequest router = new RouteRequest();
+        router.routeToResourcesInDirectory(Paths.get(publicDirectory));
 
         router.addRoute("/", Method.GET, new GetRouteResource(
             new StringResource(indexPage(publicDirectory))));
@@ -94,33 +90,11 @@ public class CobspecConfiguration implements ServerConfiguration {
             new VerifyRequestAuthorization("admin", "hunter2", "Logging",
                 new GetRouteResource(logsResource)));
 
-        Resource file1 = new FileResource(Paths.get(publicDirectory + "/file1"));
-        router.addRoute("/file1", Method.GET, new GetRouteResource(file1));
-
-        Resource file2 = new FileResource(Paths.get(publicDirectory + "/file2"));
-        router.addRoute("/file2", Method.GET, new GetRouteResource(file2));
-
-        Resource textfile = new FileResource(Paths.get(publicDirectory + "/text-file.txt"));
-        router.addRoute("/text-file.txt", Method.GET, new GetRouteResource(textfile));
-
-        Resource partialContent =
-            new FileResource(Paths.get(publicDirectory + "/partial_content.txt"));
-        router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
-
         Resource patchContent = new FileResource(Paths.get(publicDirectory + "/patch-content.txt"));
         router.addRoute("/patch-content.txt", Method.GET,
             new GetRouteResource(patchContent));
         router.addRoute("/patch-content.txt", Method.PATCH,
             new ModifyRouteResource(patchContent, Status.NO_CONTENT));
-
-        Resource jpeg = new FileResource(Paths.get(publicDirectory + "/image.jpeg"));
-        router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));
-
-        Resource png = new FileResource(Paths.get(publicDirectory + "/image.png"));
-        router.addRoute("/image.png", Method.GET, new GetRouteResource(png));
-
-        Resource gif = new FileResource(Paths.get(publicDirectory + "/image.gif"));
-        router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
 
         return router;
     }

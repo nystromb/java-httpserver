@@ -19,9 +19,9 @@ import static org.junit.Assert.assertTrue;
 public class RouteToDirectoryResourcesTest {
 
     @Test
-    public void testReturnsFilesInRouterDirectory() throws IOException {
+    public void testReturnsFileInRootDirectory() throws IOException {
         String fileContents = "file contents";
-        Path directory = Files.createTempDirectory("dir");
+        Path directory = Files.createTempDirectory("directory");
         Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
         RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
@@ -35,6 +35,26 @@ public class RouteToDirectoryResourcesTest {
         assertEquals(fileContents, new String(response.getBody()));
 
         deleteFiles(Arrays.asList(file, directory));
+    }
+
+    @Test
+    public void testReturnsFileInNestedDirectory() throws IOException {
+        String fileContents = "file contents";
+        Path directory = Files.createTempDirectory("directory");
+        Path subdirectory = Files.createTempDirectory(directory, "subdirectory");
+        Path file = createTempFileWithContent(subdirectory, fileContents.getBytes());
+
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/" + subdirectory.getFileName() + "/" + file.getFileName())
+            .build();
+
+        Response response = router.apply(request);
+
+        assertEquals(fileContents, new String(response.getBody()));
+
+        deleteFiles(Arrays.asList(file, subdirectory, directory));
     }
 
     @Test

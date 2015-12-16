@@ -1,8 +1,8 @@
 package scarvill.httpserver.server;
 
-import scarvill.httpserver.request.HTTPRequest;
+import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Request;
-import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.HttpResponse;
 import scarvill.httpserver.response.Response;
 
 import java.io.BufferedReader;
@@ -15,11 +15,11 @@ public class ServerIO {
         String requestLineAndHeaders = readRequestLineAndHeaders(in);
         byte[] body = readBody(in);
 
-        return new HTTPRequest(requestLineAndHeaders, body).parse();
+        return new HttpRequest(requestLineAndHeaders, body).parse();
     }
 
     public void writeResponse(OutputStream out, Response response) throws IOException {
-        byte[] rawResponse = new HTTPResponse().generate(response);
+        byte[] rawResponse = new HttpResponse().generate(response);
 
         out.write(rawResponse, 0, rawResponse.length);
     }

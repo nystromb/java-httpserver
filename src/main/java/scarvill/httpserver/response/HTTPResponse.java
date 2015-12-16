@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-public class HTTPResponse {
+public class HttpResponse {
 
     public byte[] generate(Response response) {
         try {

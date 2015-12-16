@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class HTTPResponseTest {
+public class HttpResponseTest {
     @Test
     public void testGeneratesAWellFormedHTTPResponseFromResponseObject() {
         Response response = new ResponseBuilder()
@@ -20,6 +20,6 @@ public class HTTPResponseTest {
             "\r\n" +
             "this is the response body";
 
-        assertEquals(expectedRawResponse, new String(new HTTPResponse().generate(response)));
+        assertEquals(expectedRawResponse, new String(new HttpResponse().generate(response)));
     }
 }

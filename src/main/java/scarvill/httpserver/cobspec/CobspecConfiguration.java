@@ -9,7 +9,7 @@ import scarvill.httpserver.routing.*;
 import scarvill.httpserver.routing.resource.FileResource;
 import scarvill.httpserver.routing.resource.Resource;
 import scarvill.httpserver.routing.resource.StringResource;
-import scarvill.httpserver.server.HTTPService;
+import scarvill.httpserver.server.HttpService;
 import scarvill.httpserver.server.Logger;
 import scarvill.httpserver.server.Serveable;
 import scarvill.httpserver.server.ServerConfiguration;
@@ -17,9 +17,6 @@ import scarvill.httpserver.server.ServerConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
@@ -42,7 +39,7 @@ public class CobspecConfiguration implements ServerConfiguration {
 
     @Override
     public Serveable getService() {
-        return new HTTPService(
+        return new HttpService(
             fileLogger(getPublicDirectory()),
             configuredRouter(getPublicDirectory()));
     }

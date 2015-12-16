@@ -10,12 +10,12 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.function.Function;
 
-public class HTTPService implements Serveable {
+public class HttpService implements Serveable {
     private final Function<Request, Response> router;
     private final Logger logger;
     private final ServerIO io;
 
-    public HTTPService(Logger logger, Function<Request, Response> router) {
+    public HttpService(Logger logger, Function<Request, Response> router) {
         this.router = router;
         this.logger = logger;
         this.io = new ServerIO();

@@ -12,11 +12,9 @@ import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
 public class FileSystemRouterTest {
@@ -24,16 +22,15 @@ public class FileSystemRouterTest {
     @Test
     public void testDelegatesToConfigurableRouterIfRouteHasBeenManuallyConfigured() throws IOException {
         Path publicDirectory = Files.createTempDirectory("public");
-        String fileContents = "should not get this data";
-        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", fileContents.getBytes());
+        Path file = createTempFileWithContent(publicDirectory, "should NOT get this".getBytes());
         String fileRoute = "/" + file.getFileName();
 
-        String expectedContent = "should get this data instead";
-        Router router = new FileSystemRouter(publicDirectory);
+        String expectedContent = "should get this";
         Response response = new ResponseBuilder()
             .setStatus(Status.OK)
             .setBody(expectedContent.getBytes())
             .build();
+        Router router = new FileSystemRouter(publicDirectory);
         router.addRoute(fileRoute, Method.GET, new GiveStaticResponse(response));
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
@@ -47,9 +44,9 @@ public class FileSystemRouterTest {
 
     @Test
     public void testReturnsFilesInRouterDirectory() throws IOException {
-        Path publicDirectory = Files.createTempDirectory("public");
         String fileContents = "file contents";
-        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", fileContents.getBytes());
+        Path publicDirectory = Files.createTempDirectory("public");
+        Path file = createTempFileWithContent(publicDirectory, fileContents.getBytes());
 
         Router router = new FileSystemRouter(publicDirectory);
         Request request = new RequestBuilder()
@@ -67,7 +64,7 @@ public class FileSystemRouterTest {
     @Test
     public void testRoutesOptionsRequestsForExtantResources() throws IOException {
         Path publicDirectory = Files.createTempDirectory("public");
-        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", "".getBytes());
+        Path file = createTempFileWithContent(publicDirectory, "".getBytes());
 
         Router router = new FileSystemRouter(publicDirectory);
         Request request = new RequestBuilder()
@@ -84,9 +81,8 @@ public class FileSystemRouterTest {
         deleteFiles(Arrays.asList(file, publicDirectory));
     }
 
-    private Path createTempFileWithContent(
-        Path dir, String prefix, String suffix, byte[] content) throws IOException {
-        Path file = Files.createTempFile(dir, prefix, suffix);
+    private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {
+        Path file = Files.createTempFile(dir, "temp", "");
         Files.write(file, content);
 
         return file;

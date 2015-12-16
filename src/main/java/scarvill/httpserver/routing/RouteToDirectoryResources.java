@@ -19,18 +19,6 @@ import static scarvill.httpserver.request.Method.OPTIONS;
 public class RouteToDirectoryResources implements Function<Request, Response> {
     private Path rootDirectory;
 
-    private final Function<Request, Response> NOT_FOUND_STRATEGY =
-        new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.NOT_FOUND)
-                .build());
-
-    private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
-        new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.METHOD_NOT_ALLOWED)
-                .build());
-
     public RouteToDirectoryResources() {}
 
     public RouteToDirectoryResources(Path rootDirectory) {
@@ -44,7 +32,7 @@ public class RouteToDirectoryResources implements Function<Request, Response> {
     @Override
     public Response apply(Request request) {
         if (servedDirectoryNotSet() || Files.notExists(filePath(request.getURI()))) {
-            return NOT_FOUND_STRATEGY.apply(request);
+            return new ResponseBuilder().setStatus(Status.NOT_FOUND).build();
         } else {
             Resource resource = new FileResource(filePath(request.getURI()));
             return applyDefaultFileRoutingStrategy(request, resource);
@@ -66,7 +54,7 @@ public class RouteToDirectoryResources implements Function<Request, Response> {
             case OPTIONS:
                 return new GetRouteOptions(Arrays.asList(GET, OPTIONS)).apply(request);
             default:
-                return METHOD_NOT_ALLOWED_STRATEGY.apply(request);
+                return new ResponseBuilder().setStatus(Status.METHOD_NOT_ALLOWED).build();
         }
     }
 }

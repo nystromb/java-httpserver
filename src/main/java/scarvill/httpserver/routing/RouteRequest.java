@@ -6,6 +6,7 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -38,8 +39,8 @@ public class RouteRequest implements Function<Request, Response> {
         }
     }
 
-    public void addFilesystemRouter(RouteToDirectoryResources routeToDirectoryResources) {
-        this.directoryRouter = routeToDirectoryResources;
+    public void routeToResourcesInDirectory(Path rootDirectory) {
+        this.directoryRouter.setRootDirectory(rootDirectory);
     }
 
     private Response routeRequestByMethod(

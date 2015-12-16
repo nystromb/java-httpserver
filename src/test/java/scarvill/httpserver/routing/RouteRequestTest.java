@@ -76,13 +76,13 @@ public class RouteRequestTest {
     }
 
     @Test
-    public void testCanDelegateHandlingUnconfiguredRoutesToFileSystemRouter() throws IOException {
+    public void testCanRouteToResourcesInADirectory() throws IOException {
         String fileContents = "contents";
         Path directory = Files.createTempDirectory("dir");
         Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
         RouteRequest router = new RouteRequest();
-        router.addFilesystemRouter(new RouteToDirectoryResources(directory));
+        router.routeToResourcesInDirectory(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/" + file.getFileName())

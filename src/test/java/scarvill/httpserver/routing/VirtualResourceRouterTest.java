@@ -1,5 +1,6 @@
 package scarvill.httpserver.routing;
 
+import junit.framework.Assert;
 import org.junit.Test;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
@@ -9,6 +10,7 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -25,7 +27,7 @@ public class VirtualResourceRouterTest {
     }
 
     @Test
-    public void testReturnsMethodNotAllowedWhenNoMethodHandler() {
+    public void testReturnsMethodNotAllowedWhenNoStrategyExistsForRequestMethod() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Router router = new VirtualResourceRouter();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
@@ -37,7 +39,7 @@ public class VirtualResourceRouterTest {
     }
 
     @Test
-    public void testReturnsResultOfApplyingCorrespondingMethodHandler() {
+    public void testReturnsResultOfApplyingConfiguredRouteStrategy() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
         Router router = new VirtualResourceRouter();
@@ -68,5 +70,16 @@ public class VirtualResourceRouterTest {
         assertTrue(newRouterResponse.getHeaders().get("Allow").contains("GET"));
         assertTrue(newRouterResponse.getHeaders().get("Allow").contains("POST"));
         assertTrue(newRouterResponse.getHeaders().get("Allow").contains("OPTIONS"));
+    }
+
+    @Test
+    public void testTracksIfHasConfiguredRouteForGivenURI() {
+        VirtualResourceRouter router = new VirtualResourceRouter();
+
+        assertFalse(router.hasRoute("/"));
+
+        router.addRoute("/", Method.GET, new GiveStaticResponse(new ResponseBuilder().build()));
+
+        assertTrue(router.hasRoute("/"));
     }
 }

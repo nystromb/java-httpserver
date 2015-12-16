@@ -20,7 +20,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Function;
 
+import static scarvill.httpserver.request.Method.*;
+
 public class FileSystemRouter implements Router {
+    private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
+        new GiveStaticResponse(new ResponseBuilder().setStatus(Status.METHOD_NOT_ALLOWED).build());
     private final Function<Request, Response> NOT_FOUND_STRATEGY =
         new GiveStaticResponse(new ResponseBuilder().setStatus(Status.NOT_FOUND).build());
 
@@ -41,28 +45,20 @@ public class FileSystemRouter implements Router {
     public Response routeRequest(Request request) {
         Path filePath = Paths.get(publicDirectory + request.getURI());
 
-        if (Files.notExists(filePath)) {
+        if (virtualRouter.hasRoute(request.getURI())) {
             return virtualRouter.routeRequest(request);
+        } else if (Files.notExists(filePath)) {
+            return NOT_FOUND_STRATEGY.apply(request);
         } else {
-            HashMap<Method, Function<Request, Response>> resourceStrategies =
-                generateResourceStrategies(new FileResource(filePath));
-            Function<Request, Response> strategy =
-                resourceStrategies.getOrDefault(request.getMethod(), NOT_FOUND_STRATEGY);
-            return strategy.apply(request);
+            return applyDefaultFileStrategy(request, new FileResource(filePath));
         }
     }
 
-    private HashMap<Method, Function<Request, Response>> generateResourceStrategies(Resource resource) {
-        HashMap<Method, Function<Request, Response>> resourceStrategies = new HashMap<>();
-        resourceStrategies.put(Method.GET, new GetRouteResource(resource));
-        resourceStrategies.put(Method.PUT, new ModifyRouteResource(resource));
-        resourceStrategies.put(Method.POST, new ModifyRouteResource(resource));
-        resourceStrategies.put(Method.PATCH, new ModifyRouteResource(resource, Status.NO_CONTENT));
-        resourceStrategies.put(Method.DELETE, new ModifyRouteResource(resource));
-        Collection<Method> allowedMethods = Arrays.asList(
-            Method.GET, Method.PUT, Method.POST, Method.PATCH, Method.DELETE, Method.OPTIONS);
-        resourceStrategies.put(Method.OPTIONS, new GetRouteOptions(allowedMethods));
-
-        return resourceStrategies;
+    private Response applyDefaultFileStrategy(Request request, Resource resource) {
+        switch (request.getMethod()) {
+            case GET: return new GetRouteResource(resource).apply(request);
+            case OPTIONS: return new GetRouteOptions(Arrays.asList(GET, OPTIONS)).apply(request);
+            default: return METHOD_NOT_ALLOWED_STRATEGY.apply(request);
+        }
     }
 }

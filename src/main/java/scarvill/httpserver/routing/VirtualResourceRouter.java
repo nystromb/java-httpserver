@@ -40,6 +40,10 @@ public class VirtualResourceRouter implements Router {
         }
     }
 
+    public boolean hasRoute(String uri) {
+        return routes.containsKey(uri);
+    }
+
     private Response routeRequestByMethod(
         Request request, HashMap<Method, Function<Request, Response>> routeStrategies) {
         Function<Request, Response> strategy =

@@ -16,19 +16,33 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
 public class FileSystemRouterTest {
+
     @Test
-    public void testDelegatesRoutingToVirtualRouterWhenRequestRouteIsNotInRouterDirectory() {
-        Router router = new FileSystemRouter(Paths.get("/noFooBarFileHere"));
-        Request request = new RequestBuilder().setMethod(Method.GET).setURI("/foo.bar").build();
-        Response response = new ResponseBuilder().setStatus(Status.OK).build();
-        router.addRoute("/foo.bar", Method.GET, new GiveStaticResponse(response));
+    public void testDelegatesToConfigurableRouterIfRouteHasBeenManuallyConfigured() throws IOException {
+        Path publicDirectory = Files.createTempDirectory("public");
+        String fileContents = "should not get this data";
+        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", fileContents.getBytes());
+        String fileRoute = "/" + file.getFileName();
+
+        String expectedContent = "should get this data instead";
+        Router router = new FileSystemRouter(publicDirectory);
+        Response response = new ResponseBuilder()
+            .setStatus(Status.OK)
+            .setBody(expectedContent.getBytes())
+            .build();
+        router.addRoute(fileRoute, Method.GET, new GiveStaticResponse(response));
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI(fileRoute)
+            .build();
 
         Response routerResponse = router.routeRequest(request);
 
-        assertEquals(Status.OK, routerResponse.getStatus());
+        assertEquals(expectedContent, new String(routerResponse.getBody()));
     }
 
     @Test
@@ -51,49 +65,6 @@ public class FileSystemRouterTest {
     }
 
     @Test
-    public void testModifiesFilesInRouterDirectory() throws IOException {
-        Path publicDirectory = Files.createTempDirectory("public");
-        byte[] initialFileContents = "foo".getBytes();
-        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", initialFileContents);
-
-        Router router = new FileSystemRouter(publicDirectory);
-        String newFileContents = "new file contents";
-        Request request = new RequestBuilder()
-            .setMethod(Method.PUT)
-            .setURI("/" + file.getFileName())
-            .setBody(newFileContents.getBytes())
-            .build();
-
-        router.routeRequest(request);
-
-        assertEquals(newFileContents, new String(Files.readAllBytes(file)));
-
-        deleteFiles(Arrays.asList(file, publicDirectory));
-    }
-
-    @Test
-    public void testPatchesFilesInRouterDirectory() throws IOException {
-        Path publicDirectory = Files.createTempDirectory("public");
-        byte[] initialFileContents = "foo".getBytes();
-        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", initialFileContents);
-
-        Router router = new FileSystemRouter(publicDirectory);
-        String newFileContents = "new file contents";
-        Request request = new RequestBuilder()
-            .setMethod(Method.PATCH)
-            .setURI("/" + file.getFileName())
-            .setBody(newFileContents.getBytes())
-            .build();
-
-        Response response = router.routeRequest(request);
-
-        assertEquals(Status.NO_CONTENT, response.getStatus());
-        assertEquals(newFileContents, new String(Files.readAllBytes(file)));
-
-        deleteFiles(Arrays.asList(file, publicDirectory));
-    }
-
-    @Test
     public void testRoutesOptionsRequestsForExtantResources() throws IOException {
         Path publicDirectory = Files.createTempDirectory("public");
         Path file = createTempFileWithContent(publicDirectory, "file", "tmp", "".getBytes());
@@ -108,13 +79,21 @@ public class FileSystemRouterTest {
 
         assertEquals(Status.OK, response.getStatus());
         assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(Method.PUT.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(Method.POST.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(Method.DELETE.toString()));
         assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
 
         deleteFiles(Arrays.asList(file, publicDirectory));
     }
+
+//    @Test
+//    public void testTracksIfHasConfiguredRouteForGivenURI() throws IOException {
+//        Path publicDirectory = Files.createTempDirectory("public");
+//        Path file = createTempFileWithContent(publicDirectory, "file", "tmp", "".getBytes());
+//
+//        Router router = new FileSystemRouter(publicDirectory);
+//
+//        assertFalse(router.hasRoute("/"));
+//        assertTrue(router.hasRoute("/" + file.getFileName()));
+//    }
 
     private Path createTempFileWithContent(
         Path dir, String prefix, String suffix, byte[] content) throws IOException {

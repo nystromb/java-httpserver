@@ -68,9 +68,9 @@ public class CobspecConfiguration implements ServerConfiguration {
         }
     }
 
-    private Router configuredRouter(String publicDirectory) {
-        VirtualResourceRouter router = new VirtualResourceRouter();
-        router.addFilesystemRouter(new FileSystemRouter(Paths.get(publicDirectory)));
+    private Function<Request, Response> configuredRouter(String publicDirectory) {
+        RouteRequest router = new RouteRequest();
+        router.addFilesystemRouter(new RouteToDirectoryResources(Paths.get(publicDirectory)));
 
         router.addRoute("/", Method.GET, new GetRouteResource(
             new StringResource(indexPage(publicDirectory))));

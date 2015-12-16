@@ -18,14 +18,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class VirtualResourceRouterTest {
+public class RouteRequestTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
         Request request = new RequestBuilder().setURI("/unconfigured").build();
-        VirtualResourceRouter router = new VirtualResourceRouter();
+        RouteRequest router = new RouteRequest();
 
-        Response response = router.routeRequest(request);
+        Response response = router.apply(request);
 
         assertEquals(Status.NOT_FOUND, response.getStatus());
     }
@@ -33,11 +33,11 @@ public class VirtualResourceRouterTest {
     @Test
     public void testReturnsMethodNotAllowedWhenNoStrategyExistsForRequestMethod() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        VirtualResourceRouter router = new VirtualResourceRouter();
+        RouteRequest router = new RouteRequest();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.POST, new GiveStaticResponse(response));
 
-        Response routerResponse = router.routeRequest(request);
+        Response routerResponse = router.apply(request);
 
         assertEquals(Status.METHOD_NOT_ALLOWED, routerResponse.getStatus());
     }
@@ -46,11 +46,11 @@ public class VirtualResourceRouterTest {
     public void testReturnsResultOfApplyingConfiguredRouteStrategy() {
         Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
         Status expectedResponseStatus = Status.OK;
-        VirtualResourceRouter router = new VirtualResourceRouter();
+        RouteRequest router = new RouteRequest();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
-        Response routerResponse = router.routeRequest(request);
+        Response routerResponse = router.apply(request);
 
         assertEquals(expectedResponseStatus, routerResponse.getStatus());
     }
@@ -58,18 +58,18 @@ public class VirtualResourceRouterTest {
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
-        VirtualResourceRouter router = new VirtualResourceRouter();
+        RouteRequest router = new RouteRequest();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
-        Response routerResponse = router.routeRequest(request);
+        Response routerResponse = router.apply(request);
 
         assertEquals(Status.OK, response.getStatus());
         assertTrue(routerResponse.getHeaders().get("Allow").contains("GET"));
         assertTrue(routerResponse.getHeaders().get("Allow").contains("OPTIONS"));
 
         router.addRoute("/", Method.POST, new GiveStaticResponse(response));
-        Response newRouterResponse = router.routeRequest(request);
+        Response newRouterResponse = router.apply(request);
 
         assertTrue(newRouterResponse.getHeaders().get("Allow").contains("GET"));
         assertTrue(newRouterResponse.getHeaders().get("Allow").contains("POST"));
@@ -82,14 +82,14 @@ public class VirtualResourceRouterTest {
         Path directory = Files.createTempDirectory("dir");
         Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
-        VirtualResourceRouter router = new VirtualResourceRouter();
-        router.addFilesystemRouter(new FileSystemRouter(directory));
+        RouteRequest router = new RouteRequest();
+        router.addFilesystemRouter(new RouteToDirectoryResources(directory));
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/" + file.getFileName())
             .build();
 
-        Response response = router.routeRequest(request);
+        Response response = router.apply(request);
 
         assertEquals(Status.OK, response.getStatus());
         assertEquals(fileContents, new String(response.getBody()));

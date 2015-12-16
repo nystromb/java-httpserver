@@ -5,9 +5,7 @@ import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
-import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.route_strategies.GiveStaticResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class FileSystemRouterTest {
+public class RouteToDirectoryResourcesTest {
 
     @Test
     public void testReturnsFilesInRouterDirectory() throws IOException {
@@ -25,13 +23,13 @@ public class FileSystemRouterTest {
         Path directory = Files.createTempDirectory("dir");
         Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
-        FileSystemRouter router = new FileSystemRouter(directory);
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/" + file.getFileName())
             .build();
 
-        Response response = router.routeRequest(request);
+        Response response = router.apply(request);
 
         assertEquals(fileContents, new String(response.getBody()));
 
@@ -43,13 +41,13 @@ public class FileSystemRouterTest {
         Path directory = Files.createTempDirectory("dir");
         Path file = createTempFileWithContent(directory, "".getBytes());
 
-        FileSystemRouter router = new FileSystemRouter(directory);
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
         Request request = new RequestBuilder()
             .setMethod(Method.OPTIONS)
             .setURI("/" + file.getFileName())
             .build();
 
-        Response response = router.routeRequest(request);
+        Response response = router.apply(request);
 
         assertEquals(Status.OK, response.getStatus());
         assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));

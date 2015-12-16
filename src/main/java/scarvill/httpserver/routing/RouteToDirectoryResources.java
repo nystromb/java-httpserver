@@ -19,24 +19,24 @@ import java.util.function.Function;
 
 import static scarvill.httpserver.request.Method.*;
 
-public class FileSystemRouter implements Router {
+public class RouteToDirectoryResources implements Function<Request, Response> {
     private Path rootDirectory;
 
-    public final Function<Request, Response> NOT_FOUND_STRATEGY =
+    private final Function<Request, Response> NOT_FOUND_STRATEGY =
         new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.NOT_FOUND)
                 .build());
 
-    public final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
+    private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
         new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.METHOD_NOT_ALLOWED)
                 .build());
 
-    public FileSystemRouter() {}
+    public RouteToDirectoryResources() {}
 
-    public FileSystemRouter(Path rootDirectory) {
+    public RouteToDirectoryResources(Path rootDirectory) {
         setRootDirectory(rootDirectory);
     }
 
@@ -45,7 +45,7 @@ public class FileSystemRouter implements Router {
     }
 
     @Override
-    public Response routeRequest(Request request) {
+    public Response apply(Request request) {
         if (servedDirectoryNotSet() || Files.notExists(filePath(request.getURI()))) {
             return NOT_FOUND_STRATEGY.apply(request);
         } else {

@@ -11,17 +11,11 @@ import scarvill.httpserver.response.Status;
 import java.util.HashMap;
 import java.util.function.Function;
 
-public class VirtualResourceRouter implements Router {
+public class RouteRequest implements Function<Request, Response> {
     private HashMap<String, HashMap<Method, Function<Request, Response>>> routes = new HashMap<>();
-    private FileSystemRouter directoryRouter = new FileSystemRouter();
+    private RouteToDirectoryResources directoryRouter = new RouteToDirectoryResources();
 
-    public final Function<Request, Response> NOT_FOUND_STRATEGY =
-        new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.NOT_FOUND)
-                .build());
-
-    public final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
+    private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
         new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.METHOD_NOT_ALLOWED)
@@ -36,18 +30,18 @@ public class VirtualResourceRouter implements Router {
     }
 
     @Override
-    public Response routeRequest(Request request) {
+    public Response apply(Request request) {
         HashMap<Method, Function<Request, Response>> routeStrategies = routes.get(request.getURI());
 
         if (routeStrategies == null) {
-            return directoryRouter.routeRequest(request);
+            return directoryRouter.apply(request);
         } else {
             return routeRequestByMethod(request, routeStrategies);
         }
     }
 
-    public void addFilesystemRouter(FileSystemRouter fileSystemRouter) {
-        this.directoryRouter = fileSystemRouter;
+    public void addFilesystemRouter(RouteToDirectoryResources routeToDirectoryResources) {
+        this.directoryRouter = routeToDirectoryResources;
     }
 
     private Response routeRequestByMethod(

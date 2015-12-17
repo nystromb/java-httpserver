@@ -29,4 +29,18 @@ public class GetRouteOptionsTest {
         assertTrue(response.getHeaders().get("Allow").contains(Method.HEAD.toString()));
         assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
     }
+
+    @Test
+    public void testOptionsIsAlwaysAllowed() {
+        Request request = new RequestBuilder().setMethod(Method.OPTIONS).build();
+        Collection<Method> allowedMethods = Arrays.asList(Method.GET, Method.HEAD);
+        Function<Request, Response> optionsStrategy = new GetRouteOptions(allowedMethods);
+
+        Response response = optionsStrategy.apply(request);
+
+        assertEquals(Status.OK, response.getStatus());
+        assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));
+        assertTrue(response.getHeaders().get("Allow").contains(Method.HEAD.toString()));
+        assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
+    }
 }

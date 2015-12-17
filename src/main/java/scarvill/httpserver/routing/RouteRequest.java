@@ -11,11 +11,6 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 public class RouteRequest implements Function<Request, Response> {
-    private final Function<Request, Response> METHOD_NOT_ALLOWED_STRATEGY =
-        new GiveStaticResponse(
-            new ResponseBuilder()
-                .setStatus(Status.METHOD_NOT_ALLOWED)
-                .build());
     private HashMap<String, HashMap<Method, Function<Request, Response>>> routes = new HashMap<>();
     private RouteToDirectoryResources directoryRouter = new RouteToDirectoryResources();
 
@@ -46,7 +41,14 @@ public class RouteRequest implements Function<Request, Response> {
         Request request,
         HashMap<Method, Function<Request, Response>> routeStrategies) {
         Function<Request, Response> strategy =
-            routeStrategies.getOrDefault(request.getMethod(), METHOD_NOT_ALLOWED_STRATEGY);
+            routeStrategies.getOrDefault(request.getMethod(), methodNotAllowed());
         return strategy.apply(request);
+    }
+
+    private Function<Request, Response> methodNotAllowed() {
+        return new GiveStaticResponse(
+            new ResponseBuilder()
+                .setStatus(Status.METHOD_NOT_ALLOWED)
+                .build());
     }
 }

@@ -55,7 +55,7 @@ public class CobspecConfiguration implements ServerConfiguration {
             logFile.createNewFile();
 
             return new Logger(new PrintStream(logFile));
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

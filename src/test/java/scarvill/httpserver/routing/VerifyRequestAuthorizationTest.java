@@ -7,8 +7,6 @@ import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.GiveStaticResponse;
-import scarvill.httpserver.routing.VerifyRequestAuthorization;
 
 import java.util.Base64;
 import java.util.function.Function;

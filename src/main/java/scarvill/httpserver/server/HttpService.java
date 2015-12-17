@@ -28,14 +28,14 @@ public class HttpService implements Serveable {
                  BufferedOutputStream out =
                      new BufferedOutputStream(clientSocket.getOutputStream())
             ) {
-                serveRequest(in, out);
+                handleClientTransaction(in, out);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         };
     }
 
-    private void serveRequest(BufferedReader in, BufferedOutputStream out) throws IOException {
+    private void handleClientTransaction(BufferedReader in, BufferedOutputStream out) throws IOException {
         Request request = io.readRequest(in);
         Response response = router.apply(request);
         io.writeResponse(out, response);

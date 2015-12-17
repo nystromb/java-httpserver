@@ -19,7 +19,8 @@ import static scarvill.httpserver.request.Method.OPTIONS;
 public class RouteToDirectoryResources implements Function<Request, Response> {
     private Path rootDirectory;
 
-    public RouteToDirectoryResources() {}
+    public RouteToDirectoryResources() {
+    }
 
     public RouteToDirectoryResources(Path rootDirectory) {
         setRootDirectory(rootDirectory);

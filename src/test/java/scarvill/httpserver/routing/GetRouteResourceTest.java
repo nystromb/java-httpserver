@@ -5,7 +5,6 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.GetRouteResource;
 import scarvill.httpserver.routing.resource.Resource;
 import scarvill.httpserver.routing.resource.StringResource;
 
@@ -43,7 +42,7 @@ public class GetRouteResourceTest {
         Response response = routeStrategy.apply(request);
 
         assertEquals(String.valueOf(resource.getData().length),
-                     response.getHeaders().get("Content-Length"));
+            response.getHeaders().get("Content-Length"));
     }
 
     @Test

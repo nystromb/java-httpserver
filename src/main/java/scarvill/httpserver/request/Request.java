@@ -5,9 +5,9 @@ import java.util.HashMap;
 public class Request {
     private final Method method;
     private final String uri;
-    private HashMap<String,String> parameters;
-    private HashMap<String,String> headers;
     private final byte[] body;
+    private HashMap<String, String> parameters;
+    private HashMap<String, String> headers;
 
     public Request(Method method,
                    String uri,

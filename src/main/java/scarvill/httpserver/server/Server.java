@@ -32,7 +32,7 @@ public class Server {
         ExecutorService threadPool =
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        while(isRunning()) {
+        while (isRunning()) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 threadPool.execute(service.serve(clientSocket));

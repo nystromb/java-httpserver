@@ -15,10 +15,10 @@ public class HttpResponseTest {
             .build();
         String expectedRawResponse =
             "HTTP/1.1 200 OK\r\n" +
-            "Bar: other header\r\n" +
-            "Foo: a header\r\n" +
-            "\r\n" +
-            "this is the response body";
+                "Bar: other header\r\n" +
+                "Foo: a header\r\n" +
+                "\r\n" +
+                "this is the response body";
 
         assertEquals(expectedRawResponse, new String(new HttpResponse().generate(response)));
     }

@@ -21,6 +21,8 @@ public class Response {
         return headers;
     }
 
-    public byte[] getBody() { return body; }
+    public byte[] getBody() {
+        return body;
+    }
 
 }

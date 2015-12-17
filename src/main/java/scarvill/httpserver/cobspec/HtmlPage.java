@@ -1,6 +1,5 @@
 package scarvill.httpserver.cobspec;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

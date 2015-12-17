@@ -1,6 +1,8 @@
 # Java HTTP Server
 
-A HTTP server compliant with a subset of the HTTP specification covered by the [Cob Spec](https://github.com/8thlight/cob_spec) HTTP server test suite.
+[![Build Status](https://travis-ci.org/scarvill91/java-httpserver.svg?branch=master)](https://travis-ci.org/scarvill91/java-httpserver)
+
+A HTTP server compliant with the subset of the HTTP specification covered by the [Cob Spec](https://github.com/8thlight/cob_spec) test suite.
 
 ## Requirements
   * Maven 3.3

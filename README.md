@@ -11,7 +11,9 @@ A HTTP server compliant with the subset of the HTTP specification covered by the
   * jUnit 4.12
 
 ## Building the project
-  * From the project root directory, enter ```mvn package``` in the command line.
+  1. Enter ```git clone --recursive https://github.com/scarvill91/java-httpserver.git``` in the command line.
+  2. Navigate to the project root directory.
+  3. Enter ```mvn package``` in the command line.
 
 ## Running the server
   1. From the project root directory, enter ```java -jar target/httpserver-1.0-SNAPSHOT.jar``` in the command line.

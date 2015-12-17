@@ -114,6 +114,34 @@ public class RouteToDirectoryResourcesTest {
         deleteFiles(Arrays.asList(file, directory));
     }
 
+    @Test
+    public void testReturnsMethodNotAllowedForNonGetOrOptionsRequests() throws IOException {
+        Path directory = Files.createTempDirectory("dir");
+        Path file = createTempFileWithContent(directory, "".getBytes());
+
+        RouteToDirectoryResources router = new RouteToDirectoryResources(directory);
+        Request request = new RequestBuilder()
+            .setMethod(Method.POST)
+            .setURI("/" + file.getFileName())
+            .build();
+
+        Response response = router.apply(request);
+
+        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
+
+        deleteFiles(Arrays.asList(file, directory));
+    }
+
+    @Test
+    public void testReturns404NotFoundWhenNoRootDirectoryIsSet() {
+        RouteToDirectoryResources router = new RouteToDirectoryResources();
+        Request request = new RequestBuilder().build();
+
+        Response response = router.apply(request);
+
+        assertEquals(Status.NOT_FOUND, response.getStatus());
+    }
+
     private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {
         Path file = Files.createTempFile(dir, "temp", "");
         Files.write(file, content);

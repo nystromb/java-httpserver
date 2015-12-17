@@ -41,6 +41,13 @@ public class VerifyRequestAuthorization implements Function<Request, Response> {
     }
 
     private String authorizationToken(Request request) {
-        return request.getHeaders().get("Authorization").split(" ")[1];
+        String token = "";
+        String authorizationHeaderField = request.getHeaders().get("Authorization");
+
+        if (authorizationHeaderField.split(" ").length > 1) {
+            token = authorizationHeaderField.split(" ")[1];
+        }
+
+        return token;
     }
 }

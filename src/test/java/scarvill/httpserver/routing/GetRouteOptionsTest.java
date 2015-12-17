@@ -6,7 +6,6 @@ import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.GetRouteOptions;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +20,20 @@ public class GetRouteOptionsTest {
     public void testReturnsOptionsResponse() {
         Request request = new RequestBuilder().setMethod(Method.OPTIONS).build();
         Collection<Method> allowedMethods = Arrays.asList(Method.GET, Method.HEAD, Method.OPTIONS);
+        Function<Request, Response> optionsStrategy = new GetRouteOptions(allowedMethods);
+
+        Response response = optionsStrategy.apply(request);
+
+        assertEquals(Status.OK, response.getStatus());
+        assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));
+        assertTrue(response.getHeaders().get("Allow").contains(Method.HEAD.toString()));
+        assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
+    }
+
+    @Test
+    public void testOptionsIsAlwaysAllowed() {
+        Request request = new RequestBuilder().setMethod(Method.OPTIONS).build();
+        Collection<Method> allowedMethods = Arrays.asList(Method.GET, Method.HEAD);
         Function<Request, Response> optionsStrategy = new GetRouteOptions(allowedMethods);
 
         Response response = optionsStrategy.apply(request);

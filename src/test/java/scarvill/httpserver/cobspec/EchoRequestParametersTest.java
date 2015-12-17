@@ -1,7 +1,6 @@
 package scarvill.httpserver.cobspec;
 
 import org.junit.Test;
-import scarvill.httpserver.cobspec.EchoRequestParameters;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;

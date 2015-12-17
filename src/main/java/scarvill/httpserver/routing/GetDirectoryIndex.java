@@ -1,6 +1,6 @@
 package scarvill.httpserver.routing;
 
-import scarvill.httpserver.cobspec.HtmlPage;
+import scarvill.httpserver.html.HtmlPageGenerator;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
@@ -23,7 +23,7 @@ public class GetDirectoryIndex implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String indexPage = new HtmlPage().indexPage(directoryFileNamesAndPaths(request.getURI()));
+        String indexPage = new HtmlPageGenerator().indexPage(directoryFileNamesAndPaths(request.getURI()));
 
         return new ResponseBuilder()
             .setStatus(Status.OK)

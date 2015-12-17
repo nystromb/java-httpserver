@@ -1,14 +1,12 @@
-package scarvill.httpserver.cobspec;
+package scarvill.httpserver.html;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class HtmlPageTest {
+public class HtmlPageGeneratorTest {
 
     @Test
     public void testGeneratesIndexPage() {
@@ -32,6 +30,6 @@ public class HtmlPageTest {
             "</body>\n" +
             "</html>\n";
 
-        assertEquals(expectedOutput, new HtmlPage().indexPage(directoryFileNamesAndPaths));
+        assertEquals(expectedOutput, new HtmlPageGenerator().indexPage(directoryFileNamesAndPaths));
     }
 }

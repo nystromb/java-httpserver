@@ -27,7 +27,7 @@ public class HttpResponse {
     private String statusAndHeaders(Response response) {
         String statusAndHeaders = "HTTP/1.1 " + response.getStatus().toString() + "\r\n";
 
-        for (Map.Entry<String, String > header : response.getHeaders().entrySet()) {
+        for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
             statusAndHeaders += header.getKey() + ": " + header.getValue() + "\r\n";
         }
 

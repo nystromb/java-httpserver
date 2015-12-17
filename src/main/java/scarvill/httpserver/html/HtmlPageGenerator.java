@@ -1,10 +1,9 @@
-package scarvill.httpserver.cobspec;
+package scarvill.httpserver.html;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HtmlPage {
+public class HtmlPageGenerator {
 
     public String indexPage(HashMap<String, String> directoryFileNamesAndPaths) {
         return "<!DOCTYPE html>\n" +

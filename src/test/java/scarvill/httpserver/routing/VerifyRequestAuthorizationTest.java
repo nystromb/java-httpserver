@@ -7,8 +7,6 @@ import scarvill.httpserver.request.RequestBuilder;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
-import scarvill.httpserver.routing.GiveStaticResponse;
-import scarvill.httpserver.routing.VerifyRequestAuthorization;
 
 import java.util.Base64;
 import java.util.function.Function;
@@ -34,7 +32,7 @@ public class VerifyRequestAuthorizationTest {
     }
 
     @Test
-    public void testDeniesRequestWithoutUsernameAndPassword() {
+    public void testDeniesRequestWithoutAuthorizationHeader() {
         Request request = new RequestBuilder()
             .setMethod(Method.GET)
             .setURI("/")
@@ -84,6 +82,21 @@ public class VerifyRequestAuthorizationTest {
             .setMethod(Method.GET)
             .setURI("/")
             .setHeader("Authorization", "Basic " + token)
+            .build();
+        Function<Request, Response> routeStrategy =
+            new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+        Response response =
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+
+        assertEquals(Status.UNAUTHORIZED, response.getStatus());
+    }
+
+    @Test
+    public void testDeniesRequestWithIllFormedAuthorizationHeader() {
+        Request request = new RequestBuilder()
+            .setMethod(Method.GET)
+            .setURI("/")
+            .setHeader("Authorization", "foo")
             .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());

@@ -4,15 +4,26 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static scarvill.httpserver.request.Method.GET;
-import static scarvill.httpserver.request.Method.NULL_METHOD;
+import static scarvill.httpserver.request.Method.*;
 
 public class HttpRequestTest {
     @Test
-    public void testParsesRawHTTPRequest() {
-        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
+    public void testParsesRequestMethod() {
+        Request getRequest = new HttpRequest(GET.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request postRequest = new HttpRequest(POST.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request putRequest = new HttpRequest(PUT.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request patchRequest = new HttpRequest(PATCH.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request deleteRequest = new HttpRequest(DELETE.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request optionsRequest = new HttpRequest(OPTIONS.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+        Request headRequest = new HttpRequest(HEAD.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
 
-        assertEquals(GET, request.getMethod());
+        assertEquals(GET, getRequest.getMethod());
+        assertEquals(POST, postRequest.getMethod());
+        assertEquals(PUT, putRequest.getMethod());
+        assertEquals(PATCH, patchRequest.getMethod());
+        assertEquals(DELETE, deleteRequest.getMethod());
+        assertEquals(OPTIONS, optionsRequest.getMethod());
+        assertEquals(HEAD, headRequest.getMethod());
     }
 
     @Test
@@ -35,6 +46,14 @@ public class HttpRequestTest {
 
         assertEquals("/uri", request.getURI());
         assertEquals("bar", request.getParameters().get("foo"));
+        assertEquals("baz", request.getParameters().get("bar"));
+    }
+
+    @Test
+    public void testIgnoresNonParameterQueryStringElements() {
+        Request request = new HttpRequest("GET /uri?ignored&bar=baz HTTP/1.1\r\n\r\n").parse();
+
+        assertEquals("/uri", request.getURI());
         assertEquals("baz", request.getParameters().get("bar"));
     }
 

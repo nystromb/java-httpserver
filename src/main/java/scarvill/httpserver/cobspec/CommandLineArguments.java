@@ -35,7 +35,7 @@ public class CommandLineArguments {
 
     private void setPublicDirectoryIfSpecified() {
         int directoryFlagIndex = argList.indexOf("-d");
-        
+
         if (flagIsFollowedByArgument(directoryFlagIndex)) {
             publicDirectory = argList.get(directoryFlagIndex + 1);
         }

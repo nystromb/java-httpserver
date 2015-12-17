@@ -52,6 +52,19 @@ public class ServerTest {
         threadPool.shutdown();
     }
 
+    private String getServerReplyTo(String message, Server server) throws IOException {
+        Socket clientSocket =
+            new Socket(server.getInetAddress(), server.getLocalPort());
+        PrintWriter out =
+            new PrintWriter(clientSocket.getOutputStream(), true);
+        BufferedReader in =
+            new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
+
+        out.println(message);
+        return in.readLine();
+    }
+
     private class TestingServerConfiguration implements ServerConfiguration {
         private int port;
         private Serveable service;
@@ -77,7 +90,8 @@ public class ServerTest {
         }
 
         @Override
-        public void serverTearDown() {}
+        public void serverTearDown() {
+        }
     }
 
     private class EchoService implements Serveable {
@@ -94,18 +108,5 @@ public class ServerTest {
                 }
             };
         }
-    }
-
-    private String getServerReplyTo(String message, Server server) throws IOException {
-        Socket clientSocket =
-            new Socket(server.getInetAddress(), server.getLocalPort());
-        PrintWriter out =
-            new PrintWriter(clientSocket.getOutputStream(), true);
-        BufferedReader in =
-            new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-
-        out.println(message);
-        return in.readLine();
     }
 }

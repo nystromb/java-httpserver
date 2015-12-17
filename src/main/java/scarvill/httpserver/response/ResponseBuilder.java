@@ -12,11 +12,6 @@ public class ResponseBuilder {
         return this;
     }
 
-    public ResponseBuilder setHeaders(HashMap<String, String> headers) {
-        this.headers = headers;
-        return this;
-    }
-
     public ResponseBuilder setHeader(String keyword, String content) {
         this.headers.put(keyword, content);
         return this;

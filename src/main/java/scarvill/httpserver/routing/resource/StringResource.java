@@ -1,6 +1,6 @@
 package scarvill.httpserver.routing.resource;
 
-public class StringResource implements Resource{
+public class StringResource implements Resource {
     private String data;
 
     public StringResource(String data) {

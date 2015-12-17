@@ -30,13 +30,13 @@ public class LoggerTest {
 
         String expectedLog =
             "*** Received Request ***\n" +
-            "MethodLine: GET /a/route HTTP/1.1\n" +
-            "Parameters: foo=bar name=value\n" +
-            "Headers:\n" +
-            "- Header: a header\n" +
-            "- Other: other header\n" +
-            "Body-length: 4\n" +
-            "\n";
+                "MethodLine: GET /a/route HTTP/1.1\n" +
+                "Parameters: foo=bar name=value\n" +
+                "Headers:\n" +
+                "- Header: a header\n" +
+                "- Other: other header\n" +
+                "Body-length: 4\n" +
+                "\n";
 
         logger.logRequest(request);
 
@@ -56,12 +56,12 @@ public class LoggerTest {
 
         String expectedLog =
             "*** Sent Response ***\n" +
-            "Status: 200 OK\n" +
-            "Headers:\n" +
-            "- Header: a header\n" +
-            "- Other: other header\n" +
-            "Body-length: 4\n" +
-            "\n";
+                "Status: 200 OK\n" +
+                "Headers:\n" +
+                "- Header: a header\n" +
+                "- Other: other header\n" +
+                "Body-length: 4\n" +
+                "\n";
 
         logger.logResponse(response);
 

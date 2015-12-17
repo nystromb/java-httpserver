@@ -20,9 +20,9 @@ public class GetRouteOptions implements Function<Request, Response> {
     @Override
     public Response apply(Request request) {
         return new ResponseBuilder()
-                .setStatus(Status.OK)
-                .setHeader("Allow", allowedMethodsString(allowedMethods))
-                .build();
+            .setStatus(Status.OK)
+            .setHeader("Allow", allowedMethodsString(allowedMethods))
+            .build();
     }
 
     private String allowedMethodsString(Collection<Method> allowedMethods) {

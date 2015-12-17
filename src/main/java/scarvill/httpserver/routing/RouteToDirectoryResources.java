@@ -33,6 +33,8 @@ public class RouteToDirectoryResources implements Function<Request, Response> {
     public Response apply(Request request) {
         if (servedDirectoryNotSet() || Files.notExists(filePath(request.getURI()))) {
             return new ResponseBuilder().setStatus(Status.NOT_FOUND).build();
+        } else if (Files.isDirectory(filePath(request.getURI()))) {
+            return new GetDirectoryIndex(rootDirectory).apply(request);
         } else {
             Resource resource = new FileResource(filePath(request.getURI()));
             return applyDefaultFileRoutingStrategy(request, resource);

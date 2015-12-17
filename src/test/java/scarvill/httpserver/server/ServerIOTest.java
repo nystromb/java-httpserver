@@ -3,7 +3,7 @@ package scarvill.httpserver.server;
 import org.junit.Test;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
-import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.HttpResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
@@ -33,7 +33,7 @@ public class ServerIOTest {
             .setBody("body".getBytes())
             .build();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String expectedResponseString = new String(new HTTPResponse().generate(expectedResponse));
+        String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
 
         new ServerIO().writeResponse(outputStream, expectedResponse);
 

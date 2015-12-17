@@ -7,31 +7,31 @@ import static org.junit.Assert.assertEquals;
 import static scarvill.httpserver.request.Method.GET;
 import static scarvill.httpserver.request.Method.NULL_METHOD;
 
-public class HTTPRequestTest {
+public class HttpRequestTest {
     @Test
     public void testParsesRawHTTPRequest() {
-        Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
         assertEquals(GET, request.getMethod());
     }
 
     @Test
     public void testParsesInvalidRawHTTPRequestMethod() {
-        Request request = new HTTPRequest("FOO /uri HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("FOO /uri HTTP/1.1\r\n\r\n").parse();
 
         assertEquals(NULL_METHOD, request.getMethod());
     }
 
     @Test
     public void testParsesRawHTTPRequestURI() {
-        Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());
     }
 
     @Test
     public void testParsesRawHTTPRequestWithQueryStringParameters() {
-        Request request = new HTTPRequest("GET /uri?foo=bar&bar=baz HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("GET /uri?foo=bar&bar=baz HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());
         assertEquals("bar", request.getParameters().get("foo"));
@@ -45,7 +45,7 @@ public class HTTPRequestTest {
         String translatedMessage =
             "<, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 
-        Request request = new HTTPRequest("GET /uri?" + query + " HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("GET /uri?" + query + " HTTP/1.1\r\n\r\n").parse();
 
         assertEquals(translatedMessage, request.getParameters().get("message"));
     }
@@ -56,7 +56,7 @@ public class HTTPRequestTest {
             "Header: a header\r\n" +
             "Other: other header\r\n" +
             "\r\n";
-        Request request = new HTTPRequest(rawRequest).parse();
+        Request request = new HttpRequest(rawRequest).parse();
 
         assertEquals("a header", request.getHeaders().get("Header"));
         assertEquals("other header", request.getHeaders().get("Other"));
@@ -64,14 +64,14 @@ public class HTTPRequestTest {
 
     @Test
     public void testParsesRawHTTPRequestWithNoBody() {
-        Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
+        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
         assertArrayEquals(new byte[]{}, request.getBody());
     }
 
     @Test
     public void testParsesRawHTTPRequestWithBody() {
-        Request request = new HTTPRequest("GET /uri HTTP/1.1\r\n\r\n", "body".getBytes()).parse();
+        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n", "body".getBytes()).parse();
 
         assertArrayEquals("body".getBytes(), request.getBody());
     }

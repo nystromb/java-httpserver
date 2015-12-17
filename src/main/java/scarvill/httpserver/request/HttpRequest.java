@@ -7,16 +7,16 @@ import java.util.HashMap;
 
 import static scarvill.httpserver.request.Method.*;
 
-public class HTTPRequest {
+public class HttpRequest {
     private String requestLineAndHeaders;
     private byte[] body = new byte[]{};
 
-    public HTTPRequest(String requestLineAndHeaders, byte[] body) {
+    public HttpRequest(String requestLineAndHeaders, byte[] body) {
         this.requestLineAndHeaders = requestLineAndHeaders;
         this.body = body;
     }
 
-    public HTTPRequest(String requestLineAndHeaders) {
+    public HttpRequest(String requestLineAndHeaders) {
         this.requestLineAndHeaders = requestLineAndHeaders;
     }
 

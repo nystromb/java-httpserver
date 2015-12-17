@@ -1,7 +1,7 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
-import scarvill.httpserver.response.HTTPResponse;
+import scarvill.httpserver.response.HttpResponse;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
@@ -13,7 +13,7 @@ import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class HTTPServiceTest {
+public class HttpServiceTest {
     @Test
     public void testLogsHTTPTransactions() {
         byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
@@ -22,7 +22,7 @@ public class HTTPServiceTest {
         Response expectedResponse = new ResponseBuilder().setStatus(Status.OK).build();
         ByteArrayOutputStream logStream = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(logStream));
-        HTTPService service = new HTTPService(logger, new GiveStaticResponse(expectedResponse));
+        HttpService service = new HttpService(logger, new GiveStaticResponse(expectedResponse));
 
         service.serve(clientSocket).run();
 
@@ -42,8 +42,8 @@ public class HTTPServiceTest {
             .setBody("body".getBytes())
             .build();
         Logger logger = new Logger(new NullPrintStream());
-        HTTPService service = new HTTPService(logger, new GiveStaticResponse(expectedResponse));
-        String expectedResponseString = new String(new HTTPResponse().generate(expectedResponse));
+        HttpService service = new HttpService(logger, new GiveStaticResponse(expectedResponse));
+        String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
 
         service.serve(clientSocket).run();
 

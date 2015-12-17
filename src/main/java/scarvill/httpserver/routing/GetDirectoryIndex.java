@@ -1,6 +1,6 @@
 package scarvill.httpserver.routing;
 
-import scarvill.httpserver.cobspec.HtmlPage;
+import scarvill.httpserver.html.HtmlPage;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;

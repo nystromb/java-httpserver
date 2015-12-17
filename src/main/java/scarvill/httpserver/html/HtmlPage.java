@@ -1,4 +1,4 @@
-package scarvill.httpserver.cobspec;
+package scarvill.httpserver.html;
 
 import java.util.HashMap;
 import java.util.Map;

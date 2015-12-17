@@ -1,6 +1,7 @@
-package scarvill.httpserver.cobspec;
+package scarvill.httpserver.html;
 
 import org.junit.Test;
+import scarvill.httpserver.html.HtmlPage;
 
 import java.util.HashMap;
 

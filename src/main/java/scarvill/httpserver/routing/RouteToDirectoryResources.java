@@ -34,30 +34,40 @@ public class RouteToDirectoryResources implements Function<Request, Response> {
     public Response apply(Request request) {
         if (servedDirectoryNotSet() || Files.notExists(filePath(request.getURI()))) {
             return new ResponseBuilder().setStatus(Status.NOT_FOUND).build();
-        } else if (Files.isDirectory(filePath(request.getURI()))) {
-            return new GetDirectoryIndex(rootDirectory).apply(request);
         } else {
-            Resource resource = new FileResource(filePath(request.getURI()));
-            return applyDefaultFileRoutingStrategy(request, resource);
+            return applyFileRoutingStrategy(request);
         }
     }
 
-    private boolean servedDirectoryNotSet() {
-        return rootDirectory == null;
+    private Response applyFileRoutingStrategy(Request request) {
+        switch (request.getMethod()) {
+            case GET:
+                return respondWithFileOrDirectoryIndex(request);
+            case OPTIONS:
+                return new GetRouteOptions(Arrays.asList(GET, OPTIONS)).apply(request);
+            default:
+                return new ResponseBuilder().setStatus(Status.METHOD_NOT_ALLOWED).build();
+        }
+    }
+
+    private Response respondWithFileOrDirectoryIndex(Request request) {
+        if (routePointsToADirectory(request.getURI())) {
+            return new GetDirectoryIndex(rootDirectory).apply(request);
+        } else {
+            Resource resource = new FileResource(filePath(request.getURI()));
+            return new GetRouteResource(resource).apply(request);
+        }
     }
 
     private Path filePath(String uri) {
         return Paths.get(rootDirectory + uri);
     }
 
-    private Response applyDefaultFileRoutingStrategy(Request request, Resource resource) {
-        switch (request.getMethod()) {
-            case GET:
-                return new GetRouteResource(resource).apply(request);
-            case OPTIONS:
-                return new GetRouteOptions(Arrays.asList(GET, OPTIONS)).apply(request);
-            default:
-                return new ResponseBuilder().setStatus(Status.METHOD_NOT_ALLOWED).build();
-        }
+    private boolean servedDirectoryNotSet() {
+        return rootDirectory == null;
+    }
+
+    private boolean routePointsToADirectory(String uri) {
+        return Files.isDirectory(filePath(uri));
     }
 }

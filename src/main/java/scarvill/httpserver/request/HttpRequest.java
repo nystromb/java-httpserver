@@ -77,12 +77,24 @@ public class HttpRequest {
         HashMap<String, String> parameters = new HashMap<>();
 
         for (String argument : query.split("&")) {
-            String parameterName = URLDecoder.decode(argument.split("=")[0], "UTF-8");
-            String parameterValue = URLDecoder.decode(argument.split("=")[1], "UTF-8");
-            parameters.put(parameterName, parameterValue);
+            addParameterIfWellFormed(argument, parameters);
         }
 
         return parameters;
+    }
+
+    private void addParameterIfWellFormed(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
+        String[] nameAndValue = argument.split("=");
+
+        if (argumentHasBothNameAndValue(nameAndValue)) {
+            String name = URLDecoder.decode(nameAndValue[0], "UTF-8");
+            String value = URLDecoder.decode(nameAndValue[1], "UTF-8");
+            parameters.put(name, value);
+        }
+    }
+
+    private boolean argumentHasBothNameAndValue(String[] nameAndValue) {
+        return nameAndValue.length >= 2;
     }
 
     private HashMap<String, String> parseHeaders() {

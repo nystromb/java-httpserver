@@ -48,7 +48,7 @@ public class HttpRequest {
             case "DELETE":
                 return DELETE;
             default:
-                return NULL_METHOD;
+                return null;
         }
     }
 

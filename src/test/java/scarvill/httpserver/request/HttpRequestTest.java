@@ -30,7 +30,7 @@ public class HttpRequestTest {
     public void testParsesInvalidRawHTTPRequestMethod() {
         Request request = new HttpRequest("FOO /uri HTTP/1.1\r\n\r\n").parse();
 
-        assertEquals(NULL_METHOD, request.getMethod());
+        assertEquals(null, request.getMethod());
     }
 
     @Test

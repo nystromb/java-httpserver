@@ -6,6 +6,4 @@ public interface ServerConfiguration {
     String getPublicDirectory();
 
     Serveable getService();
-
-    void serverTearDown();
 }

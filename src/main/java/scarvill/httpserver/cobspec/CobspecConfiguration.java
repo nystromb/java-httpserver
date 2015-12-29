@@ -44,11 +44,6 @@ public class CobspecConfiguration implements ServerConfiguration {
             configuredRouter(getPublicDirectory()));
     }
 
-    @Override
-    public void serverTearDown() {
-        new File(arguments.getPublicDirectory() + "/logs").delete();
-    }
-
     private Logger fileLogger(String publicDirectory) {
         try {
             File logFile = new File(publicDirectory + "/logs");

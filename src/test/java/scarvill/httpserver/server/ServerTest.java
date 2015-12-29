@@ -96,10 +96,6 @@ public class ServerTest {
         public Serveable getService() {
             return service;
         }
-
-        @Override
-        public void serverTearDown() {
-        }
     }
 
     private class EchoService implements Serveable {

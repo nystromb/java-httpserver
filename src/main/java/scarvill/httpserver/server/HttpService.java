@@ -48,6 +48,9 @@ public class HttpService implements Serveable {
         } catch (HttpRequest.IllFormedRequest e) {
             logger.logException(e.getMessage());
             response = badRequestResponse(e.getMessage());
+        } catch (IOException e) {
+            logger.logException(e.getMessage());
+            response = serverErrorResponse();
         }
         logger.logResponse(response);
         io.writeResponse(out, response);
@@ -56,7 +59,14 @@ public class HttpService implements Serveable {
     private Response badRequestResponse(String message) {
         return new ResponseBuilder()
             .setStatus(Status.BAD_REQUEST)
-            .setBody(message.getBytes())
+            .setBody((Status.BAD_REQUEST.toString() + "\n" + message).getBytes())
+            .build();
+    }
+
+    private Response serverErrorResponse() {
+        return new ResponseBuilder()
+            .setStatus(Status.SERVER_ERROR)
+            .setBody(Status.SERVER_ERROR.toString().getBytes())
             .build();
     }
 }

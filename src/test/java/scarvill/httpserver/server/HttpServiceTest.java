@@ -52,7 +52,7 @@ public class HttpServiceTest {
     }
 
     @Test
-    public void testSends400BadResponseWhenReceivesIllFormedRequest() throws Exception {
+    public void testSends400BadRequestResponseWhenReceivesIllFormedRequest() throws Exception {
         byte[] rawRequest = "FOO / HTTP/1.1\r\n\r\n".getBytes();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -63,6 +63,19 @@ public class HttpServiceTest {
         service.serve(clientSocket).run();
 
         assertTrue(new String(outputStream.toByteArray()).contains(Status.BAD_REQUEST.toString()));
+    }
+
+    @Test
+    public void testSends500ServerErrorResponseWhenAnIOExceptionIsRaised() throws Exception {
+        InputStream inputStream = new FailingInputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
+        Logger logger = new Logger(new NullPrintStream());
+        HttpService service = new HttpService(logger, new RouteRequest());
+
+        service.serve(clientSocket).run();
+
+        assertTrue(new String(outputStream.toByteArray()).contains(Status.SERVER_ERROR.toString()));
     }
 
     private class MockSocket extends Socket {
@@ -82,6 +95,13 @@ public class HttpServiceTest {
         @Override
         public OutputStream getOutputStream() {
             return outputStream;
+        }
+    }
+
+    private class FailingInputStream extends InputStream {
+        @Override
+        public int read() throws IOException {
+            throw new IOException();
         }
     }
 

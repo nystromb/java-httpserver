@@ -3,6 +3,8 @@ package scarvill.httpserver.server;
 import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -38,19 +40,22 @@ public class HttpService implements Serveable {
     }
 
     private void handleClientTransaction(BufferedReader in, BufferedOutputStream out) throws IOException {
-        Request request = null;
+        Response response;
         try {
-            request = io.readRequest(in);
+            Request request = io.readRequest(in);
+            response = router.apply(request);
+            logger.logRequest(request);
         } catch (HttpRequest.IllFormedRequest e) {
-            e.printStackTrace();
+            response = badRequestResponse(e.getMessage());
         }
-        Response response = router.apply(request);
+        logger.logResponse(response);
         io.writeResponse(out, response);
-        logTransaction(request, response);
     }
 
-    private void logTransaction(Request request, Response response) {
-        logger.logRequest(request);
-        logger.logResponse(response);
+    private Response badRequestResponse(String message) {
+        return new ResponseBuilder()
+            .setStatus(Status.BAD_REQUEST)
+            .setBody(message.getBytes())
+            .build();
     }
 }

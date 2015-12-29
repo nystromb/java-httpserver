@@ -6,6 +6,7 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.GiveStaticResponse;
+import scarvill.httpserver.routing.RouteRequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -48,6 +49,20 @@ public class HttpServiceTest {
         service.serve(clientSocket).run();
 
         assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
+    }
+
+    @Test
+    public void testSends400BadResponseWhenReceivesIllFormedRequest() throws Exception {
+        byte[] rawRequest = "FOO / HTTP/1.1\r\n\r\n".getBytes();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
+        Logger logger = new Logger(new NullPrintStream());
+        HttpService service = new HttpService(logger, new RouteRequest());
+
+        service.serve(clientSocket).run();
+
+        assertTrue(new String(outputStream.toByteArray()).contains(Status.BAD_REQUEST.toString()));
     }
 
     private class MockSocket extends Socket {

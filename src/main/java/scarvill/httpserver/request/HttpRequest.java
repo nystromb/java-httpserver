@@ -20,7 +20,7 @@ public class HttpRequest {
         this.requestLineAndHeaders = requestLineAndHeaders;
     }
 
-    public Request parse() {
+    public Request parse() throws IllFormedRequest {
         return new RequestBuilder()
             .setMethod(parseMethod())
             .setURI(parseURI())
@@ -30,7 +30,7 @@ public class HttpRequest {
             .build();
     }
 
-    private Method parseMethod() {
+    private Method parseMethod() throws IllFormedRequest {
         String method = requestLineAndHeaders.split(" ")[0];
         switch (method) {
             case "GET":
@@ -48,7 +48,7 @@ public class HttpRequest {
             case "DELETE":
                 return DELETE;
             default:
-                return null;
+                throw new IllFormedRequest("Cannot parse ill-formed HTTP request: Invalid method.");
         }
     }
 
@@ -56,13 +56,14 @@ public class HttpRequest {
         return requestLineAndHeaders.split(" ")[1].split("\\?")[0];
     }
 
-    private HashMap<String, String> parseParameters() {
+    private HashMap<String, String> parseParameters() throws IllFormedRequest {
         HashMap<String, String> parameters = new HashMap<>();
 
         if (requestHasQueryString()) {
             try {
                 parameters = parseQueryStringParameters(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
-            } catch (UnsupportedEncodingException ignored) {
+            } catch (UnsupportedEncodingException e) {
+                throw new IllFormedRequest("Cannot parse ill-formed HTTP request: Invalid URI character encoding.");
             }
         }
 
@@ -77,23 +78,24 @@ public class HttpRequest {
         HashMap<String, String> parameters = new HashMap<>();
 
         for (String argument : query.split("&")) {
-            addParameterIfWellFormed(argument, parameters);
+            addParameterIfHasBothNameAndValue(argument, parameters);
         }
 
         return parameters;
     }
 
-    private void addParameterIfWellFormed(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
-        String[] nameAndValue = argument.split("=");
-
-        if (argumentHasBothNameAndValue(nameAndValue)) {
+    private void addParameterIfHasBothNameAndValue(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
+        if (hasBothNameAndValue(argument)) {
+            String[] nameAndValue = argument.split("=");
             String name = URLDecoder.decode(nameAndValue[0], "UTF-8");
             String value = URLDecoder.decode(nameAndValue[1], "UTF-8");
             parameters.put(name, value);
         }
     }
 
-    private boolean argumentHasBothNameAndValue(String[] nameAndValue) {
+    private boolean hasBothNameAndValue(String argument) {
+        String[] nameAndValue = argument.split("=");
+
         return nameAndValue.length >= 2;
     }
 
@@ -112,5 +114,11 @@ public class HttpRequest {
 
     private boolean includesHeaders(String[] requestLines) {
         return requestLines.length > 2;
+    }
+
+    public class IllFormedRequest extends Exception {
+        public IllFormedRequest(String message) {
+            super(message);
+        }
     }
 }

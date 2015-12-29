@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class ServerIO {
-    public Request readRequest(BufferedReader in) throws IOException {
+    public Request readRequest(BufferedReader in) throws IOException, HttpRequest.IllFormedRequest {
         String requestLineAndHeaders = readRequestLineAndHeaders(in);
         byte[] body = readBody(in);
 

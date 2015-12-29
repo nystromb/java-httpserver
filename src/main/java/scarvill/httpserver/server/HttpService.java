@@ -1,5 +1,6 @@
 package scarvill.httpserver.server;
 
+import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
 
@@ -8,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.function.Function;
 
 public class HttpService implements Serveable {
@@ -36,7 +38,12 @@ public class HttpService implements Serveable {
     }
 
     private void handleClientTransaction(BufferedReader in, BufferedOutputStream out) throws IOException {
-        Request request = io.readRequest(in);
+        Request request = null;
+        try {
+            request = io.readRequest(in);
+        } catch (HttpRequest.IllFormedRequest e) {
+            e.printStackTrace();
+        }
         Response response = router.apply(request);
         io.writeResponse(out, response);
         logTransaction(request, response);

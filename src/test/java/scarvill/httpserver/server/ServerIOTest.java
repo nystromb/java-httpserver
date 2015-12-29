@@ -1,6 +1,7 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
+import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HttpResponse;
@@ -9,12 +10,13 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 
 import java.io.*;
+import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 
 public class ServerIOTest {
     @Test
-    public void testReadsRequestFromStream() throws IOException {
+    public void testReadsRequestFromStream() throws IOException, HttpRequest.IllFormedRequest {
         byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));

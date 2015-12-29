@@ -43,9 +43,10 @@ public class HttpService implements Serveable {
         Response response;
         try {
             Request request = io.readRequest(in);
-            response = router.apply(request);
             logger.logRequest(request);
+            response = router.apply(request);
         } catch (HttpRequest.IllFormedRequest e) {
+            logger.logException(e.getMessage());
             response = badRequestResponse(e.getMessage());
         }
         logger.logResponse(response);

@@ -10,7 +10,6 @@ import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 
 import java.io.*;
-import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 

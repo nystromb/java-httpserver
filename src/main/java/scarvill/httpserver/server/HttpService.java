@@ -39,20 +39,26 @@ public class HttpService implements Serveable {
     }
 
     private void handleClientTransaction(BufferedReader in, BufferedOutputStream out) throws IOException {
-        Response response;
+        Response response = generateResponse(in);
+        logger.logResponse(response);
+        io.writeResponse(out, response);
+    }
+
+    private Response generateResponse(BufferedReader in) {
         try {
             Request request = io.readRequest(in);
             logger.logRequest(request);
-            response = router.apply(request);
+
+            return router.apply(request);
         } catch (HttpRequest.IllFormedRequest e) {
             logger.logException(e.getMessage());
-            response = badRequestResponse(e.getMessage());
+
+            return badRequestResponse(e.getMessage());
         } catch (IOException e) {
             logger.logException(e.getMessage());
-            response = serverErrorResponse();
+
+            return serverErrorResponse();
         }
-        logger.logResponse(response);
-        io.writeResponse(out, response);
     }
 
     private Response badRequestResponse(String message) {

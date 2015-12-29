@@ -20,10 +20,10 @@ public class HttpServiceTest {
         byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
         MockSocket clientSocket =
             new MockSocket(new ByteArrayInputStream(rawRequest), new ByteArrayOutputStream());
-        Response expectedResponse = new ResponseBuilder().setStatus(Status.OK).build();
         ByteArrayOutputStream logStream = new ByteArrayOutputStream();
         Logger logger = new Logger(new PrintStream(logStream));
-        HttpService service = new HttpService(logger, new GiveStaticResponse(expectedResponse));
+        HttpService service = new HttpService(logger, new GiveStaticResponse(
+            new ResponseBuilder().setStatus(Status.OK).build()));
 
         service.serve(clientSocket).run();
 
@@ -33,33 +33,31 @@ public class HttpServiceTest {
 
     @Test
     public void testSendsResponseToClientRequest() throws Exception {
-        byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
+        ByteArrayInputStream inputStream =
+            new ByteArrayInputStream("GET / HTTP/1.1\r\n\r\n".getBytes());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
         Response expectedResponse = new ResponseBuilder()
             .setStatus(Status.OK)
             .setHeader("Header", "a header")
             .setBody("body".getBytes())
             .build();
-        Logger logger = new Logger(new NullPrintStream());
-        HttpService service = new HttpService(logger, new GiveStaticResponse(expectedResponse));
+        HttpService service = new HttpService(
+            new Logger(new NullPrintStream()),
+            new GiveStaticResponse(expectedResponse));
         String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
 
-        service.serve(clientSocket).run();
+        service.serve(new MockSocket(inputStream, outputStream)).run();
 
         assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
     }
 
     @Test
     public void testSends500ServerErrorResponseWhenAnIOExceptionIsRaised() throws Exception {
-        InputStream inputStream = new FailingInputStream();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
-        Logger logger = new Logger(new NullPrintStream());
-        HttpService service = new HttpService(logger, new RouteRequest());
+        HttpService service =
+            new HttpService(new Logger(new NullPrintStream()), new RouteRequest());
 
-        service.serve(clientSocket).run();
+        service.serve(new MockSocket(new FailingInputStream(), outputStream)).run();
 
         assertTrue(new String(outputStream.toByteArray()).contains(Status.SERVER_ERROR.toString()));
     }

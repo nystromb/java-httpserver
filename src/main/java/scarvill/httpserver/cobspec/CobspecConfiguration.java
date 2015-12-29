@@ -2,13 +2,13 @@ package scarvill.httpserver.cobspec;
 
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
+import scarvill.httpserver.resource.FileResource;
+import scarvill.httpserver.resource.Resource;
+import scarvill.httpserver.resource.StringResource;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.*;
-import scarvill.httpserver.routing.resource.FileResource;
-import scarvill.httpserver.routing.resource.Resource;
-import scarvill.httpserver.routing.resource.StringResource;
 import scarvill.httpserver.server.HttpService;
 import scarvill.httpserver.server.Logger;
 import scarvill.httpserver.server.Serveable;

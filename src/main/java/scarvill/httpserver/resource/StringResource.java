@@ -1,4 +1,4 @@
-package scarvill.httpserver.routing.resource;
+package scarvill.httpserver.resource;
 
 public class StringResource implements Resource {
     private String data;
@@ -14,6 +14,10 @@ public class StringResource implements Resource {
 
     @Override
     public void setData(byte[] data) {
-        this.data = new String(data);
+        if (data != null) {
+            this.data = new String(data);
+        } else {
+            this.data = "";
+        }
     }
 }

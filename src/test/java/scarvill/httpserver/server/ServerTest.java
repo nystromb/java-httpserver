@@ -23,13 +23,21 @@ public class ServerTest {
     }
 
     @Test
-    public void testServerRunsThenStops() throws Exception {
+    public void testServerRuns() throws Exception {
         int port = 0;
-        Server server = new Server(new TestingServerConfiguration(port, new EchoService()));
+        Server server = new Server(new TestServerConfiguration(port, new EchoService()));
         threadPool.submit(server::start);
 
         assertTrue(server.isRunning());
 
+        server.stopServingNewConnections();
+    }
+
+    @Test
+    public void testServerStops() throws Exception {
+        int port = 0;
+        Server server = new Server(new TestServerConfiguration(port, new EchoService()));
+        threadPool.submit(server::start);
         server.stopServingNewConnections();
 
         assertFalse(server.isRunning());
@@ -38,7 +46,7 @@ public class ServerTest {
     @Test
     public void testServesConnectionAccordingToServiceInServerConfiguration() throws Exception {
         int port = 0;
-        Server server = new Server(new TestingServerConfiguration(port, new EchoService()));
+        Server server = new Server(new TestServerConfiguration(port, new EchoService()));
         threadPool.submit(server::start);
         String echoMessage = "foo";
 
@@ -65,11 +73,11 @@ public class ServerTest {
         return in.readLine();
     }
 
-    private class TestingServerConfiguration implements ServerConfiguration {
+    private class TestServerConfiguration implements ServerConfiguration {
         private int port;
         private Serveable service;
 
-        public TestingServerConfiguration(int port, Serveable service) {
+        public TestServerConfiguration(int port, Serveable service) {
             this.port = port;
             this.service = service;
         }
@@ -103,8 +111,7 @@ public class ServerTest {
                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
                     out.println(in.readLine());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException ignored) {
                 }
             };
         }

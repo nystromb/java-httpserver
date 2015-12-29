@@ -1,7 +1,6 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
-import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HttpResponse;
@@ -16,9 +15,10 @@ import static org.junit.Assert.assertEquals;
 public class ServerIOTest {
     @Test
     public void testReadsRequestFromStream() throws IOException {
-        byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
-        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader in =
+            new BufferedReader(
+                new InputStreamReader(
+                    new ByteArrayInputStream("GET / HTTP/1.1\r\n\r\n".getBytes())));
 
         Request request = new ServerIO().readRequest(in);
 
@@ -33,8 +33,8 @@ public class ServerIOTest {
             .setHeader("Header", "a header")
             .setBody("body".getBytes())
             .build();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         new ServerIO().writeResponse(outputStream, expectedResponse);
 

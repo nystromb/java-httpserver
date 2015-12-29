@@ -13,8 +13,10 @@ public class VerifyRequestAuthorization implements Function<Request, Response> {
     private String realm;
     private Function<Request, Response> verifiedRequestRouteStrategy;
 
-    public VerifyRequestAuthorization(
-        String username, String password, String realm, Function<Request, Response> routeStrategy) {
+    public VerifyRequestAuthorization(String username,
+                                      String password,
+                                      String realm,
+                                      Function<Request, Response> routeStrategy) {
         encodedId = idEncode(username, password);
         this.realm = realm;
         verifiedRequestRouteStrategy = routeStrategy;

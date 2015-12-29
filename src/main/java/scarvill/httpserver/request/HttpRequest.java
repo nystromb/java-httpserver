@@ -61,7 +61,8 @@ public class HttpRequest {
 
         if (requestHasQueryString()) {
             try {
-                parameters = parseQueryStringParameters(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
+                String queryString = requestLineAndHeaders.split(" ")[1].split("\\?")[1];
+                parameters = parseQueryStringParameters(queryString);
             } catch (UnsupportedEncodingException ignored) {
             }
         }
@@ -73,17 +74,19 @@ public class HttpRequest {
         return requestLineAndHeaders.split(" ")[1].split("\\?").length > 1;
     }
 
-    private HashMap<String, String> parseQueryStringParameters(String query) throws UnsupportedEncodingException {
+    private HashMap<String, String> parseQueryStringParameters(String query)
+        throws UnsupportedEncodingException {
         HashMap<String, String> parameters = new HashMap<>();
 
         for (String argument : query.split("&")) {
-            addParameterIfHasBothNameAndValue(argument, parameters);
+            addParameterIfHasNameAndValue(argument, parameters);
         }
 
         return parameters;
     }
 
-    private void addParameterIfHasBothNameAndValue(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
+    private void addParameterIfHasNameAndValue(String argument, HashMap<String, String> parameters)
+        throws UnsupportedEncodingException {
         if (hasBothNameAndValue(argument)) {
             String[] nameAndValue = argument.split("=");
             String name = URLDecoder.decode(nameAndValue[0], "UTF-8");

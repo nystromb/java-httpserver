@@ -24,7 +24,8 @@ public class HtmlPageGenerator {
         String listElements = "";
 
         for (Map.Entry<String, String> entry : fileNamesAndPaths.entrySet()) {
-            listElements += "<li><a href=" + entry.getValue() + ">" + entry.getKey() + "</a></li>\n";
+            listElements +=
+                "<li><a href=" + entry.getValue() + ">" + entry.getKey() + "</a></li>\n";
         }
 
         return listElements;

@@ -37,18 +37,18 @@ public class RouteRequest implements Function<Request, Response> {
         this.directoryRouter.setRootDirectory(rootDirectory);
     }
 
-    private Response routeRequestByMethod(
-        Request request,
-        HashMap<Method, Function<Request, Response>> routeStrategies) {
+    private Response routeRequestByMethod(Request request,
+                                          HashMap<Method, Function<Request, Response>> routeStrategies) {
         Function<Request, Response> strategy =
-            routeStrategies.getOrDefault(request.getMethod(), methodNotAllowed());
+            routeStrategies.getOrDefault(request.getMethod(), methodNotAllowedStrategy());
         return strategy.apply(request);
     }
 
-    private Function<Request, Response> methodNotAllowed() {
+    private Function<Request, Response> methodNotAllowedStrategy() {
         return new GiveStaticResponse(
             new ResponseBuilder()
                 .setStatus(Status.METHOD_NOT_ALLOWED)
+                .setBody(Status.METHOD_NOT_ALLOWED.toString().getBytes())
                 .build());
     }
 }

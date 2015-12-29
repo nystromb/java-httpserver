@@ -12,20 +12,22 @@ import java.util.Base64;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static scarvill.httpserver.request.Method.GET;
 
 public class VerifyRequestAuthorizationTest {
     @Test
     public void testDelegatesToGivenStrategyWhenRequestProvidesCorrectUsernameAndPassword() {
-        String token = Base64.getEncoder().encodeToString("username:password".getBytes());
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .setHeader("Authorization", "Basic " + token)
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+        String token = Base64.getEncoder().encodeToString("username:password".getBytes());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(GET)
+                    .setURI("/")
+                    .setHeader("Authorization", "Basic " + token)
+                    .build());
 
         assertEquals(Status.OK, response.getStatus());
 
@@ -33,75 +35,80 @@ public class VerifyRequestAuthorizationTest {
 
     @Test
     public void testDeniesRequestWithoutAuthorizationHeader() {
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(GET)
+                    .setURI("/")
+                    .build());
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }
 
     @Test
     public void testIncludesWWWAuthenticateHeaderIn401Response() {
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(GET)
+                    .setURI("/")
+                    .build());
 
         assertEquals("Basic realm=FortKnox", response.getHeaders().get("WWW-Authenticate"));
     }
 
     @Test
     public void testDeniesRequestWithCorrectUsernameAndIncorrectPassword() {
-        String token = Base64.getEncoder().encodeToString("username:incorrect-password".getBytes());
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .setHeader("Authorization", "Basic " + token)
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+        String token = Base64.getEncoder().encodeToString("username:incorrect-password".getBytes());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(GET)
+                    .setURI("/")
+                    .setHeader("Authorization", "Basic " + token)
+                    .build());
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }
 
     @Test
     public void testDeniesRequestWithIncorrectUsernameAndCorrectPassword() {
-        String token = Base64.getEncoder().encodeToString("incorrect-username:password".getBytes());
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .setHeader("Authorization", "Basic " + token)
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+        String token = Base64.getEncoder().encodeToString("incorrect-username:password".getBytes());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(GET)
+                    .setURI("/")
+                    .setHeader("Authorization", "Basic " + token)
+                    .build());
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }
 
     @Test
     public void testDeniesRequestWithIllFormedAuthorizationHeader() {
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/")
-            .setHeader("Authorization", "foo")
-            .build();
         Function<Request, Response> routeStrategy =
             new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build());
+
         Response response =
-            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(request);
+            new VerifyRequestAuthorization("username", "password", "FortKnox", routeStrategy).apply(
+                new RequestBuilder()
+                    .setMethod(Method.GET)
+                    .setURI("/")
+                    .setHeader("Authorization", "foo")
+                    .build());
 
         assertEquals(Status.UNAUTHORIZED, response.getStatus());
     }

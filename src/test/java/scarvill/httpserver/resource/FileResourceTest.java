@@ -1,7 +1,8 @@
-package scarvill.httpserver.routing.resource;
+package scarvill.httpserver.resource;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,7 +49,9 @@ public class FileResourceTest {
 
     private Path testFile() {
         try {
-            return Files.createTempFile("testfile", ".tmp");
+            File temp = File.createTempFile("testfile", ".tmp");
+            temp.deleteOnExit();
+            return temp.toPath();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

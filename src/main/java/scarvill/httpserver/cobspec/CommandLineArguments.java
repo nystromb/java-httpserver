@@ -7,6 +7,9 @@ public class CommandLineArguments {
     public static final int DEFAULT_PORT = 5000;
     public static final String DEFAULT_PUBLIC_DIRECTORY = "./cob_spec/public";
 
+    private final String PORT_FLAG = "-p";
+    private final String DIRECTORY_FLAG = "-d";
+
     private int port = DEFAULT_PORT;
     private String publicDirectory = DEFAULT_PUBLIC_DIRECTORY;
     private List<String> argList;
@@ -26,7 +29,7 @@ public class CommandLineArguments {
     }
 
     private void setPortIfSpecified() {
-        int portFlagIndex = argList.indexOf("-p");
+        int portFlagIndex = argList.indexOf(PORT_FLAG);
 
         if (flagIsFollowedByArgument(portFlagIndex)) {
             port = Integer.parseInt(argList.get(portFlagIndex + 1));
@@ -34,7 +37,7 @@ public class CommandLineArguments {
     }
 
     private void setPublicDirectoryIfSpecified() {
-        int directoryFlagIndex = argList.indexOf("-d");
+        int directoryFlagIndex = argList.indexOf(DIRECTORY_FLAG);
 
         if (flagIsFollowedByArgument(directoryFlagIndex)) {
             publicDirectory = argList.get(directoryFlagIndex + 1);

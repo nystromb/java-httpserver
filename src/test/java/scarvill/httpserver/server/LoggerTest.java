@@ -2,9 +2,7 @@ package scarvill.httpserver.server;
 
 import org.junit.Test;
 import scarvill.httpserver.request.Method;
-import scarvill.httpserver.request.Request;
 import scarvill.httpserver.request.RequestBuilder;
-import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 
@@ -17,17 +15,6 @@ public class LoggerTest {
     @Test
     public void testLogsRequestToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Logger logger = new Logger(new PrintStream(out));
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/a/route")
-            .setParameter("name", "value")
-            .setParameter("foo", "bar")
-            .setHeader("Header", "a header")
-            .setHeader("Other", "other header")
-            .setBody("body".getBytes())
-            .build();
-
         String expectedLog =
             "*** Received Request ***\n" +
                 "MethodLine: GET /a/route HTTP/1.1\n" +
@@ -38,7 +25,16 @@ public class LoggerTest {
                 "Body-length: 4\n" +
                 "\n";
 
-        logger.logRequest(request);
+        new Logger(new PrintStream(out)).logRequest(
+            new RequestBuilder()
+                .setMethod(Method.GET)
+                .setURI("/a/route")
+                .setParameter("name", "value")
+                .setParameter("foo", "bar")
+                .setHeader("Header", "a header")
+                .setHeader("Other", "other header")
+                .setBody("body".getBytes())
+                .build());
 
         assertEquals(expectedLog, out.toString());
     }
@@ -46,14 +42,6 @@ public class LoggerTest {
     @Test
     public void testLogsResponseToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Logger logger = new Logger(new PrintStream(out));
-        Response response = new ResponseBuilder()
-            .setStatus(Status.OK)
-            .setHeader("Header", "a header")
-            .setHeader("Other", "other header")
-            .setBody("body".getBytes())
-            .build();
-
         String expectedLog =
             "*** Sent Response ***\n" +
                 "Status: 200 OK\n" +
@@ -63,7 +51,13 @@ public class LoggerTest {
                 "Body-length: 4\n" +
                 "\n";
 
-        logger.logResponse(response);
+        new Logger(new PrintStream(out)).logResponse(
+            new ResponseBuilder()
+                .setStatus(Status.OK)
+                .setHeader("Header", "a header")
+                .setHeader("Other", "other header")
+                .setBody("body".getBytes())
+                .build());
 
         assertEquals(expectedLog, out.toString());
     }
@@ -71,13 +65,11 @@ public class LoggerTest {
     @Test
     public void testLogsExceptionMessageToGivenOutputStream() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Logger logger = new Logger(new PrintStream(out));
-
         String expectedLog =
             "*** Server Exception ***\n" +
                 "exception message\n";
 
-        logger.logException("exception message");
+        new Logger(new PrintStream(out)).logException("exception message");
 
         assertEquals(expectedLog, out.toString());
     }

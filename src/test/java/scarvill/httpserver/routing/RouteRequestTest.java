@@ -8,104 +8,108 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static scarvill.httpserver.request.Method.GET;
+import static scarvill.httpserver.request.Method.OPTIONS;
 
 public class RouteRequestTest {
 
     @Test
     public void testReturnsResponseWithStatusNotFoundForUnconfiguredRoute() {
-        Request request = new RequestBuilder().setURI("/unconfigured").build();
-        RouteRequest router = new RouteRequest();
-
-        Response response = router.apply(request);
+        Response response = new RouteRequest().apply(
+            new RequestBuilder().setURI("/unconfigured").build());
 
         assertEquals(Status.NOT_FOUND, response.getStatus());
     }
 
     @Test
     public void testReturnsMethodNotAllowedWhenNoStrategyExistsForRequestMethod() {
-        Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        RouteRequest router = new RouteRequest();
-        Response response = new ResponseBuilder().setStatus(Status.OK).build();
-        router.addRoute("/", Method.POST, new GiveStaticResponse(response));
+        RouteRequest routeRequest = new RouteRequest();
+        Response responseToGive = new ResponseBuilder().setStatus(Status.OK).build();
+        routeRequest.addRoute("/", Method.POST, new GiveStaticResponse(responseToGive));
 
-        Response routerResponse = router.apply(request);
+        Response routerResponse = routeRequest.apply(
+            new RequestBuilder()
+                .setMethod(GET)
+                .setURI("/")
+                .build());
 
         assertEquals(Status.METHOD_NOT_ALLOWED, routerResponse.getStatus());
     }
 
     @Test
     public void testReturnsResultOfApplyingConfiguredRouteStrategy() {
-        Request request = new RequestBuilder().setMethod(Method.GET).setURI("/").build();
-        Status expectedResponseStatus = Status.OK;
         RouteRequest router = new RouteRequest();
         Response response = new ResponseBuilder().setStatus(Status.OK).build();
         router.addRoute("/", Method.GET, new GiveStaticResponse(response));
 
-        Response routerResponse = router.apply(request);
+        Response routerResponse = router.apply(
+            new RequestBuilder()
+                .setMethod(GET)
+                .setURI("/")
+                .build());
 
-        assertEquals(expectedResponseStatus, routerResponse.getStatus());
+        assertEquals(Status.OK, routerResponse.getStatus());
     }
 
     @Test
     public void testDynamicallyHandlesOptionsRequests() {
-        Request request = new RequestBuilder().setMethod(Method.OPTIONS).setURI("/").build();
-        RouteRequest router = new RouteRequest();
-        Response response = new ResponseBuilder().setStatus(Status.OK).build();
-        router.addRoute("/", Method.GET, new GiveStaticResponse(response));
+        Request optionsRequest = new RequestBuilder().setMethod(OPTIONS).setURI("/").build();
+        RouteRequest routeRequest = new RouteRequest();
+        routeRequest.addRoute("/", Method.GET, new GiveStaticResponse(
+            new ResponseBuilder().build()));
 
-        Response routerResponse = router.apply(request);
+        Response withoutConfiguredPutRouteResponse = routeRequest.apply(optionsRequest);
 
-        assertEquals(Status.OK, response.getStatus());
-        assertTrue(routerResponse.getHeaders().get("Allow").contains("GET"));
-        assertTrue(routerResponse.getHeaders().get("Allow").contains("OPTIONS"));
+        routeRequest.addRoute("/", Method.PUT, new GiveStaticResponse(
+            new ResponseBuilder().build()));
 
-        router.addRoute("/", Method.POST, new GiveStaticResponse(response));
-        Response newRouterResponse = router.apply(request);
+        Response withConfiguredPutRouteResponse = routeRequest.apply(optionsRequest);
 
-        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("GET"));
-        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("POST"));
-        assertTrue(newRouterResponse.getHeaders().get("Allow").contains("OPTIONS"));
+        assertEquals(Status.OK, withConfiguredPutRouteResponse.getStatus());
+        assertEquals(Status.OK, withoutConfiguredPutRouteResponse.getStatus());
+        assertTrue(withConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
+        assertFalse(withoutConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
     }
 
     @Test
     public void testCanRouteToResourcesInADirectory() throws IOException {
         String fileContents = "contents";
-        Path directory = Files.createTempDirectory("dir");
+        Path directory = createTempDirectory();
         Path file = createTempFileWithContent(directory, fileContents.getBytes());
 
-        RouteRequest router = new RouteRequest();
-        router.routeToResourcesInDirectory(directory);
-        Request request = new RequestBuilder()
-            .setMethod(Method.GET)
-            .setURI("/" + file.getFileName())
-            .build();
+        RouteRequest routeRequest = new RouteRequest();
+        routeRequest.routeToResourcesInDirectory(directory);
 
-        Response response = router.apply(request);
+        Response response = routeRequest.apply(
+            new RequestBuilder()
+                .setMethod(GET)
+                .setURI("/" + file.getFileName())
+                .build());
 
         assertEquals(Status.OK, response.getStatus());
         assertEquals(fileContents, new String(response.getBody()));
+    }
 
-        deleteFiles(Arrays.asList(file, directory));
+    private Path createTempDirectory() throws IOException {
+        Path directory = Files.createTempDirectory("");
+        directory.toFile().deleteOnExit();
+
+        return directory;
     }
 
     private Path createTempFileWithContent(Path dir, byte[] content) throws IOException {
-        Path file = Files.createTempFile(dir, "temp", "");
-        Files.write(file, content);
+        File file = File.createTempFile("temp", "", dir.toFile());
+        Files.write(file.toPath(), content);
+        file.deleteOnExit();
 
-        return file;
-    }
-
-    private void deleteFiles(List<Path> paths) throws IOException {
-        for (Path path : paths) {
-            Files.delete(path);
-        }
+        return file.toPath();
     }
 }

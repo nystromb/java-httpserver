@@ -50,22 +50,11 @@ public class HttpService implements Serveable {
             logger.logRequest(request);
 
             return router.apply(request);
-        } catch (HttpRequest.IllFormedRequest e) {
-            logger.logException(e.getMessage());
-
-            return badRequestResponse(e.getMessage());
         } catch (IOException e) {
             logger.logException(e.getMessage());
 
             return serverErrorResponse();
         }
-    }
-
-    private Response badRequestResponse(String message) {
-        return new ResponseBuilder()
-            .setStatus(Status.BAD_REQUEST)
-            .setBody((Status.BAD_REQUEST.toString() + "\n" + message).getBytes())
-            .build();
     }
 
     private Response serverErrorResponse() {

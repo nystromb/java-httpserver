@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ServerIOTest {
     @Test
-    public void testReadsRequestFromStream() throws IOException, HttpRequest.IllFormedRequest {
+    public void testReadsRequestFromStream() throws IOException {
         byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(rawRequest);
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));

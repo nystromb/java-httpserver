@@ -20,7 +20,7 @@ public class HttpRequest {
         this.requestLineAndHeaders = requestLineAndHeaders;
     }
 
-    public Request parse() throws IllFormedRequest {
+    public Request parse() {
         return new RequestBuilder()
             .setMethod(parseMethod())
             .setURI(parseURI())
@@ -30,7 +30,7 @@ public class HttpRequest {
             .build();
     }
 
-    private Method parseMethod() throws IllFormedRequest {
+    private Method parseMethod() {
         String method = requestLineAndHeaders.split(" ")[0];
         switch (method) {
             case "GET":
@@ -48,7 +48,7 @@ public class HttpRequest {
             case "DELETE":
                 return DELETE;
             default:
-                throw new IllFormedRequest("Cannot parse ill-formed HTTP request: Invalid method.");
+                return UNSUPPORTED;
         }
     }
 
@@ -56,14 +56,13 @@ public class HttpRequest {
         return requestLineAndHeaders.split(" ")[1].split("\\?")[0];
     }
 
-    private HashMap<String, String> parseParameters() throws IllFormedRequest {
+    private HashMap<String, String> parseParameters() {
         HashMap<String, String> parameters = new HashMap<>();
 
         if (requestHasQueryString()) {
             try {
                 parameters = parseQueryStringParameters(requestLineAndHeaders.split(" ")[1].split("\\?")[1]);
-            } catch (UnsupportedEncodingException e) {
-                throw new IllFormedRequest("Cannot parse ill-formed HTTP request: Invalid URI character encoding.");
+            } catch (UnsupportedEncodingException ignored) {
             }
         }
 
@@ -114,11 +113,5 @@ public class HttpRequest {
 
     private boolean includesHeaders(String[] requestLines) {
         return requestLines.length > 2;
-    }
-
-    public class IllFormedRequest extends Exception {
-        public IllFormedRequest(String message) {
-            super(message);
-        }
     }
 }

@@ -37,7 +37,7 @@ public class GetRouteResourceTest {
         Response response = new GetRouteResource(resource).apply(new RequestBuilder().build());
 
         assertEquals(String.valueOf(resource.getData().length),
-            response.getHeaders().get("Content-Length"));
+            response.getHeaderContent("Content-Length"));
     }
 
     @Test

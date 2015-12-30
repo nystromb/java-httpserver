@@ -32,8 +32,8 @@ public class Logger {
         out.println("*** Sent Response ***");
         out.println("Status: " + response.getStatus().toString());
         out.println("Headers:");
-        response.getHeaders().forEach(
-            (keyword, content) -> out.println("- " + keyword + ": " + content));
+        response.getHeaderNames().forEach(
+            (name) -> out.println("- " + name + ": " + response.getHeaderContent(name)));
         out.println("Body-length: " + response.getBody().length);
         out.println();
     }

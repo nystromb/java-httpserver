@@ -24,9 +24,9 @@ public class GetRouteOptionsTest {
             new RequestBuilder().setMethod(OPTIONS).build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertThat(response.getHeaders().get("Allow"), containsString(GET.toString()));
-        assertThat(response.getHeaders().get("Allow"), containsString(HEAD.toString()));
-        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(GET.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(HEAD.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(OPTIONS.toString()));
     }
 
     @Test
@@ -37,6 +37,6 @@ public class GetRouteOptionsTest {
             new RequestBuilder().setMethod(OPTIONS).build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(OPTIONS.toString()));
     }
 }

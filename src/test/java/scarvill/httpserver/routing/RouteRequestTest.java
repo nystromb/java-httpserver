@@ -78,8 +78,8 @@ public class RouteRequestTest {
         assertEquals(Status.OK, withPutRouteResponse.getStatus());
         assertEquals(Status.OK, withoutPutRouteResponse.getStatus());
 
-        assertThat(withPutRouteResponse.getHeaders().get("Allow"), containsString("PUT"));
-        assertThat(withoutPutRouteResponse.getHeaders().get("Allow"), not(containsString("PUT")));
+        assertThat(withPutRouteResponse.getHeaderContent("Allow"), containsString("PUT"));
+        assertThat(withoutPutRouteResponse.getHeaderContent("Allow"), not(containsString("PUT")));
     }
 
     @Test

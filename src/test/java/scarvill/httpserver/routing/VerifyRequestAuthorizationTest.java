@@ -60,7 +60,7 @@ public class VerifyRequestAuthorizationTest {
                     .setURI("/")
                     .build());
 
-        assertEquals("Basic realm=FortKnox", response.getHeaders().get("WWW-Authenticate"));
+        assertEquals("Basic realm=FortKnox", response.getHeaderContent("WWW-Authenticate"));
     }
 
     @Test

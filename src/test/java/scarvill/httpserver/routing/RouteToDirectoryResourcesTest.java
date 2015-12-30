@@ -92,8 +92,8 @@ public class RouteToDirectoryResourcesTest {
                 .build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertThat(response.getHeaders().get("Allow"), containsString(GET.toString()));
-        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(GET.toString()));
+        assertThat(response.getHeaderContent("Allow"), containsString(OPTIONS.toString()));
     }
 
     @Test

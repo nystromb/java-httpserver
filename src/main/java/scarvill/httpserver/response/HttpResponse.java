@@ -2,7 +2,6 @@ package scarvill.httpserver.response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class HttpResponse {
 
@@ -27,8 +26,8 @@ public class HttpResponse {
     private String statusAndHeaders(Response response) {
         String statusAndHeaders = "HTTP/1.1 " + response.getStatus().toString() + "\r\n";
 
-        for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
-            statusAndHeaders += header.getKey() + ": " + header.getValue() + "\r\n";
+        for (String name : response.getHeaderNames()) {
+            statusAndHeaders += name + ": " + response.getHeaderContent(name) + "\r\n";
         }
 
         return statusAndHeaders + "\r\n";

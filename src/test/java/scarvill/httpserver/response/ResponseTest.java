@@ -2,6 +2,7 @@ package scarvill.httpserver.response;
 
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -21,8 +22,9 @@ public class ResponseTest {
             .setHeader("Bar", "another header")
             .build();
 
-        assertEquals("a header", response.getHeaders().get("Foo"));
-        assertEquals("another header", response.getHeaders().get("Bar"));
+        assertThat(response.getHeaderNames(), containsInAnyOrder("Foo", "Bar"));
+        assertEquals("a header", response.getHeaderContent("Foo"));
+        assertEquals("another header", response.getHeaderContent("Bar"));
     }
 
     @Test

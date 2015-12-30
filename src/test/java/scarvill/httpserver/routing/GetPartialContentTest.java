@@ -35,7 +35,7 @@ public class GetPartialContentTest {
                 .setHeader("Range", "bytes=0-2")
                 .build());
 
-        assertEquals("3", response.getHeaders().get("Content-Length"));
+        assertEquals("3", response.getHeaderContent("Content-Length"));
     }
 
     @Test

@@ -8,22 +8,18 @@ import static scarvill.httpserver.request.Method.*;
 
 public class HttpRequestTest {
     @Test
-    public void testParsesRequestMethod()  {
-        Request getRequest = new HttpRequest(GET.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request postRequest = new HttpRequest(POST.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request putRequest = new HttpRequest(PUT.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request patchRequest = new HttpRequest(PATCH.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request deleteRequest = new HttpRequest(DELETE.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request optionsRequest = new HttpRequest(OPTIONS.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
-        Request headRequest = new HttpRequest(HEAD.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
+    public void testParsesRequestMethod() {
+        assertEquals(GET, new HttpRequest(rawRequestWith(GET)).parse().getMethod());
+        assertEquals(POST, new HttpRequest(rawRequestWith(POST)).parse().getMethod());
+        assertEquals(PUT, new HttpRequest(rawRequestWith(PUT)).parse().getMethod());
+        assertEquals(PATCH, new HttpRequest(rawRequestWith(PATCH)).parse().getMethod());
+        assertEquals(DELETE, new HttpRequest(rawRequestWith(DELETE)).parse().getMethod());
+        assertEquals(OPTIONS, new HttpRequest(rawRequestWith(OPTIONS)).parse().getMethod());
+        assertEquals(HEAD, new HttpRequest(rawRequestWith(HEAD)).parse().getMethod());
+    }
 
-        assertEquals(GET, getRequest.getMethod());
-        assertEquals(POST, postRequest.getMethod());
-        assertEquals(PUT, putRequest.getMethod());
-        assertEquals(PATCH, patchRequest.getMethod());
-        assertEquals(DELETE, deleteRequest.getMethod());
-        assertEquals(OPTIONS, optionsRequest.getMethod());
-        assertEquals(HEAD, headRequest.getMethod());
+    private String rawRequestWith(Method method) {
+        return method.toString() + " /uri HTTP/1.1\r\n\r\n";
     }
 
     @Test
@@ -34,7 +30,7 @@ public class HttpRequestTest {
     }
 
     @Test
-    public void testParsesRawHTTPRequestURI()  {
+    public void testParsesRawHTTPRequestURI() {
         Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());

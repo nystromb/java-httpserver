@@ -15,7 +15,6 @@ public class ResponseTest {
 
     @Test
     public void testHasHeaders() {
-        String[] headers = new String[]{"Foo: a header", "Bar: another header"};
         Response response = new ResponseBuilder()
             .setHeader("Foo", "a header")
             .setHeader("Bar", "another header")

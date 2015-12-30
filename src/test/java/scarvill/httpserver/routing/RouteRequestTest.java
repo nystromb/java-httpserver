@@ -75,6 +75,7 @@ public class RouteRequestTest {
 
         assertEquals(Status.OK, withConfiguredPutRouteResponse.getStatus());
         assertEquals(Status.OK, withoutConfiguredPutRouteResponse.getStatus());
+
         assertTrue(withConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
         assertFalse(withoutConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
     }

@@ -47,11 +47,11 @@ public class GetDirectoryIndexTest {
         assertTrue(new String(response.getBody())
             .contains("/" + subdirectory.getFileName() + "/" + file2.getFileName()));
     }
-    
+
     private Path createTempDirectory() throws IOException {
         Path directory = Files.createTempDirectory("");
         directory.toFile().deleteOnExit();
-        
+
         return directory;
     }
 

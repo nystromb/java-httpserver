@@ -16,20 +16,20 @@ public class HttpResponse {
     private byte[] assembleResponse(Response response) throws IOException {
         ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
 
-        rawResponse.write(statusAndHeaders(response).getBytes());
+        rawResponse.write(statusAndHeaders(response));
         rawResponse.write(response.getBody());
 
         return rawResponse.toByteArray();
     }
 
 
-    private String statusAndHeaders(Response response) {
+    private byte[] statusAndHeaders(Response response) {
         String statusAndHeaders = "HTTP/1.1 " + response.getStatus().toString() + "\r\n";
 
         for (String name : response.getHeaderNames()) {
             statusAndHeaders += name + ": " + response.getHeaderContent(name) + "\r\n";
         }
 
-        return statusAndHeaders + "\r\n";
+        return (statusAndHeaders + "\r\n").getBytes();
     }
 }

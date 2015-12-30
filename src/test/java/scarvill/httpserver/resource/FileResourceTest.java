@@ -41,6 +41,26 @@ public class FileResourceTest {
         assertThat(newFileContents, equalTo(resource.getData()));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testRaisesRuntimeExceptionIfEncountersIOExceptionWhenGettingData()
+        throws IOException {
+        Path file = createTempFileWithContent("foo".getBytes());
+        FileResource resource = new FileResource(file);
+        file.toFile().delete();
+
+        resource.getData();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testRaisesRuntimeExceptionIfEncountersIOExceptionWhenSettingData()
+        throws IOException {
+        Path file = createTempFileWithContent("foo".getBytes());
+        FileResource resource = new FileResource(file);
+        file.toFile().setReadOnly();
+
+        resource.setData("bar".getBytes());
+    }
+
     private Path createTempFileWithContent(byte[] content) throws IOException {
         File file = File.createTempFile("temp", "");
         Files.write(file.toPath(), content);

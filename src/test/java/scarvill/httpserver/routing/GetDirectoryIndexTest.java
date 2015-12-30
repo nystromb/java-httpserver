@@ -49,6 +49,19 @@ public class GetDirectoryIndexTest {
             containsString("/" + subdirectory.getFileName() + "/" + file2.getFileName()));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testThrowsRuntimeExceptionWhenCannotGetDirectoryContents() throws IOException {
+        Path directory = createTempDirectory();
+        GetDirectoryIndex getDirectoryIndex = new GetDirectoryIndex(directory);
+        directory.toFile().delete();
+
+        getDirectoryIndex.apply(
+            new RequestBuilder()
+            .setMethod(GET)
+            .setURI("/" + directory.getFileName())
+            .build());
+    }
+
     private Path createTempDirectory() throws IOException {
         Path directory = Files.createTempDirectory("");
         directory.toFile().deleteOnExit();

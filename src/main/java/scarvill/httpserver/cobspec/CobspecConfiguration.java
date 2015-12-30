@@ -1,6 +1,5 @@
 package scarvill.httpserver.cobspec;
 
-import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.resource.FileResource;
 import scarvill.httpserver.resource.Resource;
@@ -19,6 +18,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.function.Function;
+
+import static scarvill.httpserver.response.Status.*;
+import static scarvill.httpserver.request.Method.*;
 
 public class CobspecConfiguration implements ServerConfiguration {
     private CommandLineArguments arguments;
@@ -59,30 +61,30 @@ public class CobspecConfiguration implements ServerConfiguration {
         RouteRequest router = new RouteRequest();
         router.routeToResourcesInDirectory(Paths.get(publicDirectory));
 
-        router.addRoute("/parameters", Method.GET, new EchoRequestParameters());
+        router.addRoute("/parameters", GET, new EchoRequestParameters());
 
-        router.addRoute("/redirect", Method.GET, giveRedirectResponse("http://localhost:5000/"));
+        router.addRoute("/redirect", GET, giveRedirectResponse("http://localhost:5000/"));
 
-        router.addRoute("/method_options", Method.GET, giveStatusOKResponse());
-        router.addRoute("/method_options", Method.PUT, giveStatusOKResponse());
-        router.addRoute("/method_options", Method.POST, giveStatusOKResponse());
-        router.addRoute("/method_options", Method.HEAD, giveStatusOKResponse());
+        router.addRoute("/method_options", GET, giveStatusOKResponse());
+        router.addRoute("/method_options", PUT, giveStatusOKResponse());
+        router.addRoute("/method_options", POST, giveStatusOKResponse());
+        router.addRoute("/method_options", HEAD, giveStatusOKResponse());
 
         Resource formResource = new StringResource("");
-        router.addRoute("/form", Method.GET, new GetRouteResource(formResource));
-        router.addRoute("/form", Method.POST, new ModifyRouteResource(formResource));
-        router.addRoute("/form", Method.PUT, new ModifyRouteResource(formResource));
-        router.addRoute("/form", Method.DELETE, new ModifyRouteResource(formResource));
+        router.addRoute("/form", GET, new GetRouteResource(formResource));
+        router.addRoute("/form", POST, new ModifyRouteResource(formResource));
+        router.addRoute("/form", PUT, new ModifyRouteResource(formResource));
+        router.addRoute("/form", DELETE, new ModifyRouteResource(formResource));
 
         Resource logsResource = new FileResource(Paths.get(publicDirectory + "/logs"));
-        router.addRoute("/logs", Method.GET,
+        router.addRoute("/logs", GET,
             new VerifyRequestAuthorization("admin", "hunter2", "Logging",
                 new GetRouteResource(logsResource)));
 
         Resource patchContent = new FileResource(Paths.get(publicDirectory + "/patch-content.txt"));
-        router.addRoute("/patch-content.txt", Method.GET,
+        router.addRoute("/patch-content.txt", GET,
             new GetRouteResource(patchContent));
-        router.addRoute("/patch-content.txt", Method.PATCH,
+        router.addRoute("/patch-content.txt", PATCH,
             new ModifyRouteResource(patchContent, Status.NO_CONTENT));
 
         return router;
@@ -91,7 +93,7 @@ public class CobspecConfiguration implements ServerConfiguration {
     private Function<Request, Response> giveRedirectResponse(String redirectLocation) {
         return new GiveStaticResponse(
             new ResponseBuilder()
-                .setStatus(Status.FOUND)
+                .setStatus(FOUND)
                 .setHeader("Location", redirectLocation)
                 .build());
     }
@@ -99,7 +101,7 @@ public class CobspecConfiguration implements ServerConfiguration {
     private Function<Request, Response> giveStatusOKResponse() {
         return new GiveStaticResponse(
             new ResponseBuilder()
-                .setStatus(Status.OK)
+                .setStatus(OK)
                 .build());
     }
 }

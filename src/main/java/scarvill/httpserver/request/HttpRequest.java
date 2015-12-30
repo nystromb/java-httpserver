@@ -5,8 +5,6 @@ import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static scarvill.httpserver.request.Method.*;
-
 public class HttpRequest {
     private String requestLineAndHeaders;
     private byte[] body = new byte[]{};
@@ -32,23 +30,10 @@ public class HttpRequest {
 
     private Method parseMethod() {
         String method = requestLineAndHeaders.split(" ")[0];
-        switch (method) {
-            case "GET":
-                return GET;
-            case "HEAD":
-                return HEAD;
-            case "OPTIONS":
-                return OPTIONS;
-            case "PUT":
-                return PUT;
-            case "POST":
-                return POST;
-            case "PATCH":
-                return PATCH;
-            case "DELETE":
-                return DELETE;
-            default:
-                return UNSUPPORTED;
+        try {
+            return Method.valueOf(method);
+        } catch (IllegalArgumentException e) {
+            return Method.UNSUPPORTED;
         }
     }
 

@@ -26,8 +26,7 @@ public class FileResource implements Resource {
     public void setData(byte[] data) {
         try {
             File file = new File(filepath.toString());
-            FileOutputStream fileStream = new FileOutputStream(file, false);
-            fileStream.write(data);
+            new FileOutputStream(file, false).write(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

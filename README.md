@@ -9,6 +9,7 @@ A HTTP server compliant with the subset of the HTTP specification covered by the
   * [Cob Spec](https://github.com/8thlight/cob_spec)
   * Java 1.8
   * jUnit 4.12
+  * hamcrest 1.3
 
 ## Building the project
   1. Enter ```git clone --recursive https://github.com/scarvill91/java-httpserver.git``` in the command line.

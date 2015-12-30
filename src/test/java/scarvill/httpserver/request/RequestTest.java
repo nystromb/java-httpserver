@@ -28,8 +28,8 @@ public class RequestTest {
             .setParameter("bar", "baz")
             .build();
 
-        assertEquals("bar", request.getParameters().get("foo"));
-        assertEquals("baz", request.getParameters().get("bar"));
+        assertEquals("bar", request.getParameterValue("foo"));
+        assertEquals("baz", request.getParameterValue("bar"));
     }
 
     @Test
@@ -39,8 +39,8 @@ public class RequestTest {
             .setHeader("Other:", "another header")
             .build();
 
-        assertEquals("a header", request.getHeaders().get("Header:"));
-        assertEquals("another header", request.getHeaders().get("Other:"));
+        assertEquals("a header", request.getHeaderContent("Header:"));
+        assertEquals("another header", request.getHeaderContent("Other:"));
     }
 
     @Test

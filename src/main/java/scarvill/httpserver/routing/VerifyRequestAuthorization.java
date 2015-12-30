@@ -25,7 +25,7 @@ public class VerifyRequestAuthorization implements Function<Request, Response> {
     @Override
     public Response apply(Request request) {
 
-        if (request.getHeaders().containsKey("Authorization") &&
+        if (request.getHeaderNames().contains("Authorization") &&
             authorizationToken(request).equals(encodedId)) {
             return verifiedRequestRouteStrategy.apply(request);
         } else {
@@ -44,7 +44,7 @@ public class VerifyRequestAuthorization implements Function<Request, Response> {
 
     private String authorizationToken(Request request) {
         String token = "";
-        String authorizationHeaderField = request.getHeaders().get("Authorization");
+        String authorizationHeaderField = request.getHeaderContent("Authorization");
 
         if (authorizationHeaderField.split(" ").length > 1) {
             token = authorizationHeaderField.split(" ")[1];

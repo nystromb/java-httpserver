@@ -29,6 +29,6 @@ public class GetRouteResource implements Function<Request, Response> {
     }
 
     private boolean hasPartialContentRangeHeader(Request request) {
-        return request.getHeaders().containsKey("Range");
+        return request.getHeaderNames().contains("Range");
     }
 }

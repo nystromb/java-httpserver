@@ -18,12 +18,12 @@ public class Logger {
             + request.getMethod().toString() + " "
             + request.getURI() + " HTTP/1.1");
         out.print("Parameters:");
-        request.getParameters().forEach(
-            (name, value) -> out.print(" " + name + "=" + value));
+        request.getParameterNames().forEach(
+            (parameter) -> out.print(" " + parameter + "=" + request.getParameterValue(parameter)));
         out.println();
         out.println("Headers:");
-        request.getHeaders().forEach(
-            (keyword, content) -> out.println("- " + keyword + ": " + content));
+        request.getHeaderNames().forEach(
+            (name) -> out.println("- " + name + ": " + request.getHeaderContent(name)));
         out.println("Body-length: " + request.getBody().length);
         out.println();
     }

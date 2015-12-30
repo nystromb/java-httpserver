@@ -1,6 +1,8 @@
 package scarvill.httpserver.request;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Request {
     private final Method method;
@@ -29,12 +31,20 @@ public class Request {
         return uri;
     }
 
-    public HashMap<String, String> getParameters() {
-        return parameters;
+    public List<String> getParameterNames() {
+        return new ArrayList<>(parameters.keySet());
     }
 
-    public HashMap<String, String> getHeaders() {
-        return headers;
+    public String getParameterValue(String headerName) {
+        return parameters.get(headerName);
+    }
+
+    public List<String> getHeaderNames() {
+        return new ArrayList<>(headers.keySet());
+    }
+
+    public String getHeaderContent(String headerName) {
+        return headers.get(headerName);
     }
 
     public byte[] getBody() {

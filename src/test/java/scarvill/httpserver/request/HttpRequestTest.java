@@ -42,8 +42,8 @@ public class HttpRequestTest {
         Request request = new HttpRequest("GET /uri?foo=bar&bar=baz HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());
-        assertEquals("bar", request.getParameters().get("foo"));
-        assertEquals("baz", request.getParameters().get("bar"));
+        assertEquals("bar", request.getParameterValue("foo"));
+        assertEquals("baz", request.getParameterValue("bar"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class HttpRequestTest {
         Request request = new HttpRequest("GET /uri?ignored&bar=baz HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());
-        assertEquals("baz", request.getParameters().get("bar"));
+        assertEquals("baz", request.getParameterValue("bar"));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class HttpRequestTest {
 
         Request request = new HttpRequest("GET /uri?" + query + " HTTP/1.1\r\n\r\n").parse();
 
-        assertEquals(translatedMessage, request.getParameters().get("message"));
+        assertEquals(translatedMessage, request.getParameterValue("message"));
     }
 
     @Test
@@ -74,8 +74,8 @@ public class HttpRequestTest {
             "\r\n";
         Request request = new HttpRequest(rawRequest).parse();
 
-        assertEquals("a header", request.getHeaders().get("Header"));
-        assertEquals("other header", request.getHeaders().get("Other"));
+        assertEquals("a header", request.getHeaderContent("Header"));
+        assertEquals("other header", request.getHeaderContent("Other"));
     }
 
     @Test

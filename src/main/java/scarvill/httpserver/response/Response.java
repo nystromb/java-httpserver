@@ -19,15 +19,15 @@ public class Response {
         return status;
     }
 
-    public byte[] getBody() {
-        return body;
+    public List<String> getHeaderNames() {
+        return new ArrayList<>(headers.keySet());
     }
 
     public String getHeaderContent(String headerName) {
         return headers.get(headerName);
     }
 
-    public List<String> getHeaderNames() {
-        return new ArrayList<>(headers.keySet());
+    public byte[] getBody() {
+        return body;
     }
 }

@@ -18,7 +18,7 @@ public class GetPartialContent implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String rangeInformation = request.getHeaders().get("Range");
+        String rangeInformation = request.getHeaderContent("Range");
         byte[] partialContent = readPartialResourceData(rangeInformation);
 
         return new ResponseBuilder().setStatus(Status.PARTIAL_CONTENT)

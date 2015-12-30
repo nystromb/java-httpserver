@@ -7,7 +7,8 @@ import scarvill.httpserver.response.Response;
 
 import java.util.function.Function;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class EchoRequestParametersTest {
     @Test
@@ -20,7 +21,7 @@ public class EchoRequestParametersTest {
 
         Response response = handler.apply(request);
 
-        assertTrue(new String(response.getBody()).contains("foo = bar"));
-        assertTrue(new String(response.getBody()).contains("bar = baz"));
+        assertThat(new String(response.getBody()), containsString("foo = bar"));
+        assertThat(new String(response.getBody()), containsString("bar = baz"));
     }
 }

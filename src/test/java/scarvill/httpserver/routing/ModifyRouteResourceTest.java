@@ -10,8 +10,9 @@ import scarvill.httpserver.response.Status;
 
 import java.util.function.Function;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ModifyRouteResourceTest {
     @Test
@@ -23,7 +24,7 @@ public class ModifyRouteResourceTest {
                 .setBody("new data".getBytes())
                 .build());
 
-        assertArrayEquals("new data".getBytes(), resource.getData());
+        assertThat("new data".getBytes(), equalTo(resource.getData()));
     }
 
     @Test

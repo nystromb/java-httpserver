@@ -11,24 +11,24 @@ import scarvill.httpserver.routing.RouteRequest;
 import java.io.*;
 import java.net.Socket;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class HttpServiceTest {
     @Test
     public void testLogsHTTPTransactions() {
-        byte[] rawRequest = "GET / HTTP/1.1\r\n\r\n".getBytes();
-        MockSocket clientSocket =
-            new MockSocket(new ByteArrayInputStream(rawRequest), new ByteArrayOutputStream());
+        ByteArrayInputStream inputStream =
+            new ByteArrayInputStream("GET / HTTP/1.1\r\n\r\n".getBytes());
         ByteArrayOutputStream logStream = new ByteArrayOutputStream();
-        Logger logger = new Logger(new PrintStream(logStream));
-        HttpService service = new HttpService(logger, new GiveStaticResponse(
-            new ResponseBuilder().setStatus(Status.OK).build()));
+        HttpService service = new HttpService(
+            new Logger(new PrintStream(logStream)),
+            new GiveStaticResponse(new ResponseBuilder().setStatus(Status.OK).build()));
 
-        service.serve(clientSocket).run();
+        service.serve(new MockSocket(inputStream, new ByteArrayOutputStream())).run();
 
-        assertTrue(new String(logStream.toByteArray()).contains("Received Request"));
-        assertTrue(new String(logStream.toByteArray()).contains("Sent Response"));
+        assertThat(new String(logStream.toByteArray()), containsString("Received Request"));
+        assertThat(new String(logStream.toByteArray()), containsString("Sent Response"));
     }
 
     @Test
@@ -44,22 +44,24 @@ public class HttpServiceTest {
         HttpService service = new HttpService(
             new Logger(new NullPrintStream()),
             new GiveStaticResponse(expectedResponse));
-        String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
 
         service.serve(new MockSocket(inputStream, outputStream)).run();
 
-        assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
+        assertThat(new HttpResponse().generate(expectedResponse),
+            equalTo(outputStream.toByteArray()));
     }
 
     @Test
     public void testSends500ServerErrorResponseWhenAnIOExceptionIsRaised() throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        HttpService service =
-            new HttpService(new Logger(new NullPrintStream()), new RouteRequest());
+        HttpService service = new HttpService(
+            new Logger(new NullPrintStream()),
+            new RouteRequest());
 
         service.serve(new MockSocket(new FailingInputStream(), outputStream)).run();
 
-        assertTrue(new String(outputStream.toByteArray()).contains(Status.SERVER_ERROR.toString()));
+        assertThat(new String(outputStream.toByteArray()),
+            containsString(Status.SERVER_ERROR.toString()));
     }
 
     private class MockSocket extends Socket {

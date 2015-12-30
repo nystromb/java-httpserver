@@ -7,8 +7,9 @@ import scarvill.httpserver.resource.StringResource;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GetPartialContentTest {
 
@@ -22,7 +23,7 @@ public class GetPartialContentTest {
                 .build());
 
         assertEquals(Status.PARTIAL_CONTENT, response.getStatus());
-        assertArrayEquals("012".getBytes(), response.getBody());
+        assertThat("012".getBytes(), equalTo(response.getBody()));
     }
 
     @Test
@@ -34,7 +35,7 @@ public class GetPartialContentTest {
                 .setHeader("Range", "bytes=0-2")
                 .build());
 
-        assertEquals(String.valueOf(3), response.getHeaders().get("Content-Length"));
+        assertEquals("3", response.getHeaders().get("Content-Length"));
     }
 
     @Test
@@ -47,7 +48,8 @@ public class GetPartialContentTest {
                 .build());
 
         assertEquals(Status.PARTIAL_CONTENT, response.getStatus());
-        assertArrayEquals("789".getBytes(), response.getBody());
+        assertThat("789".getBytes(), equalTo(response.getBody()));
+
     }
 
     @Test
@@ -60,6 +62,6 @@ public class GetPartialContentTest {
                 .build());
 
         assertEquals(Status.PARTIAL_CONTENT, response.getStatus());
-        assertArrayEquals("789".getBytes(), response.getBody());
+        assertThat("789".getBytes(), equalTo(response.getBody()));
     }
 }

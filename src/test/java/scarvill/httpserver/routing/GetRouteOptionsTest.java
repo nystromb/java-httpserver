@@ -9,8 +9,9 @@ import scarvill.httpserver.response.Status;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static scarvill.httpserver.request.Method.*;
 
 public class GetRouteOptionsTest {
@@ -23,9 +24,9 @@ public class GetRouteOptionsTest {
             new RequestBuilder().setMethod(OPTIONS).build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertTrue(response.getHeaders().get("Allow").contains(GET.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(HEAD.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(OPTIONS.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(GET.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(HEAD.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
     }
 
     @Test
@@ -36,6 +37,6 @@ public class GetRouteOptionsTest {
             new RequestBuilder().setMethod(OPTIONS).build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertTrue(response.getHeaders().get("Allow").contains(OPTIONS.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
     }
 }

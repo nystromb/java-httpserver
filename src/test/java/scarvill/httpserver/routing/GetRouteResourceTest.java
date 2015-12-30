@@ -7,8 +7,9 @@ import scarvill.httpserver.resource.StringResource;
 import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.Status;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GetRouteResourceTest {
     @Test
@@ -26,7 +27,7 @@ public class GetRouteResourceTest {
 
         Response response = new GetRouteResource(resource).apply(new RequestBuilder().build());
 
-        assertArrayEquals("data".getBytes(), response.getBody());
+        assertThat("data".getBytes(), equalTo(response.getBody()));
     }
 
     @Test
@@ -49,6 +50,6 @@ public class GetRouteResourceTest {
                 .build());
 
         assertEquals(Status.PARTIAL_CONTENT, response.getStatus());
-        assertArrayEquals("012".getBytes(), response.getBody());
+        assertThat("012".getBytes(), equalTo(response.getBody()));
     }
 }

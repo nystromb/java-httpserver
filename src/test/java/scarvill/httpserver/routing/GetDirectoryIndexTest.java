@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 import static scarvill.httpserver.request.Method.GET;
 
 public class GetDirectoryIndexTest {
@@ -25,8 +26,8 @@ public class GetDirectoryIndexTest {
                 .setURI("/")
                 .build());
 
-        assertTrue(new String(response.getBody()).contains(file1.getFileName().toString()));
-        assertTrue(new String(response.getBody()).contains(file2.getFileName().toString()));
+        assertThat(new String(response.getBody()), containsString(file1.getFileName().toString()));
+        assertThat(new String(response.getBody()), containsString(file2.getFileName().toString()));
     }
 
     @Test
@@ -42,16 +43,16 @@ public class GetDirectoryIndexTest {
                 .setURI("/" + subdirectory.getFileName())
                 .build());
 
-        assertTrue(new String(response.getBody())
-            .contains("/" + subdirectory.getFileName() + "/" + file1.getFileName()));
-        assertTrue(new String(response.getBody())
-            .contains("/" + subdirectory.getFileName() + "/" + file2.getFileName()));
+        assertThat(new String(response.getBody()),
+            containsString("/" + subdirectory.getFileName() + "/" + file1.getFileName()));
+        assertThat(new String(response.getBody()),
+            containsString("/" + subdirectory.getFileName() + "/" + file2.getFileName()));
     }
-    
+
     private Path createTempDirectory() throws IOException {
         Path directory = Files.createTempDirectory("");
         directory.toFile().deleteOnExit();
-        
+
         return directory;
     }
 

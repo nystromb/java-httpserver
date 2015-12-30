@@ -4,56 +4,48 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class FileResourceTest {
 
     @Test
     public void testReturnsFileData() throws IOException {
-        String fileContents = "foo";
-        Path filepath = testFile();
-        Files.write(filepath, fileContents.getBytes(), StandardOpenOption.WRITE);
+        byte[] fileContents = "foo".getBytes();
 
-        FileResource resource = new FileResource(filepath);
+        FileResource resource = new FileResource(createTempFileWithContent(fileContents));
 
-        assertEquals(fileContents, new String(resource.getData(), StandardCharsets.UTF_8));
+        assertThat(fileContents, equalTo(resource.getData()));
     }
 
     @Test
-    public void testModifiesFileData() {
-        String fileContents = "foo";
-        Path filepath = testFile();
-        FileResource resource = new FileResource(filepath);
+    public void testModifiesFileData() throws IOException {
+        byte[] fileContents = "foo".getBytes();
+        FileResource resource = new FileResource(createTempFileWithContent(fileContents));
 
-        resource.setData(fileContents.getBytes());
+        resource.setData(fileContents);
 
-        assertEquals(fileContents, new String(resource.getData(), StandardCharsets.UTF_8));
+        assertThat(fileContents, equalTo(resource.getData()));
     }
 
     @Test
     public void testOverwritesExistingData() throws IOException {
-        String newFileContents = "baz";
-        Path filepath = testFile();
-        Files.write(filepath, "foobar".getBytes(), StandardOpenOption.WRITE);
+        byte[] newFileContents = "baz".getBytes();
+        FileResource resource = new FileResource(createTempFileWithContent("foo".getBytes()));
 
-        FileResource resource = new FileResource(filepath);
-        resource.setData(newFileContents.getBytes());
+        resource.setData(newFileContents);
 
-        assertEquals(newFileContents, new String(resource.getData(), StandardCharsets.UTF_8));
+        assertThat(newFileContents, equalTo(resource.getData()));
     }
 
-    private Path testFile() {
-        try {
-            File temp = File.createTempFile("testfile", ".tmp");
-            temp.deleteOnExit();
-            return temp.toPath();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private Path createTempFileWithContent(byte[] content) throws IOException {
+        File file = File.createTempFile("temp", "");
+        Files.write(file.toPath(), content);
+        file.deleteOnExit();
+
+        return file.toPath();
     }
 }

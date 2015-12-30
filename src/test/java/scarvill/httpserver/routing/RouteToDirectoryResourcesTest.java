@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static scarvill.httpserver.request.Method.GET;
 import static scarvill.httpserver.request.Method.OPTIONS;
 
@@ -20,9 +22,9 @@ public class RouteToDirectoryResourcesTest {
 
     @Test
     public void testReturnsFileInRootDirectory() throws IOException {
-        String fileContents = "file contents";
+        byte[] fileContents = "file contents".getBytes();
         Path directory = createTempDirectory();
-        Path file = createTempFileWithContent(directory, fileContents.getBytes());
+        Path file = createTempFileWithContent(directory, fileContents);
 
         Response response = new RouteToDirectoryResources(directory).apply(
             new RequestBuilder()
@@ -30,15 +32,15 @@ public class RouteToDirectoryResourcesTest {
                 .setURI("/" + file.getFileName())
                 .build());
 
-        assertEquals(fileContents, new String(response.getBody()));
+        assertThat(fileContents, equalTo(response.getBody()));
     }
 
     @Test
     public void testReturnsFileInNestedDirectory() throws IOException {
-        String fileContents = "file contents";
+        byte[] fileContents = "file contents".getBytes();
         Path directory = createTempDirectory();
         Path subdirectory = createTempSubdirectory(directory);
-        Path file = createTempFileWithContent(subdirectory, fileContents.getBytes());
+        Path file = createTempFileWithContent(subdirectory, fileContents);
 
         Response response = new RouteToDirectoryResources(directory).apply(
             new RequestBuilder()
@@ -46,7 +48,7 @@ public class RouteToDirectoryResourcesTest {
                 .setURI("/" + subdirectory.getFileName() + "/" + file.getFileName())
                 .build());
 
-        assertEquals(fileContents, new String(response.getBody()));
+        assertThat(fileContents, equalTo(response.getBody()));
     }
 
     @Test
@@ -60,7 +62,7 @@ public class RouteToDirectoryResourcesTest {
                 .setURI("/")
                 .build());
 
-        assertTrue(new String(response.getBody()).contains(file.getFileName().toString()));
+        assertThat(new String(response.getBody()), containsString(file.getFileName().toString()));
     }
 
     @Test
@@ -75,7 +77,7 @@ public class RouteToDirectoryResourcesTest {
                 .setURI("/" + subdirectory.getFileName())
                 .build());
 
-        assertTrue(new String(response.getBody()).contains(file.getFileName().toString()));
+        assertThat(new String(response.getBody()), containsString(file.getFileName().toString()));
     }
 
     @Test
@@ -90,8 +92,8 @@ public class RouteToDirectoryResourcesTest {
                 .build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertTrue(response.getHeaders().get("Allow").contains(Method.GET.toString()));
-        assertTrue(response.getHeaders().get("Allow").contains(Method.OPTIONS.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(GET.toString()));
+        assertThat(response.getHeaders().get("Allow"), containsString(OPTIONS.toString()));
     }
 
     @Test

@@ -13,9 +13,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static scarvill.httpserver.request.Method.GET;
 import static scarvill.httpserver.request.Method.OPTIONS;
 
@@ -66,25 +68,25 @@ public class RouteRequestTest {
         routeRequest.addRoute("/", Method.GET, new GiveStaticResponse(
             new ResponseBuilder().build()));
 
-        Response withoutConfiguredPutRouteResponse = routeRequest.apply(optionsRequest);
+        Response withoutPutRouteResponse = routeRequest.apply(optionsRequest);
 
         routeRequest.addRoute("/", Method.PUT, new GiveStaticResponse(
             new ResponseBuilder().build()));
 
-        Response withConfiguredPutRouteResponse = routeRequest.apply(optionsRequest);
+        Response withPutRouteResponse = routeRequest.apply(optionsRequest);
 
-        assertEquals(Status.OK, withConfiguredPutRouteResponse.getStatus());
-        assertEquals(Status.OK, withoutConfiguredPutRouteResponse.getStatus());
+        assertEquals(Status.OK, withPutRouteResponse.getStatus());
+        assertEquals(Status.OK, withoutPutRouteResponse.getStatus());
 
-        assertTrue(withConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
-        assertFalse(withoutConfiguredPutRouteResponse.getHeaders().get("Allow").contains("PUT"));
+        assertThat(withPutRouteResponse.getHeaders().get("Allow"), containsString("PUT"));
+        assertThat(withoutPutRouteResponse.getHeaders().get("Allow"), not(containsString("PUT")));
     }
 
     @Test
     public void testCanRouteToResourcesInADirectory() throws IOException {
-        String fileContents = "contents";
+        byte[] fileContents = "contents".getBytes();
         Path directory = createTempDirectory();
-        Path file = createTempFileWithContent(directory, fileContents.getBytes());
+        Path file = createTempFileWithContent(directory, fileContents);
 
         RouteRequest routeRequest = new RouteRequest();
         routeRequest.routeToResourcesInDirectory(directory);
@@ -96,7 +98,7 @@ public class RouteRequestTest {
                 .build());
 
         assertEquals(Status.OK, response.getStatus());
-        assertEquals(fileContents, new String(response.getBody()));
+        assertThat(fileContents, equalTo(response.getBody()));
     }
 
     private Path createTempDirectory() throws IOException {

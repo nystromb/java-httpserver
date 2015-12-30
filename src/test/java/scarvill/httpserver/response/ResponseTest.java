@@ -2,8 +2,9 @@ package scarvill.httpserver.response;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ResponseTest {
     @Test
@@ -26,8 +27,9 @@ public class ResponseTest {
 
     @Test
     public void testHasBody() {
-        Response response = new ResponseBuilder().setBody("body".getBytes()).build();
+        byte[] expectedBody = "body".getBytes();
+        Response response = new ResponseBuilder().setBody(expectedBody).build();
 
-        assertArrayEquals("body".getBytes(), response.getBody());
+        assertThat(expectedBody, equalTo(response.getBody()));
     }
 }

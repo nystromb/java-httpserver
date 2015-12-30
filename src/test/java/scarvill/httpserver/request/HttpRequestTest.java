@@ -2,8 +2,9 @@ package scarvill.httpserver.request;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static scarvill.httpserver.request.Method.*;
 
 public class HttpRequestTest {
@@ -26,7 +27,7 @@ public class HttpRequestTest {
     public void testParsesUnsupportedMethodInRawHTTPRequest() {
         Request request = new HttpRequest("FOO /uri HTTP/1.1\r\n\r\n").parse();
 
-        assertEquals(Method.UNSUPPORTED, request.getMethod());
+        assertEquals(UNSUPPORTED, request.getMethod());
     }
 
     @Test
@@ -81,13 +82,14 @@ public class HttpRequestTest {
     public void testParsesRawHTTPRequestWithNoBody() {
         Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
-        assertArrayEquals(new byte[]{}, request.getBody());
+        assertThat(new byte[]{}, equalTo(request.getBody()));
     }
 
     @Test
     public void testParsesRawHTTPRequestWithBody() {
-        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n", "body".getBytes()).parse();
+        byte[] expectedBody = "body".getBytes();
+        Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n", expectedBody).parse();
 
-        assertArrayEquals("body".getBytes(), request.getBody());
+        assertThat(expectedBody, equalTo(request.getBody()));
     }
 }

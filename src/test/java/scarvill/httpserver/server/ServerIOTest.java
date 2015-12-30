@@ -10,7 +10,9 @@ import scarvill.httpserver.response.Status;
 
 import java.io.*;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ServerIOTest {
     @Test
@@ -33,11 +35,11 @@ public class ServerIOTest {
             .setHeader("Header", "a header")
             .setBody("body".getBytes())
             .build();
-        String expectedResponseString = new String(new HttpResponse().generate(expectedResponse));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         new ServerIO().writeResponse(outputStream, expectedResponse);
 
-        assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
+        assertThat(new HttpResponse().generate(expectedResponse),
+            equalTo(outputStream.toByteArray()));
     }
 }

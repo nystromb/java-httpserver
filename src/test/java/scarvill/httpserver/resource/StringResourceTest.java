@@ -2,7 +2,8 @@ package scarvill.httpserver.resource;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class StringResourceTest {
 
@@ -10,7 +11,7 @@ public class StringResourceTest {
     public void testResourceHasData() throws Exception {
         Resource resource = new StringResource("foo");
 
-        assertEquals("foo", new String(resource.getData()));
+        assertThat("foo".getBytes(), equalTo(resource.getData()));
     }
 
     @Test
@@ -18,6 +19,6 @@ public class StringResourceTest {
         Resource resource = new StringResource("foo");
         resource.setData("bar".getBytes());
 
-        assertEquals("bar", new String(resource.getData()));
+        assertThat("bar".getBytes(), equalTo(resource.getData()));
     }
 }

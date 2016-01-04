@@ -36,3 +36,5 @@ public class GetRouteOptions implements Function<Request, Response> {
         return methodsString;
     }
 }
+
+// I like the way you handle your options request

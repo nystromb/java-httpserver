@@ -105,3 +105,21 @@ public class CobspecConfiguration implements ServerConfiguration {
                 .build());
     }
 }
+
+// To me, it seems a little out of place for the the "giveRedirectResponse" and "giveStatusOKResponse" functions to be defined here
+// Shouldn't the server always be configured to give a 200 OK response as long as the route is defined?
+// This, I believe, is not something that should be user configurable
+
+// creating the routing chain might be more user friendly if you create the chain like how you create the logs route for each
+// like first RouteRequest checks if route is defined
+//      if not then send 404
+//      if defined -> keep going down request chain of handlers and eventually to the one handler/controller you define for that route
+
+// This seems redundant. Why not have 1 class to handle each request method?
+//         router.addRoute("/form", POST, new ModifyRouteResource(formResource));
+//         router.addRoute("/form", PUT, new ModifyRouteResource(formResource));
+//         router.addRoute("/form", DELETE, new ModifyRouteResource(formResource));
+
+
+// I like the abstractions using the routing classes this way, but thinking from a "framework" standpoint
+// I think each route should have its own class to handling each method

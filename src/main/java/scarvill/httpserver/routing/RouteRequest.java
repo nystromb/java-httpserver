@@ -52,3 +52,9 @@ public class RouteRequest implements Function<Request, Response> {
                 .build());
     }
 }
+
+
+// I think the nested hashmap makes things a little confusing in order to understand the request chain path
+
+// There are multiple places (in RouteToDirectoryResources) where you check to see if the Method is not allowed.
+// Maybe slip some kind of handler in the request chain to handle this and remove the redundancy?

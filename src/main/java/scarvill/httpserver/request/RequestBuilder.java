@@ -48,3 +48,15 @@ public class RequestBuilder {
         return this;
     }
 }
+
+// when you call build(), you could just pass "this" entire object into the constructor of the Request method
+//
+// instead of:
+//      return new Request(method, uri, parameters, headers, body);
+// you would do:
+//      return new Request(this);
+//
+// then call the fields from the this builder to set the appropriate fields in the Request constructor
+
+// this is something I got out of Effective java
+// http://www.informit.com/articles/article.aspx?p=1216151&seqNum=2

@@ -43,3 +43,10 @@ public class Logger {
         out.println(message);
     }
 }
+
+// I really like the formatting of your logs so that they are easy to read and understand, but from what I read
+// the built-in java logger is better performace wise (might not matter in this case) and it contains other useful debug information such as:
+// 1. the class/method the message is logged
+// 2. time of logging
+// 3. severity level
+

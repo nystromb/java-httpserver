@@ -33,3 +33,10 @@ public class HttpResponse {
         return (statusAndHeaders + "\r\n").getBytes();
     }
 }
+
+// Name of class I think could be better named. You use the Response object technically as your "HttpResponse"
+
+// += operator could be changed to a StringBuffer for efficiency
+
+// assembleResponse() could be similar to a toString() function and placed in the Response object
+// as a way of formatting your response

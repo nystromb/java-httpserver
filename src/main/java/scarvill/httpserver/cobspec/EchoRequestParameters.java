@@ -26,3 +26,6 @@ public class EchoRequestParameters implements Function<Request, Response> {
         return body.getBytes();
     }
 }
+
+// You might want to consider using a StringBuffer and calling the .append function instead of doing the += operator
+// Each time you do this, it creates a new object (very small, but i was told this by my mentors)

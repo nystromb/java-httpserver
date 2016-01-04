@@ -48,3 +48,7 @@ public class CommandLineArguments {
         return portFlagIndex != -1 && (portFlagIndex + 1) < argList.size();
     }
 }
+
+// What is the necessity or benefit of converting the array args into a list in the constructor?
+// Why not just loop through the cmd line args and if the option flags are defined, then call the appropriate setter function?
+// I might be biased on this because that's pretty much what I did.

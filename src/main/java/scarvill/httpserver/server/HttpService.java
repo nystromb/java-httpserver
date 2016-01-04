@@ -38,7 +38,7 @@ public class HttpService implements Serveable {
     }
 
     private void handleClientTransaction(BufferedReader in, BufferedOutputStream out)
-        throws IOException {
+            throws IOException { // why not put this on the line above?
         Response response = generateResponse(in);
         logger.logResponse(response);
 
@@ -60,6 +60,9 @@ public class HttpService implements Serveable {
         return router.apply(request);
     }
 
+    // This function could be named differently I think, because
+    // you are not really "sending" a response here, you are still getting a response (like the above function)
+    // to presumably write or "send" to output stream somewhere else
     private Response sendServerErrorResponse(Exception e) {
         logger.logException(e.getMessage());
 

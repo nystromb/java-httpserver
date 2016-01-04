@@ -103,3 +103,6 @@ public class HttpRequest {
         return requestLines.length > 2;
     }
 }
+
+// I think the name of this class could be more fitting. It is more of a "Parser" than it is a "HttpRequest" in my opinion
+// You already have a class named "Request" also which is really your request object.
